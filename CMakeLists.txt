@@ -25,13 +25,13 @@ SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeModules)
 ENABLE_TESTING()
 
 # Options
-OPTION(RP3D_COMPILE_TESTBED "Select this if you want to build the testbed application" OFF)
-OPTION(RP3D_COMPILE_TESTS "Select this if you want to build the tests" OFF)
+OPTION(RP3D_COMPILE_TESTBED "Select this if you want to build the testbed application" ON)
+OPTION(RP3D_COMPILE_TESTS "Select this if you want to build the tests" ON)
 OPTION(RP3D_PROFILING_ENABLED "Select this if you want to compile with enabled profiling" OFF)
-OPTION(RP3D_LOGS_ENABLED "Select this if you want to compile with logs enabled during execution" OFF)
+OPTION(RP3D_LOGS_ENABLED "Select this if you want to compile with logs enabled during execution" ON)
 OPTION(RP3D_CODE_COVERAGE_ENABLED "Select this if you need to build for code coverage calculation" OFF)
 OPTION(RP3D_DOUBLE_PRECISION_ENABLED "Select this if you want to compile using double precision floating
-                                 values" OFF)
+                                 values" ON)
 
 # Warning Compiler flags
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
