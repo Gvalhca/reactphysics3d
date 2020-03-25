@@ -37,6 +37,7 @@
 #include "raycast/RaycastScene.h"
 #include "concavemesh/ConcaveMeshScene.h"
 #include "cubestack/CubeStackScene.h"
+#include "dzhanibekovbolt/DzhanibekovScene.h"
 
 using namespace openglframework;
 using namespace jointsscene;
@@ -47,22 +48,23 @@ using namespace trianglemeshscene;
 using namespace heightfieldscene;
 using namespace collisiondetectionscene;
 using namespace cubestackscene;
+using namespace dzhanibekovscene;
 
 // Initialization of static variables
 const float TestbedApplication::SCROLL_SENSITIVITY = 0.08f;
 
 // Constructor
 TestbedApplication::TestbedApplication(bool isFullscreen)
-                   : Screen(Vector2i(1280, 800), "Testbed ReactPhysics3D", true, isFullscreen, 8, 8, 24, 8, 8),
-                     mIsInitialized(false), mGui(this), mCurrentScene(nullptr),
-                     mEngineSettings(EngineSettings::defaultSettings()),
-                     mFPS(0), mNbFrames(0), mPreviousTime(0),
-                     mLastTimeComputedFPS(0), mFrameTime(0), mPhysicsTime(0),
-                     mWidth(1280), mHeight(720),
-                     mSinglePhysicsStepEnabled(false), mSinglePhysicsStepDone(false),
-                     mWindowToFramebufferRatio(Vector2(1, 1)), mIsShadowMappingEnabled(true),
-                     mIsContactPointsDisplayed(false), mIsAABBsDisplayed(false), mIsWireframeEnabled(false),
-                     mIsVSyncEnabled(true) {
+        : Screen(Vector2i(1280, 800), "Testbed ReactPhysics3D", true, isFullscreen, 8, 8, 24, 8, 8),
+          mIsInitialized(false), mGui(this), mCurrentScene(nullptr),
+          mEngineSettings(EngineSettings::defaultSettings()),
+          mFPS(0), mNbFrames(0), mPreviousTime(0),
+          mLastTimeComputedFPS(0), mFrameTime(0), mPhysicsTime(0),
+          mWidth(1280), mHeight(720),
+          mSinglePhysicsStepEnabled(false), mSinglePhysicsStepDone(false),
+          mWindowToFramebufferRatio(Vector2(1, 1)), mIsShadowMappingEnabled(true),
+          mIsContactPointsDisplayed(false), mIsAABBsDisplayed(false), mIsWireframeEnabled(false),
+          mIsVSyncEnabled(true) {
 
     init();
 
@@ -118,14 +120,19 @@ void TestbedApplication::createScenes() {
     mScenes.push_back(raycastScene);
 
     // Collision Detection scene
-    CollisionDetectionScene* collisionDetectionScene = new CollisionDetectionScene("Collision Detection", mEngineSettings);
+    CollisionDetectionScene* collisionDetectionScene = new CollisionDetectionScene("Collision Detection",
+                                                                                   mEngineSettings);
     mScenes.push_back(collisionDetectionScene);
 
     // Concave Mesh scene
     ConcaveMeshScene* concaveMeshScene = new ConcaveMeshScene("Concave Mesh", mEngineSettings);
     mScenes.push_back(concaveMeshScene);
 
-    assert(mScenes.size() > 0);
+    // Dzhanibekovs Bolt scene
+    auto* dzhanibekovScene = new DzhanibekovScene("Dzhanibekov", mEngineSettings);
+    mScenes.push_back(dzhanibekovScene);
+
+    assert(!mScenes.empty());
 
     const int firstSceneIndex = 0;
 
@@ -135,7 +142,7 @@ void TestbedApplication::createScenes() {
 // Remove all the scenes
 void TestbedApplication::destroyScenes() {
 
-    for (uint i=0; i<mScenes.size(); i++) {
+    for (uint i = 0; i < mScenes.size(); i++) {
         delete mScenes[i];
     }
 
@@ -161,7 +168,7 @@ void TestbedApplication::updatePhysics() {
         mTimer.update();
 
         // While the time accumulator is not empty
-        while(mTimer.isPossibleToTakeStep(mEngineSettings.timeStep)) {
+        while (mTimer.isPossibleToTakeStep(mEngineSettings.timeStep)) {
 
             // Take a physics simulation step
             mCurrentScene->updatePhysics();
@@ -180,8 +187,7 @@ void TestbedApplication::update() {
     if (mSinglePhysicsStepEnabled && !mSinglePhysicsStepDone) {
         updateSinglePhysicsStep();
         mSinglePhysicsStepDone = true;
-    }
-    else {
+    } else {
         updatePhysics();
     }
 
@@ -271,7 +277,7 @@ void TestbedApplication::switchScene(Scene* newScene) {
 
 // Notify that the engine settings have changed
 void TestbedApplication::notifyEngineSetttingsChanged() {
-   mCurrentScene->updateEngineSettings();
+    mCurrentScene->updateEngineSettings();
 }
 
 // Check the OpenGL errors
@@ -286,12 +292,22 @@ void TestbedApplication::checkOpenGLErrorsInternal(const char* file, int line) {
 
         std::string error;
 
-        switch(glError) {
-                case GL_INVALID_OPERATION:      error="INVALID_OPERATION";      break;
-                case GL_INVALID_ENUM:           error="INVALID_ENUM";           break;
-                case GL_INVALID_VALUE:          error="INVALID_VALUE";          break;
-                case GL_OUT_OF_MEMORY:          error="OUT_OF_MEMORY";          break;
-                case GL_INVALID_FRAMEBUFFER_OPERATION:  error="INVALID_FRAMEBUFFER_OPERATION";  break;
+        switch (glError) {
+            case GL_INVALID_OPERATION:
+                error = "INVALID_OPERATION";
+                break;
+            case GL_INVALID_ENUM:
+                error = "INVALID_ENUM";
+                break;
+            case GL_INVALID_VALUE:
+                error = "INVALID_VALUE";
+                break;
+            case GL_OUT_OF_MEMORY:
+                error = "OUT_OF_MEMORY";
+                break;
+            case GL_INVALID_FRAMEBUFFER_OPERATION:
+                error = "INVALID_FRAMEBUFFER_OPERATION";
+                break;
         }
 
         std::cerr << "OpenGL Error #" << error.c_str() << " - " << file << ": " << line << std::endl;
@@ -321,7 +337,7 @@ void TestbedApplication::computeFPS() {
     double timeInterval = (mCurrentTime - mLastTimeComputedFPS) * 1000.0;
 
     // Update the FPS counter each second
-    if(timeInterval > 1000) {
+    if (timeInterval > 1000) {
 
         //  calculate the number of frames per second
         mFPS = static_cast<double>(mNbFrames) / timeInterval;
@@ -353,7 +369,7 @@ bool TestbedApplication::keyboardEvent(int key, int scancode, int action, int mo
 }
 
 // Handle a mouse button event (default implementation: propagate to children)
-bool TestbedApplication::mouseButtonEvent(const Vector2i &p, int button, bool down, int modifiers) {
+bool TestbedApplication::mouseButtonEvent(const Vector2i& p, int button, bool down, int modifiers) {
 
     if (Screen::mouseButtonEvent(p, button, down, modifiers)) {
         return true;
@@ -367,7 +383,7 @@ bool TestbedApplication::mouseButtonEvent(const Vector2i &p, int button, bool do
 }
 
 // Handle a mouse motion event (default implementation: propagate to children)
-bool TestbedApplication::mouseMotionEvent(const Vector2i &p, const Vector2i &rel, int button, int modifiers) {
+bool TestbedApplication::mouseMotionEvent(const Vector2i& p, const Vector2i& rel, int button, int modifiers) {
 
     if (Screen::mouseMotionEvent(p, rel, button, modifiers)) {
         return true;
@@ -379,11 +395,11 @@ bool TestbedApplication::mouseMotionEvent(const Vector2i &p, const Vector2i &rel
     int altKeyState = glfwGetKey(mGLFWWindow, GLFW_KEY_LEFT_ALT);
 
     return mCurrentScene->mouseMotionEvent(p[0], p[1], leftButtonState, rightButtonState,
-                                                  middleButtonState, altKeyState);
+                                           middleButtonState, altKeyState);
 }
 
 // Handle a mouse scroll event (default implementation: propagate to children)
-bool TestbedApplication::scrollEvent(const Vector2i &p, const Vector2f &rel) {
+bool TestbedApplication::scrollEvent(const Vector2i& p, const Vector2f& rel) {
 
     if (Screen::scrollEvent(p, rel)) {
         return true;

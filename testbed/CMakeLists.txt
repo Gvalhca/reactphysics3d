@@ -96,7 +96,7 @@ SET(COMMON_SOURCES
     common/PerlinNoise.cpp
     common/AABB.h
     common/AABB.cpp
-)
+        common/Drone.cpp common/Drone.h)
 
 # Examples scenes source files
 SET(SCENES_SOURCES
@@ -116,7 +116,7 @@ SET(SCENES_SOURCES
     scenes/heightfield/HeightFieldScene.cpp
     scenes/cubestack/CubeStackScene.h
     scenes/cubestack/CubeStackScene.cpp
-)
+        scenes/dzhanibekovbolt/DzhanibekovScene.cpp scenes/dzhanibekovbolt/DzhanibekovScene.h)
 
 # Add .user file to set debug path in Visual Studio
 SET(USER_FILE testbed.vcxproj.user)

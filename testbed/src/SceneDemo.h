@@ -91,6 +91,7 @@ class SceneDemo : public Scene {
         static openglframework::Color mOrangeColorDemo;
         static openglframework::Color mPinkColorDemo;
         static openglframework::Color mRedColorDemo;
+        static openglframework::Color mGreenColorDemo;
         static openglframework::Color mDemoColors[];
         static int mNbDemoColors;
 

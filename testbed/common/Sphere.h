@@ -34,64 +34,64 @@
 // Class Sphere
 class Sphere : public PhysicsObject {
 
-    private :
+private :
 
-        // -------------------- Attributes -------------------- //
+    // -------------------- Attributes -------------------- //
 
-        /// Radius of the sphere
-        float mRadius;
+    /// Radius of the sphere
+    float mRadius;
 
-        /// Collision shape
-        rp3d::SphereShape* mCollisionShape;
-        rp3d::ProxyShape* mProxyShape;
+    /// Collision shape
+    rp3d::SphereShape* mCollisionShape;
+    rp3d::ProxyShape* mProxyShape;
 
-        /// Scaling matrix (applied to a sphere to obtain the correct sphere dimensions)
-        openglframework::Matrix4 mScalingMatrix;
+    /// Scaling matrix (applied to a sphere to obtain the correct sphere dimensions)
+    openglframework::Matrix4 mScalingMatrix;
 
-        /// Previous transform (for interpolation)
-        rp3d::Transform mPreviousTransform;
+    /// Previous transform (for interpolation)
+    rp3d::Transform mPreviousTransform;
 
-        /// Vertex Buffer Object for the vertices data
-        static openglframework::VertexBufferObject mVBOVertices;
+    /// Vertex Buffer Object for the vertices data
+    static openglframework::VertexBufferObject mVBOVertices;
 
-        /// Vertex Buffer Object for the normals data
-        static openglframework::VertexBufferObject mVBONormals;
+    /// Vertex Buffer Object for the normals data
+    static openglframework::VertexBufferObject mVBONormals;
 
-        /// Vertex Buffer Object for the texture coords
-        static openglframework::VertexBufferObject mVBOTextureCoords;
+    /// Vertex Buffer Object for the texture coords
+    static openglframework::VertexBufferObject mVBOTextureCoords;
 
-        /// Vertex Buffer Object for the indices
-        static openglframework::VertexBufferObject mVBOIndices;
+    /// Vertex Buffer Object for the indices
+    static openglframework::VertexBufferObject mVBOIndices;
 
-        /// Vertex Array Object for the vertex data
-        static openglframework::VertexArrayObject mVAO;
+    /// Vertex Array Object for the vertex data
+    static openglframework::VertexArrayObject mVAO;
 
-        // Total number of capsules created
-        static int totalNbSpheres;
+    // Total number of capsules created
+    static int totalNbSpheres;
 
-        // -------------------- Methods -------------------- //
+    // -------------------- Methods -------------------- //
 
-        // Create the Vertex Buffer Objects used to render with OpenGL.
-        void createVBOAndVAO();
+    // Create the Vertex Buffer Objects used to render with OpenGL.
+    void createVBOAndVAO();
 
-    public :
+public :
 
-        // -------------------- Methods -------------------- //
+    // -------------------- Methods -------------------- //
 
-        /// Constructor
-        Sphere(float radius, rp3d::CollisionWorld* world, const std::string& meshFolderPath);
+    /// Constructor
+    Sphere(float radius, rp3d::CollisionWorld* world, const std::string& meshFolderPath);
 
-        /// Constructor
-        Sphere(float radius, float mass, rp3d::DynamicsWorld* dynamicsWorld, const std::string& meshFolderPath);
+    /// Constructor
+    Sphere(float radius, float mass, rp3d::DynamicsWorld* dynamicsWorld, const std::string& meshFolderPath);
 
-        /// Destructor
-        ~Sphere();
+    /// Destructor
+    ~Sphere();
 
-        /// Render the sphere at the correct position and with the correct orientation
-        void virtual render(openglframework::Shader& shader, const openglframework::Matrix4& worldToCameraMatrix) override;
+    /// Render the sphere at the correct position and with the correct orientation
+    void virtual render(openglframework::Shader& shader, const openglframework::Matrix4& worldToCameraMatrix) override;
 
-        /// Update the transform matrix of the object
-        virtual void updateTransform(float interpolationFactor) override;
+    /// Update the transform matrix of the object
+    virtual void updateTransform(float interpolationFactor) override;
 };
 
 // Update the transform matrix of the object

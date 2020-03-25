@@ -38,6 +38,7 @@ openglframework::Color SceneDemo::mYellowColorDemo = Color(0.9f, 0.88f, 0.145f, 
 openglframework::Color SceneDemo::mBlueColorDemo = Color(0, 0.66f, 0.95f, 1.0f);
 openglframework::Color SceneDemo::mOrangeColorDemo = Color(0.9f, 0.35f, 0, 1.0f);
 openglframework::Color SceneDemo::mPinkColorDemo = Color(0.83f, 0.48f, 0.64f, 1.0f);
+openglframework::Color SceneDemo::mGreenColorDemo = Color(0.0f, 0.95f, 0.3f, 1.0f);
 openglframework::Color SceneDemo::mRedColorDemo = Color(0.95f, 0, 0, 1.0f);
 int SceneDemo::mNbDemoColors = 4;
 openglframework::Color SceneDemo::mDemoColors[] = {SceneDemo::mYellowColorDemo, SceneDemo::mBlueColorDemo,
