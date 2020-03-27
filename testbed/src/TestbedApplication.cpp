@@ -99,34 +99,34 @@ void TestbedApplication::createScenes() {
     CubesScene* cubeScene = new CubesScene("Cubes", mEngineSettings);
     mScenes.push_back(cubeScene);
 
-    // Cube Stack scene
-    CubeStackScene* cubeStackScene = new CubeStackScene("Cube Stack", mEngineSettings);
-    mScenes.push_back(cubeStackScene);
-
-    // Joints scene
-    JointsScene* jointsScene = new JointsScene("Joints", mEngineSettings);
-    mScenes.push_back(jointsScene);
-
-    // Collision shapes scene
-    CollisionShapesScene* collisionShapesScene = new CollisionShapesScene("Collision Shapes", mEngineSettings);
-    mScenes.push_back(collisionShapesScene);
-
-    // Heightfield shape scene
-    HeightFieldScene* heightFieldScene = new HeightFieldScene("Heightfield", mEngineSettings);
-    mScenes.push_back(heightFieldScene);
-
-    // Raycast scene
-    RaycastScene* raycastScene = new RaycastScene("Raycast", mEngineSettings);
-    mScenes.push_back(raycastScene);
-
-    // Collision Detection scene
-    CollisionDetectionScene* collisionDetectionScene = new CollisionDetectionScene("Collision Detection",
-                                                                                   mEngineSettings);
-    mScenes.push_back(collisionDetectionScene);
-
-    // Concave Mesh scene
-    ConcaveMeshScene* concaveMeshScene = new ConcaveMeshScene("Concave Mesh", mEngineSettings);
-    mScenes.push_back(concaveMeshScene);
+//    // Cube Stack scene
+//    CubeStackScene* cubeStackScene = new CubeStackScene("Cube Stack", mEngineSettings);
+//    mScenes.push_back(cubeStackScene);
+//
+//    // Joints scene
+//    JointsScene* jointsScene = new JointsScene("Joints", mEngineSettings);
+//    mScenes.push_back(jointsScene);
+//
+//    // Collision shapes scene
+//    CollisionShapesScene* collisionShapesScene = new CollisionShapesScene("Collision Shapes", mEngineSettings);
+//    mScenes.push_back(collisionShapesScene);
+//
+//    // Heightfield shape scene
+//    HeightFieldScene* heightFieldScene = new HeightFieldScene("Heightfield", mEngineSettings);
+//    mScenes.push_back(heightFieldScene);
+//
+//    // Raycast scene
+//    RaycastScene* raycastScene = new RaycastScene("Raycast", mEngineSettings);
+//    mScenes.push_back(raycastScene);
+//
+//    // Collision Detection scene
+//    CollisionDetectionScene* collisionDetectionScene = new CollisionDetectionScene("Collision Detection",
+//                                                                                   mEngineSettings);
+//    mScenes.push_back(collisionDetectionScene);
+//
+//    // Concave Mesh scene
+//    ConcaveMeshScene* concaveMeshScene = new ConcaveMeshScene("Concave Mesh", mEngineSettings);
+//    mScenes.push_back(concaveMeshScene);
 
     // Dzhanibekovs Bolt scene
     auto* dzhanibekovScene = new DzhanibekovScene("Dzhanibekov", mEngineSettings);

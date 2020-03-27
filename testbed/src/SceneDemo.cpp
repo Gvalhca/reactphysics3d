@@ -114,10 +114,10 @@ void SceneDemo::update() {
     updateContactPoints();
 
 	// Update the position and orientation of the physics objects
-	for (std::vector<PhysicsObject*>::iterator it = mPhysicsObjects.begin(); it != mPhysicsObjects.end(); ++it) {
+	for (auto & mPhysicsObject : mPhysicsObjects) {
 
 		// Update the transform used for the rendering
-		(*it)->updateTransform(mInterpolationFactor);
+		mPhysicsObject->updateTransform(mInterpolationFactor);
 	}
 }
 

@@ -11,7 +11,7 @@
 #include "Box.h"
 #include "SceneDemo.h"
 #include "Sphere.h"
-
+#include "Drone.h"
 namespace dzhanibekovscene {
 
 // Constants
@@ -72,18 +72,21 @@ namespace dzhanibekovscene {
         /// Box for the floor
         Box* mFloor;
 
-        Sphere* mCentralSphere;
-        Sphere* mTopSphere;
-        Sphere* mBottomSphere;
-        Sphere* mLeftSphere;
-        Sphere* mRightSphere;
-        Line* mLineTopBottom;
-        Line* mLineLeftRight;
+//        Sphere* mCentralSphere;
+//        Sphere* mTopSphere;
+//        Sphere* mBottomSphere;
+//        Sphere* mLeftSphere;
+//        Sphere* mRightSphere;
+//        Line* mLineTopBottom;
+//        Line* mLineLeftRight;
+//
+//        rp3d::FixedJoint* mFixedJointCentralTop;
+//        rp3d::FixedJoint* mFixedJointCentralBottom;
+//        rp3d::FixedJoint* mFixedJointCentralLeft;
+//        rp3d::FixedJoint* mFixedJointCentralRight;
+        float initialHeight = 5;
 
-        rp3d::FixedJoint* mFixedJointCentralTop;
-        rp3d::FixedJoint* mFixedJointCentralBottom;
-        rp3d::FixedJoint* mFixedJointCentralLeft;
-        rp3d::FixedJoint* mFixedJointCentralRight;
+        Drone* mDrone;
         double simStartTime, simElapsedTime;
 
         // -------------------- Methods -------------------- //

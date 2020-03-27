@@ -37,10 +37,11 @@ uint CollisionWorld::mNbWorlds = 0;
 
 // Constructor
 CollisionWorld::CollisionWorld(const WorldSettings& worldSettings, Logger* logger, Profiler* profiler)
-               : mConfig(worldSettings), mCollisionDetection(this, mMemoryManager), mBodies(mMemoryManager.getPoolAllocator()), mCurrentBodyId(0),
-                 mFreeBodiesIds(mMemoryManager.getPoolAllocator()), mEventListener(nullptr), mName(worldSettings.worldName),
-                 mIsProfilerCreatedByUser(profiler != nullptr),
-                 mIsLoggerCreatedByUser(logger != nullptr) {
+        : mConfig(worldSettings), mCollisionDetection(this, mMemoryManager), mBodies(mMemoryManager.getPoolAllocator()),
+          mCurrentBodyId(0),
+          mFreeBodiesIds(mMemoryManager.getPoolAllocator()), mEventListener(nullptr), mName(worldSettings.worldName),
+          mIsProfilerCreatedByUser(profiler != nullptr),
+          mIsLoggerCreatedByUser(logger != nullptr) {
 
     // Automatically generate a name for the world
     if (mName == "") {
@@ -81,11 +82,11 @@ CollisionWorld::CollisionWorld(const WorldSettings& worldSettings, Logger* logge
     // If the user has not provided its own logger, we create one
     if (mLogger == nullptr) {
 
-       mLogger = new Logger();
+        mLogger = new Logger();
 
         // Add a log destination file
         uint logLevel = static_cast<uint>(Logger::Level::Information) | static_cast<uint>(Logger::Level::Warning) |
-                static_cast<uint>(Logger::Level::Error);
+                        static_cast<uint>(Logger::Level::Error);
         mLogger->addFileDestination("rp3d_log_" + mName + ".html", logLevel, Logger::Format::HTML);
     }
 
@@ -106,7 +107,7 @@ CollisionWorld::~CollisionWorld() {
              "Collision World: Collision world " + mName + " has been destroyed");
 
     // Destroy all the collision bodies that have not been removed
-    for (int i=mBodies.size() - 1 ; i >= 0; i--) {
+    for (int i = mBodies.size() - 1; i >= 0; i--) {
         destroyCollisionBody(mBodies[i]);
     }
 
@@ -145,9 +146,9 @@ CollisionBody* CollisionWorld::createCollisionBody(const Transform& transform) {
     assert(bodyID < std::numeric_limits<reactphysics3d::bodyindex>::max());
 
     // Create the collision body
-    CollisionBody* collisionBody = new (mMemoryManager.allocate(MemoryManager::AllocationType::Pool,
-                                        sizeof(CollisionBody)))
-                                        CollisionBody(transform, *this, bodyID);
+    CollisionBody* collisionBody = new(mMemoryManager.allocate(MemoryManager::AllocationType::Pool,
+                                                               sizeof(CollisionBody)))
+            CollisionBody(transform, *this, bodyID);
 
     assert(collisionBody != nullptr);
 
@@ -161,7 +162,7 @@ CollisionBody* CollisionWorld::createCollisionBody(const Transform& transform) {
 #endif
 
 #ifdef IS_LOGGING_ACTIVE
-   collisionBody->setLogger(mLogger);
+    collisionBody->setLogger(mLogger);
 #endif
 
     RP3D_LOG(mLogger, Logger::Level::Information, Logger::Category::Body,
@@ -207,8 +208,7 @@ bodyindex CollisionWorld::computeNextAvailableBodyId() {
     if (mFreeBodiesIds.size() != 0) {
         bodyID = mFreeBodiesIds[mFreeBodiesIds.size() - 1];
         mFreeBodiesIds.removeAt(mFreeBodiesIds.size() - 1);
-    }
-    else {
+    } else {
         bodyID = mCurrentBodyId;
         mCurrentBodyId++;
     }
@@ -253,7 +253,8 @@ bool CollisionWorld::testAABBOverlap(const CollisionBody* body1,
  * @param overlapCallback Pointer to the callback class to report overlap
  * @param categoryMaskBits bits mask used to filter the bodies to test overlap with
  */
-void CollisionWorld::testAABBOverlap(const AABB& aabb, OverlapCallback* overlapCallback, unsigned short categoryMaskBits) {
+void
+CollisionWorld::testAABBOverlap(const AABB& aabb, OverlapCallback* overlapCallback, unsigned short categoryMaskBits) {
     mCollisionDetection.testAABBOverlap(aabb, overlapCallback, categoryMaskBits);
 }
 
@@ -278,5 +279,5 @@ AABB CollisionWorld::getWorldAABB(const ProxyShape* proxyShape) const {
         return AABB();
     }
 
-   return mCollisionDetection.getWorldAABB(proxyShape);
+    return mCollisionDetection.getWorldAABB(proxyShape);
 }
