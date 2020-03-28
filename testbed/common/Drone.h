@@ -12,26 +12,26 @@
 class Drone : public openglframework::Object3D {
 private:
 
-    class DronePart {
+    class DroneModule {
     private:
         Sphere* physicsBody;
         rp3d::Vector3 defaultPosition;
 
     public:
-        DronePart(float radius, float mass, const rp3d::Vector3& defaultPosition, rp3d::DynamicsWorld* dynamicsWorld,
-                  const std::string& meshFolderPath);
+        DroneModule(float radius, float mass, const rp3d::Vector3& defaultPosition, rp3d::DynamicsWorld* dynamicsWorld,
+                    const std::string& meshFolderPath);
 
-        ~DronePart();
+        ~DroneModule();
 
         rp3d::Vector3 getDefaultPosition() const;
 
-        static DronePart* initDronePart(DronePart* dronePart, const openglframework::Color& color,
-                                        const openglframework::Color& sleepingColor);
+        static DroneModule* initDroneModule(DroneModule* droneModule, const openglframework::Color& color,
+                                          const openglframework::Color& sleepingColor);
 
         Sphere* getPhysicsBody() const;
     };
 
-    class Motor : public DronePart {
+    class Motor : public DroneModule {
     private:
         double throttle = 0;
     public:
@@ -41,7 +41,7 @@ private:
 
     std::vector<Motor*> motors;
     std::vector<rp3d::FixedJoint*> fixedJoints;
-    std::vector<DronePart*> droneParts;
+    std::vector<DroneModule*> droneModules;
 
 
 public:
@@ -62,8 +62,8 @@ public:
         return fixedJoints;
     }
 
-    inline std::vector<DronePart*> getDroneParts() const {
-        return droneParts;
+    inline std::vector<DroneModule*> getDroneModules() const {
+        return droneModules;
     }
 
 };

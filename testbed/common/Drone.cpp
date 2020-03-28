@@ -4,7 +4,7 @@
 
 #include "Drone.h"
 
-#define physBody dronePart->getPhysicsBody()
+#define physBody droneModule->getPhysicsBody()
 
 Drone::Drone(float frameSize, float droneMass, float motorRadius, float motorMass, rp3d::DynamicsWorld* world,
              const std::string& meshFolderPath) {
@@ -18,8 +18,8 @@ Drone::Drone(float frameSize, float droneMass, float motorRadius, float motorMas
     float centerMass = droneMass - 4 * motorMass;
     assert(centerMass > 0);
 
-    DronePart* mCentralSphere = new DronePart(0.1, centerMass, positionCentralSphere, world, meshFolderPath);
-    droneParts.push_back(mCentralSphere);
+    DroneModule* mCentralSphere = new DroneModule(0.1, centerMass, positionCentralSphere, world, meshFolderPath);
+    droneModules.push_back(mCentralSphere);
 
     // --------------- Create the top sphere --------------- //
 
@@ -27,8 +27,8 @@ Drone::Drone(float frameSize, float droneMass, float motorRadius, float motorMas
     rp3d::Vector3 positionTopSphere(0, 0, frameSize / 2);
 
     // Create a sphere and a corresponding rigid in the dynamics world
-    DronePart* mTopSphere = new DronePart(motorRadius, motorMass, positionTopSphere, world, meshFolderPath);
-    droneParts.push_back(mTopSphere);
+    DroneModule* mTopSphere = new DroneModule(motorRadius, motorMass, positionTopSphere, world, meshFolderPath);
+    droneModules.push_back(mTopSphere);
 
     // --------------- Create the bottom sphere --------------- //
 
@@ -36,8 +36,8 @@ Drone::Drone(float frameSize, float droneMass, float motorRadius, float motorMas
     rp3d::Vector3 positionBottomSphere(0, 0, -frameSize / 2);
 
     // Create a sphere and a corresponding rigid in the dynamics world
-    DronePart* mBottomSphere = new DronePart(motorRadius, motorMass, positionBottomSphere, world, meshFolderPath);
-    droneParts.push_back(mBottomSphere);
+    DroneModule* mBottomSphere = new DroneModule(motorRadius, motorMass, positionBottomSphere, world, meshFolderPath);
+    droneModules.push_back(mBottomSphere);
 
     // --------------- Create the left sphere --------------- //
 
@@ -45,8 +45,8 @@ Drone::Drone(float frameSize, float droneMass, float motorRadius, float motorMas
     rp3d::Vector3 positionLeftSphere(-frameSize / 2, 0, 0);
 
     // Create a sphere and a corresponding rigid in the dynamics world
-    DronePart* mLeftSphere = new DronePart(motorRadius, motorMass, positionLeftSphere, world, meshFolderPath);
-    droneParts.push_back(mLeftSphere);
+    DroneModule* mLeftSphere = new DroneModule(motorRadius, motorMass, positionLeftSphere, world, meshFolderPath);
+    droneModules.push_back(mLeftSphere);
 
     // --------------- Create the right sphere --------------- //
 
@@ -54,8 +54,8 @@ Drone::Drone(float frameSize, float droneMass, float motorRadius, float motorMas
     rp3d::Vector3 positionRightSphere(frameSize / 2, 0, 0);
 
     // Create a sphere and a corresponding rigid in the dynamics world
-    DronePart* mRightSphere = new DronePart(motorRadius, motorMass, positionRightSphere, world, meshFolderPath);
-    droneParts.push_back(mRightSphere);
+    DroneModule* mRightSphere = new DroneModule(motorRadius, motorMass, positionRightSphere, world, meshFolderPath);
+    droneModules.push_back(mRightSphere);
 
     // --------------- Create the central top fixed joint --------------- //
 
@@ -102,15 +102,15 @@ Drone::Drone(float frameSize, float droneMass, float motorRadius, float motorMas
 }
 
 void Drone::render(openglframework::Shader& shader, const openglframework::Matrix4& worldToCameraMatrix) {
-    for (auto& dronePart : droneParts) {
+    for (auto& droneModule : droneModules) {
         physBody->render(shader, worldToCameraMatrix);
     }
 }
 
-///TODO: First apply defaultTransform() to every dronePart object, Then apply setTransform() to them
+///TODO: First apply defaultTransform() to every droneModule object, Then apply setTransform() to them
 void Drone::setTransform(const rp3d::Transform& transform) {
-    for (auto& dronePart : droneParts) {
-        rp3d::Transform defaultTransform = rp3d::Transform(dronePart->getDefaultPosition(), rp3d::Quaternion::identity());
+    for (auto& droneModule : droneModules) {
+        rp3d::Transform defaultTransform = rp3d::Transform(droneModule->getDefaultPosition(), rp3d::Quaternion::identity());
         physBody->setTransform(transform * defaultTransform);
     }
 }
@@ -120,31 +120,31 @@ Drone::~Drone() = default;
 
 Drone::Motor::Motor(float propellerRadius, float mass, const rp3d::Vector3& defaultPosition,
                     rp3d::DynamicsWorld* dynamicsWorld,
-                    const std::string& meshFolderPath) : DronePart(propellerRadius, mass, defaultPosition,
-                                                                   dynamicsWorld,
-                                                                   meshFolderPath) {}
+                    const std::string& meshFolderPath) : DroneModule(propellerRadius, mass, defaultPosition,
+                                                                     dynamicsWorld,
+                                                                     meshFolderPath) {}
 
-Drone::DronePart::DronePart(float radius, float mass, const rp3d::Vector3& defaultPosition,
-                            rp3d::DynamicsWorld* dynamicsWorld, const std::string& meshFolderPath) :
+Drone::DroneModule::DroneModule(float radius, float mass, const rp3d::Vector3& defaultPosition,
+                                rp3d::DynamicsWorld* dynamicsWorld, const std::string& meshFolderPath) :
         physicsBody(new Sphere(radius, mass, dynamicsWorld, meshFolderPath)),
         defaultPosition(defaultPosition) {
     auto mYellowColor = openglframework::Color(0.9f, 0.88f, 0.145f, 1.0f);
     auto mRedColor = openglframework::Color(0.95f, 0, 0, 1.0f);
-    initDronePart(this, mYellowColor, mRedColor);
+    initDroneModule(this, mYellowColor, mRedColor);
 }
 
-rp3d::Vector3 Drone::DronePart::getDefaultPosition() const {
+rp3d::Vector3 Drone::DroneModule::getDefaultPosition() const {
     return this->defaultPosition;
 }
 
-Drone::DronePart::~DronePart() {
+Drone::DroneModule::~DroneModule() {
     delete physicsBody;
 }
 
-Drone::DronePart* Drone::DronePart::initDronePart(Drone::DronePart* dronePart, const openglframework::Color& color,
-                                                  const openglframework::Color& sleepingColor) {
+Drone::DroneModule* Drone::DroneModule::initDroneModule(Drone::DroneModule* droneModule, const openglframework::Color& color,
+                                                      const openglframework::Color& sleepingColor) {
 
-    physBody->setTransform(rp3d::Transform(dronePart->getDefaultPosition(), rp3d::Quaternion::identity()));
+    physBody->setTransform(rp3d::Transform(droneModule->getDefaultPosition(), rp3d::Quaternion::identity()));
 
     physBody->setColor(color);
     physBody->setSleepingColor(sleepingColor);
@@ -152,9 +152,9 @@ Drone::DronePart* Drone::DronePart::initDronePart(Drone::DronePart* dronePart, c
     rp3d::Material& materialSphere = physBody->getRigidBody()->getMaterial();
     materialSphere.setBounciness(rp3d::decimal(0.4));
 
-    return dronePart;
+    return droneModule;
 }
 
-Sphere* Drone::DronePart::getPhysicsBody() const {
+Sphere* Drone::DroneModule::getPhysicsBody() const {
     return this->physicsBody;
 }
