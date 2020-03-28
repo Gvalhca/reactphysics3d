@@ -21,8 +21,8 @@ DzhanibekovScene::DzhanibekovScene(const std::string& name, EngineSettings& sett
     setScenePosition(center, SCENE_RADIUS);
 
     // Gravity vector in the dynamics world
-    rp3d::Vector3 gravity(0, rp3d::decimal(-9.81), 0);
-//    rp3d::Vector3 gravity(0, 0, 0);
+//    rp3d::Vector3 gravity(0, rp3d::decimal(-9.81), 0);
+    rp3d::Vector3 gravity(0, 0, 0);
 
     rp3d::WorldSettings worldSettings;
     worldSettings.worldName = name;
@@ -117,14 +117,14 @@ void DzhanibekovScene::updatePhysics() {
 //        mLeftSphere->getRigidBody()->setAngularVelocity(rp3d::Vector3(10, 0, 0));
 
 //        mCentralSphere->getRigidBody()->setAngularVelocity(rp3d::Vector3(10, 0, 0));
-        rp3d::Vector3 force = rp3d::Vector3(10, 10, 10);
-        PhysicsObject* mTopSphere = mDrone->getDroneParts()[1];
+        rp3d::Vector3 force = rp3d::Vector3(0, 2, 0);
+        PhysicsObject* mTopSphere = mDrone->getDroneParts()[1]->getPhysicsBody();
         rp3d::Vector3 transformedForce = mTopSphere->getTransform() * force;
         mTopSphere->getRigidBody()->applyForceToCenterOfMass(transformedForce);
     }
 
-    PhysicsObject* mCentralSphere = mDrone->getDroneParts()[0];
-    //mCentralSphere->getRigidBody()->setLinearVelocity(rp3d::Vector3(0, 0, 0));
+    PhysicsObject* mCentralSphere = mDrone->getDroneParts()[0]->getPhysicsBody();
+    mCentralSphere->getRigidBody()->setLinearVelocity(rp3d::Vector3(0, 0, 0));
 
     SceneDemo::updatePhysics();
 }
@@ -132,71 +132,16 @@ void DzhanibekovScene::updatePhysics() {
 // Reset the scene
 void DzhanibekovScene::reset() {
 
-//    openglframework::Vector3 positionBox(0, 15, 5);
-//    openglframework::Vector3 boxDimension(1, 1, 1);
-//
-//    for (auto& mBallAndSocketJointChainBox : mBallAndSocketJointChainBoxes) {
-//
-//        // Initial position and orientation of the rigid body
-//        rp3d::Vector3 initPosition(positionBox.x, positionBox.y, positionBox.z);
-//        rp3d::Quaternion initOrientation = rp3d::Quaternion::identity();
-//        rp3d::Transform transform(initPosition, initOrientation);
-//
-//        // Create a box and a corresponding rigid in the dynamics world
-//        mBallAndSocketJointChainBox->setTransform(transform);
-//
-//        positionBox.y -= boxDimension.y + 0.5f;
-//    }
-
-//    mCentralSphere->getRigidBody()->setAngularVelocity(rp3d::Vector3(10, 0, 0));
-//    mTopSphere->getRigidBody()->setAngularVelocity(rp3d::Vector3(10, 0, 0));
-//    mRightSphere->getRigidBody()->setAngularVelocity(rp3d::Vector3(10, 0, 0));
-//    mLeftSphere->getRigidBody()->setAngularVelocity(rp3d::Vector3(10, 0, 0));
-
     simStartTime = static_cast<double>(mEngineSettings.elapsedTime);
 
     // --------------- Drone --------------- //
 
     float modelArm = 5;
 
-    rp3d::Vector3 positionDrone(0, initialHeight, 0);
+    rp3d::Vector3 positionDrone(0, 0, 0);
+
     mDrone->setTransform(rp3d::Transform(positionDrone, rp3d::Quaternion::identity()));
 
-//    openglframework::Vector3 positionSphere(0, modelHeight, 0);
-//    rp3d::Vector3 initPosition(positionSphere.x, positionSphere.y, positionSphere.z);
-//    rp3d::Quaternion initOrientation = rp3d::Quaternion::identity();
-//    rp3d::Transform transformCentralSphere(initPosition, initOrientation);
-//
-//    mCentralSphere->setTransform(transformCentralSphere);
-//
-//    openglframework::Vector3 positionTopSphere(0, modelHeight, modelArm * 2);
-//    initPosition = rp3d::Vector3(positionTopSphere.x, positionTopSphere.y, positionTopSphere.z);
-//    initOrientation = rp3d::Quaternion::identity();
-//    rp3d::Transform transformTopSphere(initPosition, initOrientation);
-//
-//    mTopSphere->setTransform(transformTopSphere);
-//
-//
-//    openglframework::Vector3 positionBottomSphere(0, modelHeight, -modelArm * 2);
-//    initPosition = rp3d::Vector3(positionBottomSphere.x, positionBottomSphere.y, positionBottomSphere.z);
-//    initOrientation = rp3d::Quaternion::identity();
-//    rp3d::Transform transformBottomSphere(initPosition, initOrientation);
-//
-//    mBottomSphere->setTransform(transformBottomSphere);
-//
-//    openglframework::Vector3 positionLeftSphere(-modelArm, modelHeight, 0);
-//    initPosition = rp3d::Vector3(positionLeftSphere.x, positionLeftSphere.y, positionLeftSphere.z);
-//    initOrientation = rp3d::Quaternion::identity();
-//    rp3d::Transform transformLeftSphere(initPosition, initOrientation);
-//
-//    mLeftSphere->setTransform(transformLeftSphere);
-//
-//    openglframework::Vector3 positionRightSphere(modelArm, modelHeight, 0);
-//    initPosition = rp3d::Vector3(positionRightSphere.x, positionRightSphere.y, positionRightSphere.z);
-//    initOrientation = rp3d::Quaternion::identity();
-//    rp3d::Transform transformRightSphere(initPosition, initOrientation);
-//
-//    mRightSphere->setTransform(transformRightSphere);
 
 #if TEST_FLAG
 
@@ -502,163 +447,11 @@ void DzhanibekovScene::createDrone() {
     float modelArm = 5;
 
     rp3d::Vector3 positionDrone(0, initialHeight, 0);
-    mDrone = new Drone(5.0, 1.0, 0.2, 1.0, getDynamicsWorld(), mMeshFolderPath);
+    mDrone = new Drone(5.0, 1.0, 0.2, 0.1, getDynamicsWorld(), mMeshFolderPath);
     mDrone->setTransform(rp3d::Transform(positionDrone, rp3d::Quaternion::identity()));
-//    for (auto& mDronePart : mDrone->getDroneParts()) {
-//        mPhysicsObjects.push_back(mDronePart);
-//    }
-
-    mPhysicsObjects.push_back(mDrone->getDroneParts()[0]);
-//    // --------------- Create the central sphere --------------- //
-//
-//    // Position of the sphere
-//    rp3d::Vector3 positionCentralSphere(0, modelHeight, 0);
-//
-//    // Create a sphere and a corresponding rigid in the dynamics world
-//    mCentralSphere = new Sphere(1.0, 1.0, getDynamicsWorld(), mMeshFolderPath);
-//    mCentralSphere->setTransform(rp3d::Transform(positionCentralSphere, rp3d::Quaternion::identity()));
-//
-//    mCentralSphere->setColor(mYellowColorDemo);
-//    mCentralSphere->setSleepingColor(mRedColorDemo);
-//
-//    rp3d::Material& materialSphere = mCentralSphere->getRigidBody()->getMaterial();
-//    materialSphere.setBounciness(rp3d::decimal(0.4));
-//    mPhysicsObjects.push_back(mCentralSphere);
-//
-////    mCentralSphere->getRigidBody()->setType(rp3d::BodyType::STATIC);
-////    mCentralSphere->getRigidBody()->setLinearDamping(1.0);
-//
-//    // --------------- Create the top sphere --------------- //
-//
-//    // Position of the sphere
-//    rp3d::Vector3 positionTopSphere(0, modelHeight, modelArm * 2);
-//
-//    // Create a sphere and a corresponding rigid in the dynamics world
-//    mTopSphere = new Sphere(1.0, 1.0, getDynamicsWorld(), mMeshFolderPath);
-//    mTopSphere->setTransform(rp3d::Transform(positionTopSphere, rp3d::Quaternion::identity()));
-//
-//    // Set the box color
-//    mTopSphere->setSleepingColor(mRedColorDemo);
-//    mTopSphere->setColor(mBlueColorDemo);
-//
-//    // Change the material properties of the rigid body
-//    rp3d::Material& materialSphere2 = mTopSphere->getRigidBody()->getMaterial();
-//    materialSphere2.setBounciness(rp3d::decimal(0.4));
-//    mPhysicsObjects.push_back(mTopSphere);
-//
-//    // --------------- Create the bottom sphere --------------- //
-//
-//    // Position of the sphere
-//    rp3d::Vector3 positionBottomSphere(0, modelHeight, -modelArm * 2);
-//
-//    // Create a sphere and a corresponding rigid in the dynamics world
-//    mBottomSphere = new Sphere(1.0, 1.0, getDynamicsWorld(), mMeshFolderPath);
-//    mBottomSphere->setTransform(rp3d::Transform(positionBottomSphere, rp3d::Quaternion::identity()));
-//
-//    // Set the box color
-//    mBottomSphere->setSleepingColor(mRedColorDemo);
-//    mBottomSphere->setColor(mOrangeColorDemo);
-//
-//    // Change the material properties of the rigid body
-//    rp3d::Material& materialBottomSphere = mBottomSphere->getRigidBody()->getMaterial();
-//    materialBottomSphere.setBounciness(rp3d::decimal(0.4));
-//    mPhysicsObjects.push_back(mBottomSphere);
-//
-//    // --------------- Create the left sphere --------------- //
-//
-//    // Position of the sphere
-//    rp3d::Vector3 positionLeftSphere(-modelArm, modelHeight, 0);
-//
-//    // Create a sphere and a corresponding rigid in the dynamics world
-//    mLeftSphere = new Sphere(1.0, 1.0, getDynamicsWorld(), mMeshFolderPath);
-//    mLeftSphere->setTransform(rp3d::Transform(positionLeftSphere, rp3d::Quaternion::identity()));
-//
-//    // Set the box color
-//    mLeftSphere->setSleepingColor(mRedColorDemo);
-//    mLeftSphere->setColor(mGreenColorDemo);
-//
-//    // Change the material properties of the rigid body
-//    rp3d::Material& materialLeftSphere = mLeftSphere->getRigidBody()->getMaterial();
-//    materialLeftSphere.setBounciness(rp3d::decimal(0.4));
-//    mPhysicsObjects.push_back(mLeftSphere);
-//
-//    // --------------- Create the right sphere --------------- //
-//
-//    // Position of the sphere
-//    rp3d::Vector3 positionRightSphere(modelArm, modelHeight, 0);
-//
-//    // Create a sphere and a corresponding rigid in the dynamics world
-//    mRightSphere = new Sphere(1.0, 0.5, getDynamicsWorld(), mMeshFolderPath);
-//    mRightSphere->setTransform(rp3d::Transform(positionRightSphere, rp3d::Quaternion::identity()));
-//
-//    // Set the box color
-//    mRightSphere->setSleepingColor(mRedColorDemo);
-//    mRightSphere->setColor(mPinkColorDemo);
-//
-//    // Change the material properties of the rigid body
-//    rp3d::Material& materialRightSphere = mRightSphere->getRigidBody()->getMaterial();
-//    materialRightSphere.setBounciness(rp3d::decimal(0.4));
-//    mPhysicsObjects.push_back(mRightSphere);
-//
-//
-//    // --------------- Create the central top fixed joint --------------- //
-//
-//    // Create the joint info object
-//    rp3d::RigidBody* topSphereBody = mTopSphere->getRigidBody();
-//    rp3d::RigidBody* centralSphereBody = mCentralSphere->getRigidBody();
-//    const rp3d::Vector3 anchorPointWorldSpace1(positionCentralSphere);
-//    rp3d::FixedJointInfo jointInfoTop(topSphereBody, centralSphereBody, anchorPointWorldSpace1);
-//    jointInfoTop.isCollisionEnabled = false;
-//
-//    // Create the joint in the dynamics world
-//    mFixedJointCentralTop = dynamic_cast<rp3d::FixedJoint*>(getDynamicsWorld()->createJoint(jointInfoTop));
-//
-//    // --------------- Create the central bottom fixed joint --------------- //
-//
-//    // Create the joint info object
-//    rp3d::RigidBody* bottomSphereBody = mBottomSphere->getRigidBody();
-//    rp3d::FixedJointInfo jointInfoBottom(bottomSphereBody, centralSphereBody, anchorPointWorldSpace1);
-//    jointInfoBottom.isCollisionEnabled = false;
-//
-//    // Create the joint in the dynamics world
-//    mFixedJointCentralBottom = dynamic_cast<rp3d::FixedJoint*>(getDynamicsWorld()->createJoint(jointInfoBottom));
-//
-//    // --------------- Create the central left fixed joint --------------- //
-//
-//    // Create the joint info object
-//    rp3d::RigidBody* leftSphereBody = mLeftSphere->getRigidBody();
-//    rp3d::FixedJointInfo jointInfoLeft(leftSphereBody, centralSphereBody, anchorPointWorldSpace1);
-//    jointInfoLeft.isCollisionEnabled = false;
-//
-//    // Create the joint in the dynamics world
-//    mFixedJointCentralLeft = dynamic_cast<rp3d::FixedJoint*>(getDynamicsWorld()->createJoint(jointInfoLeft));
-//
-//    // --------------- Create the central right fixed joint --------------- //
-//
-//    // Create the joint info object
-//    rp3d::RigidBody* rightSphereBody = mRightSphere->getRigidBody();
-//    rp3d::FixedJointInfo jointInfoRight(rightSphereBody, centralSphereBody, anchorPointWorldSpace1);
-//    jointInfoRight.isCollisionEnabled = false;
-//
-//    // Create the joint in the dynamics world
-//    mFixedJointCentralRight = dynamic_cast<rp3d::FixedJoint*>(getDynamicsWorld()->createJoint(jointInfoRight));
-
-    // ---------------- Create Lines -------------- //
-
-//    mLineTopBottom = new Line(positionTopSphere, positionBottomSphere);
-
-
-//
-//    // --------------- Create the second fixed joint --------------- //
-//
-//    // Create the joint info object
-//    rp3d::RigidBody* body2 = mFixedJointBox2->getRigidBody();
-//    const rp3d::Vector3 anchorPointWorldSpace2(-5, 7, 0);
-//    rp3d::FixedJointInfo jointInfo2(body2, propellerBody, anchorPointWorldSpace2);
-//    jointInfo2.isCollisionEnabled = false;
-//
-//    // Create the joint in the dynamics world
-//    mFixedJoint2 = dynamic_cast<rp3d::FixedJoint*>(getDynamicsWorld()->createJoint(jointInfo2));
+    for (auto& mDronePart : mDrone->getDroneParts()) {
+        mPhysicsObjects.push_back(mDronePart->getPhysicsBody());
+    }
 }
 
 
