@@ -9,24 +9,25 @@
 #include "openglframework.h"
 #include "Sphere.h"
 
+
 class Drone : public openglframework::Object3D {
 private:
 
     class DroneModule {
-    private:
+    protected:
         Sphere* physicsBody;
-        rp3d::Vector3 defaultPosition;
+        rp3d::Transform defaultTransform;
+
+        static DroneModule* initDroneModule(DroneModule* droneModule, const openglframework::Color& color);
 
     public:
-        DroneModule(float radius, float mass, const rp3d::Vector3& defaultPosition, rp3d::DynamicsWorld* dynamicsWorld,
+        DroneModule(float mass, const openglframework::Color& color, const rp3d::Transform& defaultTransform,
+                    rp3d::DynamicsWorld* dynamicsWorld,
                     const std::string& meshFolderPath);
 
         ~DroneModule();
 
-        rp3d::Vector3 getDefaultPosition() const;
-
-        static DroneModule* initDroneModule(DroneModule* droneModule, const openglframework::Color& color,
-                                          const openglframework::Color& sleepingColor);
+        rp3d::Transform getDefaultTransform() const;
 
         Sphere* getPhysicsBody() const;
     };
@@ -35,8 +36,11 @@ private:
     private:
         double throttle = 0;
     public:
-        Motor(float radius, float mass, const rp3d::Vector3& defaultPosition, rp3d::DynamicsWorld* dynamicsWorld,
+        Motor(float propellerRadius, float mass, const openglframework::Color& color,
+              const rp3d::Transform& defaultTransform,
+              rp3d::DynamicsWorld* dynamicsWorld,
               const std::string& meshFolderPath);
+
     };
 
     std::vector<Motor*> motors;
