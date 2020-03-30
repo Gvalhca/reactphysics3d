@@ -21,8 +21,8 @@ DzhanibekovScene::DzhanibekovScene(const std::string& name, EngineSettings& sett
     setScenePosition(center, SCENE_RADIUS);
 
     // Gravity vector in the dynamics world
-    rp3d::Vector3 gravity(0, rp3d::decimal(-9.81), 0);
-//    rp3d::Vector3 gravity(0, 0, 0);
+//    rp3d::Vector3 gravity(0, rp3d::decimal(-9.81), 0);
+    rp3d::Vector3 gravity(0, 0, 0);
 
     rp3d::WorldSettings worldSettings;
     worldSettings.worldName = name;
@@ -93,17 +93,20 @@ void DzhanibekovScene::updatePhysics() {
     std::cout << "elapsed time: " << elapsedTime << std::endl;
     if (elapsedTime < 5.0) {
 //        mCentralSphere->getRigidBody()->setAngularVelocity(rp3d::Vector3(10, 0, 0));
-//        mTopSphere->getRigidBody()->setAngularVelocity(rp3d::Vector3(10, 0, 0));
+//        mDroneModule->getRigidBody()->setAngularVelocity(rp3d::Vector3(10, 0, 0));
 //        mRightSphere->getRigidBody()->setAngularVelocity(rp3d::Vector3(10, 0, 0));
 //        mLeftSphere->getRigidBody()->setAngularVelocity(rp3d::Vector3(10, 0, 0));
 
 //        mCentralSphere->getRigidBody()->setAngularVelocity(rp3d::Vector3(10, 0, 0));
         rp3d::Vector3 force = rp3d::Vector3(0, 1, 0);
-        PhysicsObject* mTopSphere = mDrone->getDroneModules()[1]->getPhysicsBody();
-        rp3d::Vector3 transformedForce = mTopSphere->getTransform().getOrientation() * force;
-//        mTopSphere->getRigidBody()->applyForceToCenterOfMass(transformedForce);
+//        for (auto& droneModule : mDrone->getDroneModules()) {
+//            droneModule->getPhysicsBody()->getRigidBody()->applyForceToCenterOfMass(force);
+//        }
+        PhysicsObject* mDroneModule = mDrone->getDroneModules()[1]->getPhysicsBody();
+        rp3d::Vector3 transformedForce = mDroneModule->getTransform().getOrientation() * force;
+        mDroneModule->getRigidBody()->applyForceToCenterOfMass(transformedForce);
 
-//#define topPosition mTopSphere->getTransform().getPosition()
+//#define topPosition mDroneModule->getTransform().getPosition()
 //        openglframework::Vector3 point1(topPosition.x, topPosition.y, topPosition.z);
 //        rp3d::Vector3 forcePositionEnd = topPosition + transformedForce;
 //        openglframework::Vector3 point2(forcePositionEnd.x, forcePositionEnd.y, forcePositionEnd.z);
@@ -158,7 +161,7 @@ void DzhanibekovScene::createDrone() {
     float modelArm = 5;
 
     rp3d::Vector3 positionDrone(0, initialHeight, 0);
-    mDrone = new Drone(5.0, 1.0, 0.2, 0.1, getDynamicsWorld(), mMeshFolderPath);
+    mDrone = new Drone(0.088, 0.12, 0.02, 0.01, getDynamicsWorld(), mMeshFolderPath);
     mDrone->setTransform(rp3d::Transform(positionDrone, rp3d::Quaternion::identity()));
     for (auto& mDroneModule : mDrone->getDroneModules()) {
         mPhysicsObjects.push_back(mDroneModule->getPhysicsBody());
