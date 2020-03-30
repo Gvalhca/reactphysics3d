@@ -107,6 +107,7 @@ void Drone::setTransform(const rp3d::Transform& transform) {
     for (auto& droneModule : droneModules) {
         rp3d::Transform defaultTransform = droneModule->getDefaultTransform();
         rp3d::Transform modifiedTransform = transform * defaultTransform;
+        _altitude = modifiedTransform.getPosition().y;
         physBody->setTransform(modifiedTransform);
     }
 }

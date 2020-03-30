@@ -15,13 +15,7 @@ private:
 
     double _mass;
     double _throttle = 0;
-
-    PID hoverPID{0.7, 0.35, 0.35};
-
-    class Stabilizer {
-
-    };
-
+    double _altitude;
     class DroneModule {
     protected:
         Sphere* physicsBody;

@@ -96,7 +96,7 @@ SET(COMMON_SOURCES
     common/PerlinNoise.cpp
     common/AABB.h
     common/AABB.cpp
-        common/Drone.cpp common/Drone.h)
+        common/Drone.cpp common/Drone.h common/Stabilizer.cpp common/Stabilizer.h)
 
 # Examples scenes source files
 SET(SCENES_SOURCES
