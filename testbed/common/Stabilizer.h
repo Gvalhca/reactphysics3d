@@ -10,12 +10,12 @@
 
 class Stabilizer {
 private:
-    PID hoverPID{0.7, 0.35, 0.35};
-    double _targetAlt;
-
+    PID _hoverPID;
+    double _targetAltitude;
 public:
-    Stabilizer();
-    double getThrottle(double currentAlt, double targetAlt, double dt)
+    Stabilizer(PID hoverPID);
+    double computePwm(double currentAltitude, double dt);
+    void setTargetParameters(double targetAltitude);
     ~Stabilizer();
 };
 

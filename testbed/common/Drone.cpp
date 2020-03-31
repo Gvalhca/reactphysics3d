@@ -6,6 +6,9 @@
 
 Drone::Drone(double frameSize, double droneMass, double motorRadius, double motorMass, rp3d::DynamicsWorld* world,
              const std::string& meshFolderPath) : _mass(droneMass) {
+    PID hoverPID(0.75, 0.35, 0.35);
+    _stabilizer = new Stabilizer(hoverPID);
+
     double arm = frameSize / 2;
     openglframework::Color mBlueColor = openglframework::Color(0, 0.66f, 0.95f, 1.0f);
     openglframework::Color mGreenColor = openglframework::Color(0.0f, 0.95f, 0.3f, 1.0f);
@@ -107,7 +110,7 @@ void Drone::setTransform(const rp3d::Transform& transform) {
     for (auto& droneModule : droneModules) {
         rp3d::Transform defaultTransform = droneModule->getDefaultTransform();
         rp3d::Transform modifiedTransform = transform * defaultTransform;
-        _altitude = modifiedTransform.getPosition().y;
+        //_altitude = modifiedTransform.getPosition().y;
         physBody->setTransform(modifiedTransform);
     }
 }
@@ -133,7 +136,9 @@ void Drone::updatePhysics() {
     }
 }
 
-Drone::~Drone() = default;
+Drone::~Drone() {
+    delete _stabilizer;
+};
 
 
 Drone::Motor::Motor(double propellerRadius, double mass, double maxpwm, const openglframework::Color& color,
@@ -144,10 +149,10 @@ Drone::Motor::Motor(double propellerRadius, double mass, double maxpwm, const op
 Drone::DroneModule::DroneModule(double mass, const openglframework::Color& color,
                                 const rp3d::Transform& defaultTransform, rp3d::DynamicsWorld* dynamicsWorld,
                                 const std::string& meshFolderPath) :
-        physicsBody(new Sphere(0.2, mass, dynamicsWorld, meshFolderPath)),
+        _physicsBody(new Sphere(0.2, mass, dynamicsWorld, meshFolderPath)),
         defaultTransform(defaultTransform) {
 
-    physicsBody->setTransform(defaultTransform);
+    _physicsBody->setTransform(defaultTransform);
 
     this->getPhysicsBody()->setColor(color);
     auto mRedColor = openglframework::Color(0.95f, 0, 0, 1.0f);
@@ -162,10 +167,10 @@ rp3d::Transform Drone::DroneModule::getDefaultTransform() const {
 }
 
 Drone::DroneModule::~DroneModule() {
-    delete physicsBody;
+    delete _physicsBody;
 }
 
 Sphere* Drone::DroneModule::getPhysicsBody() const {
-    return physicsBody;
+    return _physicsBody;
 }
 

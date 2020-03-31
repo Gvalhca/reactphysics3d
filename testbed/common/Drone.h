@@ -9,16 +9,29 @@
 #include "openglframework.h"
 #include "Sphere.h"
 #include "pid.h"
+#include "Stabilizer.h"
 
 class Drone : public openglframework::Object3D {
 private:
 
     double _mass;
     double _throttle = 0;
-    double _altitude;
+    Stabilizer* _stabilizer;
+    class Barometer {
+    private:
+        double _altitude;
+    public:
+#define dronePosition drone->getCentralModule()->getPhysicsBody()->getTransform().getPosition()
+        explicit Barometer(Drone* drone) : _altitude(dronePosition.y) {};
+        ~Barometer();
+        double getAltitude(Drone* drone) {
+            _altitude = dronePosition.y;
+        }
+    };
+
     class DroneModule {
     protected:
-        Sphere* physicsBody;
+        Sphere* _physicsBody;
         rp3d::Transform defaultTransform;
 
     public:
@@ -60,8 +73,8 @@ private:
 
         inline void updatePhysics() {
             rp3d::Vector3 liftingForce(0, _pwm, 0);
-            rp3d::Vector3 transformedForce = physicsBody->getTransform().getOrientation() * liftingForce;
-            physicsBody->getRigidBody()->applyForceToCenterOfMass(transformedForce);
+            rp3d::Vector3 transformedForce = _physicsBody->getTransform().getOrientation() * liftingForce;
+            _physicsBody->getRigidBody()->applyForceToCenterOfMass(transformedForce);
         }
 
     };
@@ -70,17 +83,18 @@ private:
     std::vector<rp3d::FixedJoint*> fixedJoints;
     std::vector<DroneModule*> droneModules;
 
+    Barometer* _barometer;
     static rp3d::FixedJointInfo
     generateFrameInfo(DroneModule* firstModule, DroneModule* secondModule, const rp3d::Vector3& anchorPoint);
 
 public:
 
-    enum {
+    typedef enum {
         MOTOR_FR = 0,
         MOTOR_FL = 1,
         MOTOR_BR = 2,
         MOTOR_BL = 3,
-    };
+    } motorsNames;
 
     Drone(double frameSize, double droneMass, double motorRadius, double motorMass, rp3d::DynamicsWorld* world,
           const std::string& meshFolderPath);
@@ -107,6 +121,9 @@ public:
         return droneModules;
     }
 
+    inline DroneModule* getCentralModule() const {
+        return droneModules[0];
+    }
 
 };
 

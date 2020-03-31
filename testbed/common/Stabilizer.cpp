@@ -3,8 +3,14 @@
 //
 
 #include "Stabilizer.h"
+#include "Drone.h"
 
-double Stabilizer::getThrottle(double currentAlt, double targetAlt, double dt) {
-    _targetAlt = targetAlt;
-    return hoverPID.calculate(dt, targetAlt,currentAlt);
+double Stabilizer::computePwm(Drone* drone, double currentAltitude, double dt) {
+    double thrust = _hoverPID.calculate(dt, _targetAltitude, currentAltitude);
 }
+
+void Stabilizer::setTargetParameters(double targetAltitude) {
+    _targetAltitude = targetAltitude;
+}
+
+Stabilizer::Stabilizer(PID hoverPID) : _hoverPID(hoverPID) {}
