@@ -1,16 +1,14 @@
-//
-// Created by kirill on 30.03.2020.
-//
 
 #include "Stabilizer.h"
-#include "Drone.h"
 
-double Stabilizer::computePwm(Drone* drone, double currentAltitude, double dt) {
-    double thrust = _hoverPID.calculate(dt, _targetAltitude, currentAltitude);
+namespace drone {
+
+    double Drone::Stabilizer::computePwm(const Drone& drone, double dt) {
+        double addThrust = _hoverPID.calculate(dt, _targetAltitude, drone.getAltitude());
+        for (const auto& motor : drone.getMotors()) {
+            double thrust = motor->getPwm() + addThrust;
+            motor->setPwm(thrust);
+        }
+    }
+
 }
-
-void Stabilizer::setTargetParameters(double targetAltitude) {
-    _targetAltitude = targetAltitude;
-}
-
-Stabilizer::Stabilizer(PID hoverPID) : _hoverPID(hoverPID) {}

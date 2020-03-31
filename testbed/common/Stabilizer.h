@@ -6,18 +6,28 @@
 #define REACTPHYSICS3D_STABILIZER_H
 
 
-#include <pid.h>
+#include "pid.h"
+#include "PhysicsObject.h"
+#include "Motor.h"
+#include "Drone.h"
 
-class Stabilizer {
-private:
-    PID _hoverPID;
-    double _targetAltitude;
-public:
-    Stabilizer(PID hoverPID);
-    double computePwm(double currentAltitude, double dt);
-    void setTargetParameters(double targetAltitude);
-    ~Stabilizer();
-};
+namespace drone {
+    class Drone::Stabilizer {
+    private:
+        PID _hoverPID;
+        double _targetAltitude;
 
+    public:
+        Stabilizer(const PID& hoverPID) : _hoverPID(hoverPID) {};
+
+        double computePwm(const Drone& drone, double dt);
+
+        inline void setTargetParameters(double targetAltitude) {
+            _targetAltitude = targetAltitude;
+        };
+
+        ~Stabilizer() = default;
+    };
+}
 
 #endif //REACTPHYSICS3D_STABILIZER_H

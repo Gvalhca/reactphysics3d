@@ -1,6 +1,3 @@
-//
-// Created by kirill on 23.03.2020.
-//
 
 #ifndef REACTPHYSICS3D_DZHANIBEKOVSCENE_H
 #define REACTPHYSICS3D_DZHANIBEKOVSCENE_H
@@ -12,8 +9,9 @@
 #include "SceneDemo.h"
 #include "Sphere.h"
 #include "Drone.h"
-namespace dzhanibekovscene {
 
+namespace dzhanibekovscene {
+using namespace drone;
 // Constants
     const float SCENE_RADIUS = 30.0f;
     const openglframework::Vector3 BOX_SIZE(2, 2, 2);           // Box dimensions in meters
