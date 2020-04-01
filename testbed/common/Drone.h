@@ -15,7 +15,9 @@ namespace drone {
     class Drone : public openglframework::Object3D {
     private:
         class Stabilizer;
+
         class Barometer;
+
         double _mass;
         double _throttle = 0;
         Stabilizer* _stabilizer = 0;
@@ -25,7 +27,7 @@ namespace drone {
         std::vector<rp3d::FixedJoint*> fixedJoints;
         std::vector<DroneModule*> droneModules;
 
-        rp3d::FixedJointInfo
+        static rp3d::FixedJointInfo
         generateFrameInfo(DroneModule* firstModule, DroneModule* secondModule, const rp3d::Vector3& anchorPoint);
 
         void createMotors(double frameSize, double motorRadius, double motorMass, rp3d::DynamicsWorld* world,
@@ -56,7 +58,17 @@ namespace drone {
             return getCentralModule()->getPhysicsBody()->getTransform();
         }
 
-        void setMotorsMaxPwm(double maxPwm);
+        inline void setMotorsMaxPwm(double maxPwm) {
+            for (const auto& motor : motors) {
+                motor->setMaxPwm(maxPwm);
+            }
+        };
+
+        inline void setMotorsPwm(double pwm) {
+            for (const auto& motor : motors) {
+                motor->setPwm(pwm);
+            }
+        }
 
         inline std::vector<Motor*> getMotors() const {
             return motors;
@@ -77,6 +89,8 @@ namespace drone {
         double getAltitude() const;
 
         void hover();
+
+        void reset();
     };
 }
 #endif //REACTPHYSICS3D_DRONE_H

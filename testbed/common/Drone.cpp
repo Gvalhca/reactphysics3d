@@ -55,12 +55,6 @@ namespace drone {
         return jointInfoTop;
     }
 
-    void Drone::setMotorsMaxPwm(double maxPwm) {
-        for (auto& motor : motors) {
-            motor->setMaxPwm(maxPwm);
-        }
-    }
-
     void Drone::updatePhysics(double dt) {
         _stabilizer->computePwm(*this, dt);
         for (auto& motor : motors) {
@@ -135,22 +129,22 @@ namespace drone {
         // --------------- Create the central top fixed joint --------------- //
         // Create the joint in the dynamics world
         fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
-                generateFrameInfo(motors[MOTOR_FR], centralModule, centralModulePosition))));
+                generateFrameInfo(motors[MOTOR_FR], centralModule, motors[MOTOR_FR]->getDefaultTransform().getPosition()))));
 
         // --------------- Create the central bottom fixed joint --------------- //
         // Create the joint in the dynamics world
         fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
-                generateFrameInfo(motors[MOTOR_BL], centralModule, centralModulePosition))));
+                generateFrameInfo(motors[MOTOR_BL], centralModule, motors[MOTOR_BL]->getDefaultTransform().getPosition()))));
 
         // --------------- Create the central left fixed joint --------------- //
         // Create the joint in the dynamics world
         fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
-                generateFrameInfo(motors[MOTOR_BR], centralModule, centralModulePosition))));
+                generateFrameInfo(motors[MOTOR_BR], centralModule, motors[MOTOR_BR]->getDefaultTransform().getPosition()))));
 
         // --------------- Create the central right fixed joint --------------- //
         // Create the joint in the dynamics world
         fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
-                generateFrameInfo(motors[MOTOR_FL], centralModule, centralModulePosition))));
+                generateFrameInfo(motors[MOTOR_FL], centralModule, motors[MOTOR_FL]->getDefaultTransform().getPosition()))));
     }
 
     double Drone::getAltitude() const {
@@ -159,6 +153,12 @@ namespace drone {
 
     void Drone::hover() {
         _stabilizer->setTargetParameters(getAltitude());
+//        _stabilizer->setTargetParameters(5.0);
+    }
+
+    void Drone::reset() {
+        setMotorsPwm(0);
+        _stabilizer->reset();
     };
 
 

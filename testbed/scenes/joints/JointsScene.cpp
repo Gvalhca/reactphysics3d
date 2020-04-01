@@ -60,7 +60,7 @@ JointsScene::JointsScene(const std::string& name, EngineSettings& settings)
     createPropellerHingeJoint();
 
     // Create the Fixed joint
-    createFixedJoints();
+//    createFixedJoints();
 
     // Create the floor
     createFloor();
@@ -178,23 +178,23 @@ void JointsScene::reset() {
 
     // --------------- Fixed joint --------------- //
 
-    // Position of the box
-    positionBox1 = openglframework::Vector3(5, 7, 0);
-    initPosition = rp3d::Vector3(positionBox1.x, positionBox1.y, positionBox1.z);
-    initOrientation = rp3d::Quaternion::identity();
-    rp3d::Transform transformFixedBox1(initPosition, initOrientation);
-
-    // Create a box and a corresponding rigid in the dynamics world
-    mFixedJointBox1->setTransform(transformFixedBox1);
-
-    // Position of the box
-    positionBox2 = openglframework::Vector3(-5, 7, 0);
-    initPosition = rp3d::Vector3(positionBox2.x, positionBox2.y, positionBox2.z);
-    initOrientation = rp3d::Quaternion::identity();
-    rp3d::Transform transformFixedBox2(initPosition, initOrientation);
-
-    // Create a box and a corresponding rigid in the dynamics world
-    mFixedJointBox2->setTransform(transformFixedBox2);
+//    // Position of the box
+//    positionBox1 = openglframework::Vector3(5, 7, 0);
+//    initPosition = rp3d::Vector3(positionBox1.x, positionBox1.y, positionBox1.z);
+//    initOrientation = rp3d::Quaternion::identity();
+//    rp3d::Transform transformFixedBox1(initPosition, initOrientation);
+//
+//    // Create a box and a corresponding rigid in the dynamics world
+//    mFixedJointBox1->setTransform(transformFixedBox1);
+//
+//    // Position of the box
+//    positionBox2 = openglframework::Vector3(-5, 7, 0);
+//    initPosition = rp3d::Vector3(positionBox2.x, positionBox2.y, positionBox2.z);
+//    initOrientation = rp3d::Quaternion::identity();
+//    rp3d::Transform transformFixedBox2(initPosition, initOrientation);
+//
+//    // Create a box and a corresponding rigid in the dynamics world
+//    mFixedJointBox2->setTransform(transformFixedBox2);
 }
 
 // Create the boxes and joints for the Ball-and-Socket joint example

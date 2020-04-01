@@ -103,9 +103,9 @@ void TestbedApplication::createScenes() {
 //    CubeStackScene* cubeStackScene = new CubeStackScene("Cube Stack", mEngineSettings);
 //    mScenes.push_back(cubeStackScene);
 //
-//    // Joints scene
-//    JointsScene* jointsScene = new JointsScene("Joints", mEngineSettings);
-//    mScenes.push_back(jointsScene);
+    // Joints scene
+    JointsScene* jointsScene = new JointsScene("Joints", mEngineSettings);
+    mScenes.push_back(jointsScene);
 //
 //    // Collision shapes scene
 //    CollisionShapesScene* collisionShapesScene = new CollisionShapesScene("Collision Shapes", mEngineSettings);

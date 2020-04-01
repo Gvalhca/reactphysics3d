@@ -11,8 +11,11 @@ public:
 
     ~PIDImpl();
 
+    PIDImpl(const PIDImpl&);
+
     double calculate(double dt, double wantedPoint, double currentPoint);
 
+    void reset();
 private:
     double _dt;
     double _max;
@@ -39,6 +42,12 @@ double PID::calculate(double dt, double wantedPoint, double currentPoint) {
 
 PID::~PID() {
     delete pimpl;
+}
+
+PID::PID(const PID& pid) : pimpl(new PIDImpl(*(pid.pimpl))) {}
+
+void PID::reset() {
+    pimpl->reset();
 }
 
 
@@ -86,6 +95,23 @@ double PIDImpl::calculate(double dt, double wantedPoint, double currentPoint) {
     _pre_error = error;
 
     return output;
+}
+
+PIDImpl::PIDImpl(const PIDImpl& pidImpl) {
+    _dt = pidImpl._dt;
+    _max = pidImpl._max;
+    _min = pidImpl._min;
+    _Kp = pidImpl._Kp;
+    _Kd = pidImpl._Kd;
+    _Ki = pidImpl._Ki;
+    _pre_error = pidImpl._pre_error;
+    _integral = pidImpl._integral;
+}
+
+void PIDImpl::reset() {
+    _dt = 0;
+    _pre_error = 0;
+    _integral = 0;
 }
 
 PIDImpl::~PIDImpl()
