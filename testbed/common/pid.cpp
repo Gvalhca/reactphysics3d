@@ -16,6 +16,9 @@ public:
     double calculate(double dt, double wantedPoint, double currentPoint);
 
     void reset();
+
+    void setMinMax(double min, double max);
+
 private:
     double _dt;
     double _max;
@@ -36,8 +39,8 @@ PID::PID(double Kp, double Kd, double Ki) {
     pimpl = new PIDImpl(std::numeric_limits<double>::max(), std::numeric_limits<double>::min(), Kp, Kd, Ki);
 }
 
-double PID::calculate(double dt, double wantedPoint, double currentPoint) {
-    return pimpl->calculate(dt, wantedPoint, currentPoint);
+double PID::calculate(double dt, double targetPoint, double currentPoint) {
+    return pimpl->calculate(dt, targetPoint, currentPoint);
 }
 
 PID::~PID() {
@@ -48,6 +51,10 @@ PID::PID(const PID& pid) : pimpl(new PIDImpl(*(pid.pimpl))) {}
 
 void PID::reset() {
     pimpl->reset();
+}
+
+void PID::setMinMax(double min, double max) {
+    pimpl->setMinMax(min, max);
 }
 
 
@@ -113,6 +120,12 @@ void PIDImpl::reset() {
     _pre_error = 0;
     _integral = 0;
 }
+
+void PIDImpl::setMinMax(double min, double max) {
+    _min = min;
+    _max = max;
+}
+
 
 PIDImpl::~PIDImpl()
 = default;

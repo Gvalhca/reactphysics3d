@@ -3,37 +3,52 @@
 
 namespace drone {
 
-    double Drone::Stabilizer::computePwm(const Drone& drone, double dt) {
-        double addThrust = computeHoverMode(drone, dt);
-        for (const auto& motor : drone.getMotors()) {
+    double Stabilizer::computePwm(const std::vector<Motor*>& motors, double dt) {
+        double addThrust = computeHoverMode(dt);
+        for (const auto& motor : motors) {
             motor->setPwm(addThrust);
         }
     }
 
-    double Drone::Stabilizer::computeHoverMode(const Drone& drone, double dt) {
-        double currentAltitude = drone.getAltitude();
-        double thrust = _pids[HOVER_PID]->calculate(dt, _targetAltitude, currentAltitude);
+    double Stabilizer::computeHoverMode(double dt) {
+        std::cout << "Current Altitude: " << _currentParams.getAltitude()
+                  << " Target Altitude: " << _targetParams.getAltitude()
+                  << " Current Pitch: " << _currentParams.getAxis().x
+                  << " Roll: " << _currentParams.getAxis().y
+                  << " Yaw: " << _currentParams.getAxis().z
+                  << std::endl;
+        double currentAltitude = _currentParams.getAltitude();
+        double thrust = _quadPids[HOVER_PID].calculate(dt, _targetParams.getAltitude(), currentAltitude);
         return thrust;
     }
 
-    void Drone::Stabilizer::setTargetParameters(double targetAltitude) {
-        _targetAltitude = targetAltitude;
+    void Stabilizer::reset() {
+        _quadPids.reset();
+        _targetParams.setAltitude(0);
     }
 
-    void Drone::Stabilizer::reset() {
-        for (const auto& pid : _pids) {
-            pid->reset();
+    void Stabilizer::setFlightMode(flightModes flightMode) {
+        _flightMode = flightMode;
+        if (flightMode == STAB_HEIGHT) {
+            _targetParams.setAltitude(_currentParams.getAltitude());
         }
-        _targetAltitude = 0;
     }
 
-    Drone::Stabilizer::Stabilizer(const PID& hoverPID, const PID& pitchPID, const PID& rollPID, const PID& yawPID) {
-        _pids.push_back(new PID(hoverPID));
-        _pids.push_back(new PID(pitchPID));
-        _pids.push_back(new PID(rollPID));
-        _pids.push_back(new PID(yawPID));
+    Stabilizer::~Stabilizer() {}
+
+    void Stabilizer::setTargetParameters(double targetAltitude, const rp3d::Vector3& targetAxis) {
+        _targetParams.setParameters(targetAltitude, targetAxis);
     }
 
+    Stabilizer::Stabilizer(QuadPids& quadPids, const QuadAttitudeParameters& currentParameters,
+                           const QuadAttitudeParameters& targetParameters, flightModes flightMode) :
+            _quadPids(quadPids), _targetParams(targetParameters), _currentParams(currentParameters) {
+        setFlightMode(flightMode);
+    }
+
+    void Stabilizer::setCurrentParameters(double currentAltitude, const rp3d::Vector3& currentAxis) {
+        _currentParams.setParameters(currentAltitude, currentAxis);
+    }
 
 
 }

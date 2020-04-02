@@ -2,6 +2,8 @@
 #define PID_H
 
 
+#include <vector>
+
 class PIDImpl;
 
 class PID {
@@ -19,12 +21,13 @@ public:
     PID(const PID&);
 
     // Returns the manipulated variable given a setpoint and current process value
-    double calculate(double dt, double wantedPoint, double currentPoint);
+    double calculate(double dt, double targetPoint, double currentPoint);
 
     ~PID();
 
     void reset();
 
+    void setMinMax(double min, double max);
 private:
     PIDImpl* pimpl;
 };

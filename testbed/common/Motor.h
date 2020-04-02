@@ -9,6 +9,7 @@
 
 namespace drone {
 
+    ///TODO: Add Motor torque
     class Motor : public DroneModule {
     private:
         double _pwm;

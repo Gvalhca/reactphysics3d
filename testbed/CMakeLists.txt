@@ -107,7 +107,11 @@ SET(COMMON_SOURCES
         common/DroneModule.cpp
         common/DroneModule.h
         common/Barometer.cpp
-        common/Barometer.h)
+        common/Barometer.h
+        common/QuadPids.cpp
+        common/QuadPids.h
+        common/QuadAttitudeParameters.cpp
+        common/QuadAttitudeParameters.h)
 
 # Examples scenes source files
 SET(SCENES_SOURCES
@@ -127,7 +131,8 @@ SET(SCENES_SOURCES
         scenes/heightfield/HeightFieldScene.cpp
         scenes/cubestack/CubeStackScene.h
         scenes/cubestack/CubeStackScene.cpp
-        scenes/dzhanibekovbolt/DzhanibekovScene.cpp scenes/dzhanibekovbolt/DzhanibekovScene.h)
+        scenes/dzhanibekovbolt/DzhanibekovScene.cpp
+        scenes/dzhanibekovbolt/DzhanibekovScene.h)
 
 # Add .user file to set debug path in Visual Studio
 SET(USER_FILE testbed.vcxproj.user)

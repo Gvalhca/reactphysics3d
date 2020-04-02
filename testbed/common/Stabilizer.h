@@ -9,32 +9,41 @@
 #include "pid.h"
 #include "PhysicsObject.h"
 #include "Motor.h"
-#include "Drone.h"
+#include "QuadPids.h"
+#include "QuadAttitudeParameters.h"
 
 namespace drone {
-    class Drone::Stabilizer {
+
+    typedef enum {
+        STAB = 0,
+        STAB_HEIGHT = 1
+    } flightModes;
+
+    class Stabilizer {
     private:
-        std::vector<PID*> _pids;
-        double _targetAltitude;
+        QuadPids _quadPids;
+        QuadAttitudeParameters _targetParams;
+        QuadAttitudeParameters _currentParams;
+        flightModes _flightMode;
 
-        double computeHoverMode(const Drone& drone, double dt);
+        double computeHoverMode(double dt);
+
     public:
-        typedef enum {
-            HOVER_PID = 0,
-            PITCH_PID = 1,
-            ROLL_PID = 2,
-            YAW_PID = 3
-        } pid_names;
 
-        Stabilizer(const PID& hoverPID, const PID& pitchPID, const PID& rollPID, const PID& yawPID);
+        explicit Stabilizer(QuadPids& quadPids, const QuadAttitudeParameters& currentParameters,
+                            const QuadAttitudeParameters& targetParameters, flightModes flightMode = STAB_HEIGHT);
 
-        double computePwm(const Drone& drone, double dt);
+        double computePwm(const std::vector<Motor*>& motors, double dt);
 
-        void setTargetParameters(double targetAltitude);
+        void setTargetParameters(double targetAltitude, const rp3d::Vector3& targetAxis);
+
+        void setCurrentParameters(double currentAltitude, const rp3d::Vector3& currentAxis);
+
+        void setFlightMode(flightModes flightMode);
 
         void reset();
 
-        ~Stabilizer() = default;
+        ~Stabilizer();
     };
 }
 
