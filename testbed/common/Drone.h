@@ -10,8 +10,11 @@
 #include "DroneModule.h"
 #include "Motor.h"
 #include "QuadAttitudeParameters.h"
-#include "QuadPids.h"
-#include "Stabilizer.h"
+#include "QuadPIDs.h"
+#include "CentralModule.h"
+#include "Barometer.h"
+#include "Gyroscope.h"
+
 
 namespace drone {
 
@@ -19,39 +22,15 @@ namespace drone {
         MOTOR_FR = 0,
         MOTOR_FL = 1,
         MOTOR_BR = 2,
-        MOTOR_BL = 3,
-    } motorsNames;
+        MOTOR_BL = 3
+    } MotorsNames;
 
     class Drone : public openglframework::Object3D {
     private:
-        class Barometer;
-
-        class Gyroscope {
-        private:
-            rp3d::Vector3 _axisPRY;
-
-            static rp3d::Vector3 getPRYFromQuaternion(const rp3d::Quaternion &Q)
-            {
-                double yaw   = asin  (2.0 * (Q.w * Q.y - Q.z * Q.x));
-                double pitch = atan2 (2.0 * (Q.w * Q.x + Q.y * Q.z),1.0 - 2.0 * (Q.x * Q.x + Q.y * Q.y));
-                double roll  = atan2 (2.0 * (Q.w * Q.z + Q.x * Q.y),1.0 - 2.0 * (Q.y * Q.y + Q.z * Q.z));
-                return rp3d::Vector3(pitch, roll, yaw);
-            }
-        public:
-            explicit Gyroscope(const rp3d::Vector3& axisPRY): _axisPRY(axisPRY) {};
-            rp3d::Vector3 getPRY(const Drone& drone) const {
-                return getPRYFromQuaternion(drone.getTransform().getOrientation());
-            }
-        };
-
-
         double _mass;
         double _throttle = 0;
 
-        Stabilizer* _stabilizer = 0;
-        Barometer* _barometer = 0;
-        Gyroscope* _gyroscope = 0;
-
+        CentralModule* _centralModule;
         std::vector<Motor*> _motors;
         std::vector<rp3d::FixedJoint*> _fixedJoints;
         std::vector<DroneModule*> _droneModules;
@@ -64,12 +43,10 @@ namespace drone {
 
         void createFrames(rp3d::DynamicsWorld* world);
 
-        void readSensorsData();
-
     public:
 
 
-        Drone(double frameSize, double droneMass, double motorRadius, double motorMass, QuadPids quadPids,
+        Drone(double frameSize, double droneMass, double motorRadius, double motorMass, QuadPIDs quadPIDs,
               rp3d::DynamicsWorld* world, const std::string& meshFolderPath);
 
         ~Drone() override;
@@ -108,13 +85,15 @@ namespace drone {
             return _droneModules;
         }
 
-        inline DroneModule* getCentralModule() const {
-            return _droneModules[0];
+        inline CentralModule* getCentralModule() const {
+            return _centralModule;
         }
 
         double getAltitude() const;
 
-        void hover();
+        void setInputAxisPRY(double pitch, double roll, double yaw);
+
+        void setFlightMode(flightModes flightMode);
 
         void reset();
     };

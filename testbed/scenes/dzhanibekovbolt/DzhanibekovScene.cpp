@@ -102,21 +102,10 @@ void DzhanibekovScene::updatePhysics() {
 //        PhysicsObject* mDroneModule = mDrone->getDroneModules()[]->getPhysicsBody();
 //        rp3d::Vector3 transformedForce = mDroneModule->getTransform().getOrientation() * force;
 //        mDroneModule->getRigidBody()->applyForceToCenterOfMass(force);
-        mDrone->getMotors()[MOTOR_BL]->getPhysicsBody()->getRigidBody()->applyForceToCenterOfMass(force);
-        mDrone->getMotors()[MOTOR_BR]->getPhysicsBody()->getRigidBody()->applyForceToCenterOfMass(force);
-        force+=force;
-//#define topPosition mDroneModule->getTransform().getPosition()
-//        openglframework::Vector3 point1(topPosition.x, topPosition.y, topPosition.z);
-//        rp3d::Vector3 forcePositionEnd = topPosition + transformedForce;
-//        openglframework::Vector3 point2(forcePositionEnd.x, forcePositionEnd.y, forcePositionEnd.z);
-//        Line* forceLine = new Line(point1, point2);
-//        std::vector<openglframework::Vector3> lines;
-//        lines.push_back(point1);
-//        lines.push_back(point2);
-//        glDrawArrays(GL_LINES, 0, lines.size());
-//        PhysicsObject* mBottomSphere = mDrone->getDroneModules()[2]->getPhysicsBody();
-//        rp3d::Vector3 transformedBotForce = mBottomSphere->getTransform() * (-force);
-        //mBottomSphere->getRigidBody()->applyForceToCenterOfMass(transformedBotForce);
+//
+//        mDrone->getMotors()[MOTOR_BL]->getPhysicsBody()->getRigidBody()->applyForceToCenterOfMass(force);
+//        mDrone->getMotors()[MOTOR_BR]->getPhysicsBody()->getRigidBody()->applyForceToCenterOfMass(force);
+//        force+=force;
     }
 
 //    PhysicsObject* mCentralSphere = mDrone->getDroneModules()[0]->getPhysicsBody();
@@ -137,7 +126,7 @@ void DzhanibekovScene::reset() {
     mDrone->reset();
     rp3d::Vector3 positionDrone(0, initialHeight, 0);
     mDrone->setTransform(rp3d::Transform(positionDrone, rp3d::Quaternion::identity()));
-    mDrone->hover();
+    mDrone->setFlightMode(STAB_HEIGHT);
 }
 
 
@@ -164,7 +153,7 @@ void DzhanibekovScene::createFloor() {
 
 void DzhanibekovScene::createDrone() {
     rp3d::Vector3 positionDrone(0, initialHeight, 0);
-    QuadPids quadPids(PID(0.7, 0.35, 0.35),
+    QuadPIDs quadPids(PID(0.7, 0.35, 0.35),
                       PID(0.7, 0.35, 0.35),
                       PID(0.7, 0.35, 0.35),
                       PID(0.7, 0.35, 0.35));
@@ -179,7 +168,7 @@ void DzhanibekovScene::createDrone() {
     for (auto& mDroneModule : mDrone->getDroneModules()) {
         mPhysicsObjects.push_back(mDroneModule->getPhysicsBody());
     }
-    mDrone->hover();
+    mDrone->setFlightMode(STAB_HEIGHT);
 }
 
 

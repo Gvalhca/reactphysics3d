@@ -17,17 +17,17 @@ namespace drone {
         HOVER_PID = 3
     } pidTypes;
 
-    class QuadPids {
+    class QuadPIDs {
     private:
         std::map<pidTypes, PID*> _pids;
 
         PID& getPid(pidTypes pidType) const;
 
     public:
-        QuadPids(const PID& pitchPID, const PID& rollPID, const PID& yawPID,
+        QuadPIDs(const PID& pitchPID, const PID& rollPID, const PID& yawPID,
                  const PID& hoverPID = PID(0.7, 0.35, 0.35));
 
-        QuadPids(const QuadPids&);
+        QuadPIDs(const QuadPIDs&);
 
         PID& operator[](pidTypes pidType);
 

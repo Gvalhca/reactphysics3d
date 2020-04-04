@@ -1,4 +1,3 @@
-#include "Barometer.h"
 #include "Drone.h"
 
 namespace drone {
@@ -21,7 +20,8 @@ namespace drone {
         rp3d::Transform motorTransform(motorPosition, rp3d::Quaternion::identity());
 
         // Create a sphere and a corresponding rigid in the dynamics world
-        auto* motorFR = new Motor(motorRadius, motorMass, maxPwm, mBlueColor, motorTransform, world, meshFolderPath);
+        auto* motorFR = new Motor(motorRadius, motorMass, maxPwm,
+                                  CLOCKWISE, mBlueColor, motorTransform, world, meshFolderPath);
         _motors.push_back(motorFR);
 
         // --------------- Create the front left motor --------------- //
@@ -31,7 +31,8 @@ namespace drone {
         motorTransform = rp3d::Transform(motorPosition, rp3d::Quaternion::identity());
 
         // Create a motor and a corresponding rigid in the dynamics world
-        auto* motorFL = new Motor(motorRadius, motorMass, maxPwm, mBlueColor, motorTransform, world, meshFolderPath);
+        auto* motorFL = new Motor(motorRadius, motorMass, maxPwm,
+                                  COUNTER_CLOCKWISE, mBlueColor, motorTransform, world, meshFolderPath);
         _motors.push_back(motorFL);
 
         // --------------- Create the back right motor --------------- //
@@ -41,8 +42,8 @@ namespace drone {
         motorTransform = rp3d::Transform(motorPosition, rp3d::Quaternion::identity());
 
         // Create a motor and a corresponding rigid in the dynamics world
-        auto* motorBR = new Motor(motorRadius, motorMass, maxPwm, mOrangeColor, motorTransform, world,
-                                  meshFolderPath);
+        auto* motorBR = new Motor(motorRadius, motorMass, maxPwm, COUNTER_CLOCKWISE, mOrangeColor, motorTransform,
+                                  world, meshFolderPath);
         _motors.push_back(motorBR);
 
         // --------------- Create the back left motor --------------- //
@@ -52,8 +53,8 @@ namespace drone {
         motorTransform = rp3d::Transform(motorPosition, rp3d::Quaternion::identity());
 
         // Create a motor and a corresponding rigid in the dynamics world
-        auto* motorBL = new Motor(motorRadius, motorMass, maxPwm, mOrangeColor, motorTransform, world,
-                                  meshFolderPath);
+        auto* motorBL = new Motor(motorRadius, motorMass, maxPwm, CLOCKWISE, mOrangeColor, motorTransform,
+                                  world, meshFolderPath);
         _motors.push_back(motorBL);
 
         // Add _motors to _droneModules
@@ -63,64 +64,55 @@ namespace drone {
     void Drone::createFrames(rp3d::DynamicsWorld* world) {
         DroneModule* centralModule = getCentralModule();
         rp3d::Vector3 centralModulePosition = centralModule->getDefaultTransform().getPosition();
+
         // --------------- Create the central top fixed joint --------------- //
-        // Create the joint in the dynamics world
         _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
                 generateFrameInfo(_motors[MOTOR_FR], centralModule,
                                   _motors[MOTOR_FR]->getDefaultTransform().getPosition()))));
 
         // --------------- Create the central bottom fixed joint --------------- //
-        // Create the joint in the dynamics world
         _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
                 generateFrameInfo(_motors[MOTOR_BL], centralModule,
                                   _motors[MOTOR_BL]->getDefaultTransform().getPosition()))));
 
         // --------------- Create the central left fixed joint --------------- //
-        // Create the joint in the dynamics world
         _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
                 generateFrameInfo(_motors[MOTOR_BR], centralModule,
                                   _motors[MOTOR_BR]->getDefaultTransform().getPosition()))));
 
         // --------------- Create the central right fixed joint --------------- //
-        // Create the joint in the dynamics world
         _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
                 generateFrameInfo(_motors[MOTOR_FL], centralModule,
                                   _motors[MOTOR_FL]->getDefaultTransform().getPosition()))));
     }
 
-    Drone::Drone(double frameSize, double droneMass, double motorRadius, double motorMass, QuadPids quadPids,
+    Drone::Drone(double frameSize, double droneMass, double motorRadius, double motorMass, QuadPIDs quadPIDs,
                  rp3d::DynamicsWorld* world, const std::string& meshFolderPath) : _mass(droneMass) {
 
-        openglframework::Color mYellowColor = openglframework::Color(0.9f, 0.88f, 0.145f, 1.0f);
+        // ---------------     Create motors     --------------- //
+        createMotors(frameSize, motorRadius, motorMass, world, meshFolderPath);
 
-        // --------------- Create the central module --------------- //
-        // Position of the module
+        // --------------- Create central module --------------- //
+        // Position of central module
         rp3d::Vector3 centralModulePosition(0, 0, 0);
         rp3d::Transform centralModuleTransform(centralModulePosition, rp3d::Quaternion::identity());
 
-        // Create a central module and a corresponding rigid in the dynamics world
-        double centerMass = droneMass - 4 * motorMass;
-        assert(centerMass > 0);
-        auto* centralModule = new DroneModule(centerMass, mYellowColor, centralModuleTransform, world, meshFolderPath);
-        _droneModules.push_back(centralModule);
+        // Mass of central module
+        double centralModuleMass = droneMass - 4 * motorMass;
+        assert(centralModuleMass > 0);
 
-        createMotors(frameSize, motorRadius, motorMass, world, meshFolderPath);
-
-        createFrames(world);
-
-        ///TODO: Constructors should be without params
-        _barometer = new Barometer(getTransform().getPosition().y);
-        _gyroscope = new Gyroscope(rp3d::Vector3::zero());
+        // Update min and max of Quad PIDs
         for (int i = 0; i < HOVER_PID; ++i) {
             pidTypes type = (pidTypes) i;
-            quadPids[type].setMinMax(0, _motors[MOTOR_BL]->getMaxPwm());
+            quadPIDs[type].setMinMax(0, _motors[MOTOR_BL]->getMaxPwm());
         }
 
-        ///TODO: gyroscope
-        QuadAttitudeParameters currentParams(0, rp3d::Vector3::zero());
-        QuadAttitudeParameters targetParams(0, rp3d::Vector3::zero());
-        _stabilizer = new Stabilizer(quadPids, currentParams, targetParams);
+        // Create a central module and a corresponding rigid in the dynamics world
+        _centralModule = new CentralModule(centralModuleMass, centralModuleTransform, quadPIDs, world, meshFolderPath);
+        _droneModules.push_back(_centralModule);
 
+        // ------------ Create fixed joints for drone frames --------- //
+        createFrames(world);
     }
 
 #define droneModuleBody droneModule->getPhysicsBody()
@@ -149,36 +141,39 @@ namespace drone {
     }
 
     void Drone::updatePhysics(double dt) {
-        readSensorsData();
-        _stabilizer->computePwm(_motors, dt);
+        _centralModule->_stabilizer->computePwm(_motors, dt);
         for (auto& motor : _motors) {
             motor->updatePhysics();
         }
     }
 
-    void Drone::readSensorsData() {
-        double currAlt = getAltitude();
-        rp3d::Vector3 currPRY = _gyroscope->getPRY(*this);
-        _stabilizer->setCurrentParameters(currAlt, currPRY);
-    };
-
+    ///TODO: Clear all shit
     Drone::~Drone() {
-        delete _stabilizer;
+        //delete _stabilizer;
     }
 
     double Drone::getAltitude() const {
-        return _barometer->getAltitude(*this);
+        return _centralModule->_stabilizer->getCurrentParameters().getAltitude();
     }
 
-    void Drone::hover() {
-        readSensorsData();
-        _stabilizer->setFlightMode(STAB_HEIGHT);
+    void Drone::setFlightMode(flightModes flightMode) {
+        _centralModule->_stabilizer->setFlightMode(STAB_HEIGHT);
 //        _stabilizer->setTargetPRY(5.0);
     }
 
     void Drone::reset() {
         setMotorsPwm(0);
-        _stabilizer->reset();
+        _centralModule->_stabilizer->reset();
+    }
+
+    /**
+     * Set target Pitch, Roll, Yaw from input device
+     * @param pitch in radians
+     * @param roll  in radians
+     * @param yaw   in radians
+     */
+    void Drone::setInputAxisPRY(double pitch, double roll, double yaw) {
+        _centralModule->_stabilizer->setTargetAxisPRY(rp3d::Vector3(pitch, roll, yaw));
     }
 
 

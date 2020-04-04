@@ -3,11 +3,10 @@
 
 namespace drone {
 
-    DroneModule::DroneModule(double mass, const openglframework::Color& color,
-                             const rp3d::Transform& defaultTransform, rp3d::DynamicsWorld* dynamicsWorld,
-                             const std::string& meshFolderPath) :
-            _physicsBody(new Sphere(0.01, mass, dynamicsWorld, meshFolderPath)),
-            defaultTransform(defaultTransform) {
+    DroneModule::DroneModule(double mass, const rp3d::Transform& defaultTransform, rp3d::DynamicsWorld* dynamicsWorld,
+                             const std::string& meshFolderPath, double radius, const openglframework::Color& color) :
+            _physicsBody(new Sphere(radius, mass, dynamicsWorld, meshFolderPath)),
+            _defaultTransform(defaultTransform) {
 
         _physicsBody->setTransform(defaultTransform);
 
@@ -20,7 +19,7 @@ namespace drone {
     }
 
     rp3d::Transform DroneModule::getDefaultTransform() const {
-        return defaultTransform;
+        return _defaultTransform;
     }
 
     DroneModule::~DroneModule() {

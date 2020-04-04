@@ -4,23 +4,16 @@
 
 #include "reactphysics3d.h"
 #include "openglframework.h"
-#include "pid.h"
-#include "Drone.h"
-
+#include "Sensor.h"
 
 namespace drone {
 
-    class Drone::Barometer {
-
-        double _currentAltitude;
+    class Barometer : public Sensor {
     public:
-        explicit Barometer(double altitude) : _currentAltitude(altitude) {}
+        explicit Barometer(const PhysicsObject* objectToRead) : Sensor(objectToRead) {};
 
-        ~Barometer() = default;
-
-        double getAltitude(const Drone& drone) {
-            _currentAltitude = drone.getTransform().getPosition().y;
-            return _currentAltitude;
+        inline void getData(QuadAttitudeParameters& quadAttitudeParameters) override {
+            quadAttitudeParameters.setAltitude(_objectToRead->getTransform().getPosition().y);
         }
     };
 }

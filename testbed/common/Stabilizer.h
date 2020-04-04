@@ -9,8 +9,10 @@
 #include "pid.h"
 #include "PhysicsObject.h"
 #include "Motor.h"
-#include "QuadPids.h"
+#include "QuadPIDs.h"
 #include "QuadAttitudeParameters.h"
+#include "Barometer.h"
+#include "Gyroscope.h"
 
 namespace drone {
 
@@ -21,28 +23,43 @@ namespace drone {
 
     class Stabilizer {
     private:
-        QuadPids _quadPids;
+        QuadPIDs _quadPIDs;
         QuadAttitudeParameters _targetParams;
         QuadAttitudeParameters _currentParams;
+        double _throttle;
+
         flightModes _flightMode;
 
-        double computeHoverMode(double dt);
+        std::vector<Sensor*> _sensors;
+
+        void computeHoverMode(double dt);
 
     public:
 
-        explicit Stabilizer(QuadPids& quadPids, const QuadAttitudeParameters& currentParameters,
-                            const QuadAttitudeParameters& targetParameters, flightModes flightMode = STAB_HEIGHT);
+        Stabilizer(const QuadPIDs& quadPIDs, const PhysicsObject* objectToRead,
+                   const QuadAttitudeParameters& currentParameters = QuadAttitudeParameters(),
+                   const QuadAttitudeParameters& targetParameters = QuadAttitudeParameters(),
+                   flightModes flightMode = STAB);
 
         double computePwm(const std::vector<Motor*>& motors, double dt);
 
+        void readSensorsData();
+
+        const QuadAttitudeParameters& getCurrentParameters() const;
+
+        const QuadAttitudeParameters& getTargetParameters() const;
+
+        void setTargetAxisPRY(const rp3d::Vector3& targetAxis);
+
         void setTargetParameters(double targetAltitude, const rp3d::Vector3& targetAxis);
 
-        void setCurrentParameters(double currentAltitude, const rp3d::Vector3& currentAxis);
+        void setThrottle(double throttle);
 
         void setFlightMode(flightModes flightMode);
 
         void reset();
 
+        ///TODO: delete sensors using sharedPtr
         ~Stabilizer();
     };
 }
