@@ -104,8 +104,9 @@ namespace drone {
         // Update min and max of Quad PIDs
         for (int i = 0; i < HOVER_PID; ++i) {
             pidTypes type = (pidTypes) i;
-            quadPIDs[type].setMinMax(0, _motors[MOTOR_BL]->getMaxPwm());
+            quadPIDs[type].setMinMax(-0.01, 0.01);
         }
+        quadPIDs[HOVER_PID].setMinMax(0, _motors[MOTOR_BL]->getMaxPwm());
 
         // Create a central module and a corresponding rigid in the dynamics world
         _centralModule = new CentralModule(centralModuleMass, centralModuleTransform, quadPIDs, world, meshFolderPath);

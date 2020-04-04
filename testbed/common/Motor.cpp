@@ -29,7 +29,7 @@ namespace drone {
         rp3d::Vector3 liftingForce(0, _pwm, 0);
         rp3d::Vector3 transformedForce = _physicsBody->getTransform().getOrientation() * liftingForce;
         _physicsBody->getRigidBody()->applyForceToCenterOfMass(transformedForce);
-        _physicsBody->getRigidBody()->applyTorque(_physicsBody->getTransform().getOrientation() * computeTorque());
+//        _physicsBody->getRigidBody()->applyTorque(_physicsBody->getTransform().getOrientation() * computeTorque());
     }
 
     rp3d::Vector3 Motor::computeTorque() {
