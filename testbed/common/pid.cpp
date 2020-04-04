@@ -31,11 +31,11 @@ private:
 };
 
 
-PID::PID(double max, double min, double Kp, double Kd, double Ki) {
+PID::PID(double max, double min, double Kp, double Ki, double Kd) {
     pimpl = new PIDImpl(max, min, Kp, Kd, Ki);
 }
 
-PID::PID(double Kp, double Kd, double Ki) {
+PID::PID(double Kp, double Ki, double Kd) {
     pimpl = new PIDImpl(std::numeric_limits<double>::max(), std::numeric_limits<double>::min(), Kp, Kd, Ki);
 }
 
@@ -90,7 +90,10 @@ double PIDImpl::calculate(double dt, double wantedPoint, double currentPoint) {
     double Dout = _Kd * derivative;
 
     // Calculate total output
+    cout << "Pout: " << Pout << " Iout: " << Iout << " Dout: " << Dout << endl;
     double output = Pout + Iout + Dout;
+
+    cout << "output: " << output << " max: " << _max << " min: " << _min << endl;
 
     // Restrict to max/min
     if (output > _max)

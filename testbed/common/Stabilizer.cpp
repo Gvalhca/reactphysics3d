@@ -7,7 +7,7 @@ namespace drone {
     double Stabilizer::computePwm(const std::vector<Motor*>& motors, double dt) {
         readSensorsData();
         if (_flightMode == STAB_HEIGHT) {
-            computeHoverMode(dt);
+//            computeHoverMode(dt);
         }
 
         _throttle = 0.2943;
@@ -16,11 +16,22 @@ namespace drone {
         rp3d::Vector3 targetPRY = _targetParams.getAxisPRY();
         double thrustPitch = _quadPIDs[PITCH_PID].calculate(dt, currentPRY[PITCH], targetPRY[PITCH]);
         double thrustRoll = _quadPIDs[ROLL_PID].calculate(dt, currentPRY[ROLL], targetPRY[ROLL]);
-        double thrustYaw = _quadPIDs[YAW_PID].calculate(dt, currentPRY[YAW], targetPRY[YAW]);
+//        double thrustYaw = _quadPIDs[YAW_PID].calculate(dt, currentPRY[YAW], targetPRY[YAW]);
 
 //        double thrustPitch = 0;
 //        double thrustRoll = 0;
-//        double thrustYaw = 0;
+        double thrustYaw = 0;
+
+        std::cout << "Current Altitude: " << _currentParams.getAltitude()
+                  << " Target Altitude: " << _targetParams.getAltitude()
+                  << std::endl
+                  << "Current Pitch: " << _currentParams.getAxisPRY().x
+                  << " Roll: " << _currentParams.getAxisPRY().y
+                  << " Yaw: " << _currentParams.getAxisPRY().z
+                  << " Target Pitch: " << _targetParams.getAxisPRY().x
+                  << " Roll: " << _targetParams.getAxisPRY().y
+                  << " Yaw: " << _targetParams.getAxisPRY().z
+                  << std::endl;
 
         std::cout << "Thrust Pitch: " << thrustPitch
                   << " Roll: " << thrustRoll
@@ -29,10 +40,10 @@ namespace drone {
                   << std::endl;
 
         std::vector<double> motorsPwm(4, 0);
-        motorsPwm[MOTOR_FR] = -thrustPitch + thrustRoll + thrustYaw + _throttle;
-        motorsPwm[MOTOR_FL] = -thrustPitch - thrustRoll - thrustYaw + _throttle;
-        motorsPwm[MOTOR_BL] = thrustPitch - thrustRoll + thrustYaw + _throttle;
-        motorsPwm[MOTOR_BR] = thrustPitch + thrustRoll - thrustYaw + _throttle;
+        motorsPwm[MOTOR_FR] = thrustPitch - thrustRoll + thrustYaw + _throttle;
+        motorsPwm[MOTOR_FL] = thrustPitch + thrustRoll - thrustYaw + _throttle;
+        motorsPwm[MOTOR_BR] = -thrustPitch - thrustRoll - thrustYaw + _throttle;
+        motorsPwm[MOTOR_BL] = -thrustPitch + thrustRoll + thrustYaw + _throttle;
 
         for (int i = 0; i < 4; i++) {
             motors[i]->setPwm(motorsPwm[i]);
@@ -42,16 +53,7 @@ namespace drone {
     }
 
     void Stabilizer::computeHoverMode(double dt) {
-        std::cout << "Current Altitude: " << _currentParams.getAltitude()
-                  << " Target Altitude: " << _targetParams.getAltitude()
-                  << std::endl
-                  << " Current Pitch: " << _currentParams.getAxisPRY().x
-                  << " Roll: " << _currentParams.getAxisPRY().y
-                  << " Yaw: " << _currentParams.getAxisPRY().z
-                  << " Target Pitch: " << _targetParams.getAxisPRY().x
-                  << " Roll: " << _targetParams.getAxisPRY().y
-                  << " Yaw: " << _targetParams.getAxisPRY().z
-                  << std::endl;
+
         double currentAltitude = _currentParams.getAltitude();
         _throttle = _quadPIDs[HOVER_PID].calculate(dt, _targetParams.getAltitude(), currentAltitude);
     }

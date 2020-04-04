@@ -14,9 +14,9 @@ public:
     // dt -  loop interval time
     // max - maximum value of manipulated variable
     // min - minimum value of manipulated variable
-    PID(double max, double min, double Kp, double Kd, double Ki);
+    PID(double max, double min, double Kp, double Ki, double Kd);
 
-    PID(double Kp, double Kd, double Ki);
+    PID(double Kp, double Ki, double Kd);
 
     PID(const PID&);
 

@@ -153,8 +153,8 @@ void DzhanibekovScene::createFloor() {
 
 void DzhanibekovScene::createDrone() {
     rp3d::Vector3 positionDrone(0, initialHeight, 0);
-    QuadPIDs quadPids(PID(0.7, 0.35, 0.35),
-                      PID(0.7, 0.35, 0.35),
+    QuadPIDs quadPids(PID(0.7, 0.35, 0.1),
+                      PID(0.7, 0.35, 0.1),
                       PID(0.7, 0.35, 0.35),
                       PID(0.7, 0.35, 0.35));
     double droneFrame = 0.088;

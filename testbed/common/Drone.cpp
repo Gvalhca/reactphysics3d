@@ -65,25 +65,64 @@ namespace drone {
         DroneModule* centralModule = getCentralModule();
         rp3d::Vector3 centralModulePosition = centralModule->getDefaultTransform().getPosition();
 
-        // --------------- Create the central top fixed joint --------------- //
-        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
-                generateFrameInfo(_motors[MOTOR_FR], centralModule,
-                                  _motors[MOTOR_FR]->getDefaultTransform().getPosition()))));
+//        // --------------- Create the central to FR motor fixed joint --------------- //
+//        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+//                generateFrameInfo(_motors[MOTOR_FR], centralModule,
+//                                  _motors[MOTOR_FR]->getDefaultTransform().getPosition()))));
+//
+//        // --------------- Create the central to FL motor fixed joint --------------- //
+//        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+//                generateFrameInfo(_motors[MOTOR_FL], centralModule,
+//                                  _motors[MOTOR_FL]->getDefaultTransform().getPosition()))));
+//
+//        // --------------- Create the central to BR motor fixed joint --------------- //
+//        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+//                generateFrameInfo(_motors[MOTOR_BR], centralModule,
+//                                  _motors[MOTOR_BR]->getDefaultTransform().getPosition()))));
+//
+//        // --------------- Create the central to BL motor fixed joint --------------- //
+//        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+//                generateFrameInfo(_motors[MOTOR_BL], centralModule,
+//                                  _motors[MOTOR_BL]->getDefaultTransform().getPosition()))));
 
-        // --------------- Create the central bottom fixed joint --------------- //
-        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
-                generateFrameInfo(_motors[MOTOR_BL], centralModule,
-                                  _motors[MOTOR_BL]->getDefaultTransform().getPosition()))));
 
-        // --------------- Create the central left fixed joint --------------- //
+        // --------------- Create the central to FR motor fixed joint --------------- //
         _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
-                generateFrameInfo(_motors[MOTOR_BR], centralModule,
-                                  _motors[MOTOR_BR]->getDefaultTransform().getPosition()))));
+                generateFrameInfo(centralModule, _motors[MOTOR_FR],
+                                  _centralModule->getDefaultTransform().getPosition()))));
 
-        // --------------- Create the central right fixed joint --------------- //
+        // --------------- Create the central to FL motor fixed joint --------------- //
         _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
-                generateFrameInfo(_motors[MOTOR_FL], centralModule,
-                                  _motors[MOTOR_FL]->getDefaultTransform().getPosition()))));
+                generateFrameInfo(centralModule, _motors[MOTOR_FL],
+                                  _centralModule->getDefaultTransform().getPosition()))));
+
+        // --------------- Create the central to BR motor fixed joint --------------- //
+        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+                generateFrameInfo(centralModule, _motors[MOTOR_BR],
+                                  _centralModule->getDefaultTransform().getPosition()))));
+
+        // --------------- Create the central to BL motor fixed joint --------------- //
+        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+                generateFrameInfo(centralModule, _motors[MOTOR_BL],
+                                  _centralModule->getDefaultTransform().getPosition()))));
+
+
+
+//        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+//                generateFrameInfo(_motors[MOTOR_FL], _motors[MOTOR_FR],
+//                                  _motors[MOTOR_FL]->getDefaultTransform().getPosition()))));
+//
+//        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+//                generateFrameInfo(_motors[MOTOR_BL], _motors[MOTOR_BR],
+//                                  _motors[MOTOR_FL]->getDefaultTransform().getPosition()))));
+//
+//        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+//                generateFrameInfo(_motors[MOTOR_FL], _motors[MOTOR_BL],
+//                                  _motors[MOTOR_FL]->getDefaultTransform().getPosition()))));
+//
+//        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+//                generateFrameInfo(_motors[MOTOR_FR], _motors[MOTOR_BR],
+//                                  _motors[MOTOR_FL]->getDefaultTransform().getPosition()))));
     }
 
     Drone::Drone(double frameSize, double droneMass, double motorRadius, double motorMass, QuadPIDs quadPIDs,
@@ -104,7 +143,7 @@ namespace drone {
         // Update min and max of Quad PIDs
         for (int i = 0; i < HOVER_PID; ++i) {
             pidTypes type = (pidTypes) i;
-            quadPIDs[type].setMinMax(-0.01, 0.01);
+            quadPIDs[type].setMinMax(-1, 1);
         }
         quadPIDs[HOVER_PID].setMinMax(0, _motors[MOTOR_BL]->getMaxPwm());
 
