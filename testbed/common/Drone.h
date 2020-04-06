@@ -35,6 +35,7 @@ namespace drone {
         std::vector<rp3d::FixedJoint*> _fixedJoints;
         std::vector<DroneModule*> _droneModules;
 
+
         static rp3d::FixedJointInfo
         generateFrameInfo(DroneModule* firstModule, DroneModule* secondModule, const rp3d::Vector3& anchorPoint);
 

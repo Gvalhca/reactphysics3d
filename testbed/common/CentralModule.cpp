@@ -7,12 +7,10 @@
 #include "Gyroscope.h"
 
 namespace drone {
-    CentralModule::CentralModule(double mass,
-                                 const rp3d::Transform& defaultTransform,
-                                 const QuadPIDs& quadPIDs,
-                                 rp3d::DynamicsWorld* dynamicsWorld,
+    CentralModule::CentralModule(double mass, const openglframework::Vector3& size, const rp3d::Transform& defaultTransform,
+                                 const QuadPIDs& quadPIDs, rp3d::DynamicsWorld* dynamicsWorld,
                                  const std::string& meshFolderPath) :
-            DroneModule(mass, defaultTransform, dynamicsWorld, meshFolderPath),
+            DroneModule(mass, defaultTransform, dynamicsWorld, meshFolderPath, size),
             _stabilizer(new Stabilizer(quadPIDs, _physicsBody)) {}
 
 

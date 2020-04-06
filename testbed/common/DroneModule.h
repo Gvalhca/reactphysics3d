@@ -11,21 +11,27 @@ namespace drone {
 
     class DroneModule {
     protected:
-        Box* _physicsBody;
+        PhysicsObject* _physicsBody;
         rp3d::Transform _defaultTransform;
 
     public:
         DroneModule(double mass,
                     const rp3d::Transform& defaultTransform, rp3d::DynamicsWorld* dynamicsWorld,
                     const std::string& meshFolderPath,
-                    double radius = 0.088,
+                    double radius = 0.01,
+                    const openglframework::Color& color = openglframework::Color(0.9f, 0.88f, 0.145f, 1.0f));
+
+        DroneModule(double mass,
+                    const rp3d::Transform& defaultTransform, rp3d::DynamicsWorld* dynamicsWorld,
+                    const std::string& meshFolderPath,
+                    const openglframework::Vector3& size,
                     const openglframework::Color& color = openglframework::Color(0.9f, 0.88f, 0.145f, 1.0f));
 
         rp3d::Transform getDefaultTransform() const;
 
         ~DroneModule();
 
-        Box* getPhysicsBody() const;
+        PhysicsObject* getPhysicsBody() const;
     };
 }
 

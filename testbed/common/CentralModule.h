@@ -16,8 +16,8 @@ namespace drone {
     class CentralModule : public DroneModule {
     public:
 
-        CentralModule(double mass, const rp3d::Transform& defaultTransform, const QuadPIDs& quadPIDs,
-                      rp3d::DynamicsWorld* dynamicsWorld, const std::string& meshFolderPath);
+        CentralModule(double mass, const openglframework::Vector3& size, const rp3d::Transform& defaultTransform,
+                      const QuadPIDs& quadPIDs, rp3d::DynamicsWorld* dynamicsWorld, const std::string& meshFolderPath);
 
         ~CentralModule();
 

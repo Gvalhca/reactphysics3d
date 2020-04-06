@@ -161,7 +161,9 @@ namespace drone {
         quadPIDs[HOVER_PID].setMinMax(0, _motors[MOTOR_BL]->getMaxPwm());
 
         // Create a central module and a corresponding rigid in the dynamics world
-        _centralModule = new CentralModule(centralModuleMass, centralModuleTransform, quadPIDs, world, meshFolderPath);
+        openglframework::Vector3 boxDimensions(frameSize, 0.01, frameSize);
+        _centralModule = new CentralModule(centralModuleMass, boxDimensions, centralModuleTransform, quadPIDs, world,
+                                           meshFolderPath);
         _droneModules.push_back(_centralModule);
 
         // ------------ Create fixed joints for drone frames --------- //

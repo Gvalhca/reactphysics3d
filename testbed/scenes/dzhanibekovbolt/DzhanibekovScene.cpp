@@ -198,7 +198,7 @@ bool DzhanibekovScene::keyboardEvent(int key, int scancode, int action, int mods
     }
 
     if (key == GLFW_KEY_A && action == GLFW_PRESS) {
-        testPRY.y = 0.5;
+        testPRY.y = -0.5;
     }
 
     if (key == GLFW_KEY_A && action == GLFW_RELEASE) {
@@ -206,7 +206,7 @@ bool DzhanibekovScene::keyboardEvent(int key, int scancode, int action, int mods
     }
 
     if (key == GLFW_KEY_D && action == GLFW_PRESS) {
-        testPRY.y = -0.5;
+        testPRY.y = 0.5;
     }
 
     if (key == GLFW_KEY_D && action == GLFW_RELEASE) {
@@ -214,7 +214,7 @@ bool DzhanibekovScene::keyboardEvent(int key, int scancode, int action, int mods
     }
 
     if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
-        testPRY.z = 1.0;
+        testPRY.z = 5.0;
     }
 
     if (key == GLFW_KEY_Q && action == GLFW_RELEASE) {
@@ -222,7 +222,7 @@ bool DzhanibekovScene::keyboardEvent(int key, int scancode, int action, int mods
     }
 
     if (key == GLFW_KEY_E && action == GLFW_PRESS) {
-        testPRY.z = -1.0;
+        testPRY.z = -5.0;
     }
 
     if (key == GLFW_KEY_E && action == GLFW_RELEASE) {
@@ -243,10 +243,10 @@ bool DzhanibekovScene::keyboardEvent(int key, int scancode, int action, int mods
         mDrone->setThrottle(mDrone->getThrottle() - 0.05);
     }
 
-    if (key == GLFW_KEY_V && action == GLFW_PRESS) {
-        mDrone->getMotors()[MOTOR_BL]->getPhysicsBody()->getRigidBody()->applyForceToCenterOfMass(rp3d::Vector3(0.0, 0.5, 0.0));
-        mDrone->getMotors()[MOTOR_BR]->getPhysicsBody()->getRigidBody()->applyForceToCenterOfMass(rp3d::Vector3(0.0, 0.5, 0.0));
-    }
+//    if (key == GLFW_KEY_V && action == GLFW_PRESS) {
+//        mDrone->getMotors()[MOTOR_BL]->getPhysicsBody()->getRigidBody()->applyForceToCenterOfMass(rp3d::Vector3(0.0, 0.5, 0.0));
+//        mDrone->getMotors()[MOTOR_BR]->getPhysicsBody()->getRigidBody()->applyForceToCenterOfMass(rp3d::Vector3(0.0, 0.5, 0.0));
+//    }
 
 
     mDrone->getCentralModule()->_stabilizer->setTargetAxisPRY(testPRY);
