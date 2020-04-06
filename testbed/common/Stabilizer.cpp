@@ -7,21 +7,23 @@ namespace drone {
     double Stabilizer::computePwm(const std::vector<Motor*>& motors, double dt) {
         readSensorsData();
         if (_flightMode == STAB_HEIGHT) {
-//            computeHoverMode(dt);
+            computeHoverMode(dt);
         }
 
-        _throttle = 0.2943;
+        //_throttle = 0.2943;
 
         rp3d::Vector3 currentPRY = _currentParams.getAxisPRY();
         rp3d::Vector3 targetPRY = _targetParams.getAxisPRY();
         double thrustPitch = _quadPIDs[PITCH_PID].calculate(dt, currentPRY[PITCH], targetPRY[PITCH]);
         double thrustRoll = _quadPIDs[ROLL_PID].calculate(dt, currentPRY[ROLL], targetPRY[ROLL]);
-//        double thrustYaw = _quadPIDs[YAW_PID].calculate(dt, currentPRY[YAW], targetPRY[YAW]);
+        double thrustYaw = _quadPIDs[YAW_PID].calculate(dt, currentPRY[YAW], targetPRY[YAW]);
 
 //        double thrustPitch = 0;
 //        double thrustRoll = 0;
-        double thrustYaw = 0;
+//        double thrustYaw = 0;
 
+//        std::cout << "FLight Mode: " << _flightMode << std::endl;
+//
         std::cout << "Current Altitude: " << _currentParams.getAltitude()
                   << " Target Altitude: " << _targetParams.getAltitude()
                   << std::endl
@@ -32,7 +34,7 @@ namespace drone {
                   << " Roll: " << _targetParams.getAxisPRY().y
                   << " Yaw: " << _targetParams.getAxisPRY().z
                   << std::endl;
-
+//
         std::cout << "Thrust Pitch: " << thrustPitch
                   << " Roll: " << thrustRoll
                   << " Yaw: " << thrustYaw
@@ -47,7 +49,7 @@ namespace drone {
 
         for (int i = 0; i < 4; i++) {
             motors[i]->setPwm(motorsPwm[i]);
-            std::cout << "Motor" << i << " Pwm: " << motorsPwm[i] << " ";
+            std::cout << "Thrust" << i + 1 << "_Pwm: " << motorsPwm[i] << " ";
         }
         std::cout << std::endl << "-------------------------------------------------------------" << std::endl;
     }
@@ -60,10 +62,10 @@ namespace drone {
 
     void Stabilizer::reset() {
         _quadPIDs.reset();
-        _targetParams.setAltitude(0);
+        _targetParams.setParameters(0, rp3d::Vector3(0, 0, 0));
     }
 
-    void Stabilizer::setFlightMode(flightModes flightMode) {
+    void Stabilizer::setFlightMode(FlightModes flightMode) {
         readSensorsData();
         _flightMode = flightMode;
         if (flightMode == STAB_HEIGHT) {
@@ -78,10 +80,10 @@ namespace drone {
     }
 
     Stabilizer::Stabilizer(const QuadPIDs& quadPIDs,
-                           const PhysicsObject* objectToRead,
+                           PhysicsObject* objectToRead,
                            const QuadAttitudeParameters& currentParameters,
                            const QuadAttitudeParameters& targetParameters,
-                           flightModes flightMode) :
+                           FlightModes flightMode) :
             _quadPIDs(quadPIDs),
             _targetParams(targetParameters),
             _currentParams(currentParameters),
@@ -110,6 +112,14 @@ namespace drone {
 
     void Stabilizer::setThrottle(double throttle) {
         _throttle = throttle;
+    }
+
+    FlightModes Stabilizer::getFlightMode() const {
+        return _flightMode;
+    }
+
+    double Stabilizer::getThrottle() const {
+        return _throttle;
     }
 
 

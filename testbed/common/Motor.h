@@ -21,11 +21,9 @@ namespace drone {
         double _maxPwm;
         RotationDirection _rotationDirection;
 
-        rp3d::Vector3 computeTorque();
-
     public:
-        void setMaxPwm(double maxPwm);
 
+        void setMaxPwm(double maxPwm);
         void setPwm(double pwm);
 
         inline double getMaxPwm() const {
@@ -41,6 +39,8 @@ namespace drone {
         Motor(double propellerRadius, double mass, double maxPwm, RotationDirection rotationDirection,
               const openglframework::Color& color, const rp3d::Transform& defaultTransform,
               rp3d::DynamicsWorld* dynamicsWorld, const std::string& meshFolderPath);
+
+        rp3d::Vector3 computeTorque();
     };
 
 }

@@ -43,6 +43,8 @@ namespace drone {
 
         void createFrames(rp3d::DynamicsWorld* world);
 
+        void setMotorsPwm(double pwm);
+
     public:
 
 
@@ -67,11 +69,6 @@ namespace drone {
             }
         };
 
-        inline void setMotorsPwm(double pwm) {
-            for (const auto& motor : _motors) {
-                motor->setPwm(pwm);
-            }
-        }
 
         inline std::vector<Motor*> getMotors() const {
             return _motors;
@@ -89,11 +86,19 @@ namespace drone {
             return _centralModule;
         }
 
+        inline FlightModes getFlightMode() const {
+            return _centralModule->_stabilizer->getFlightMode();
+        };
+
+        double getThrottle() const;
+
+        void setThrottle(double throttle);
+
         double getAltitude() const;
 
         void setInputAxisPRY(double pitch, double roll, double yaw);
 
-        void setFlightMode(flightModes flightMode);
+        void setFlightMode(FlightModes flightMode);
 
         void reset();
     };

@@ -5,26 +5,27 @@
 #include "reactphysics3d.h"
 #include "openglframework.h"
 #include "Sphere.h"
+#include "Box.h"
 
 namespace drone {
 
     class DroneModule {
     protected:
-        Sphere* _physicsBody;
+        Box* _physicsBody;
         rp3d::Transform _defaultTransform;
 
     public:
         DroneModule(double mass,
                     const rp3d::Transform& defaultTransform, rp3d::DynamicsWorld* dynamicsWorld,
                     const std::string& meshFolderPath,
-                    double radius = 0.01,
+                    double radius = 0.088,
                     const openglframework::Color& color = openglframework::Color(0.9f, 0.88f, 0.145f, 1.0f));
 
         rp3d::Transform getDefaultTransform() const;
 
         ~DroneModule();
 
-        Sphere* getPhysicsBody() const;
+        Box* getPhysicsBody() const;
     };
 }
 

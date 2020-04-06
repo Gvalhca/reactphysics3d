@@ -22,14 +22,14 @@ namespace drone {
 //            throw std::runtime_error("Motor::setPwm: Invalid value of argument. pwm should be positive");
 //        }
         _pwm = std::max(pwm, 0.0);
-        _pwm = std::min(pwm, _maxPwm);
+        _pwm = std::min(_pwm, _maxPwm);
     }
 
     void Motor::updatePhysics() {
         rp3d::Vector3 liftingForce(0, _pwm, 0);
         rp3d::Vector3 transformedForce = _physicsBody->getTransform().getOrientation() * liftingForce;
         _physicsBody->getRigidBody()->applyForceToCenterOfMass(transformedForce);
-//        _physicsBody->getRigidBody()->applyTorque(_physicsBody->getTransform().getOrientation() * computeTorque());
+        _physicsBody->getRigidBody()->applyTorque(_physicsBody->getTransform().getOrientation() * computeTorque());
     }
 
     rp3d::Vector3 Motor::computeTorque() {

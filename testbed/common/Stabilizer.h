@@ -19,7 +19,7 @@ namespace drone {
     typedef enum {
         STAB = 0,
         STAB_HEIGHT = 1
-    } flightModes;
+    } FlightModes;
 
     class Stabilizer {
     private:
@@ -28,7 +28,7 @@ namespace drone {
         QuadAttitudeParameters _currentParams;
         double _throttle;
 
-        flightModes _flightMode;
+        FlightModes _flightMode;
 
         std::vector<Sensor*> _sensors;
 
@@ -36,10 +36,10 @@ namespace drone {
 
     public:
 
-        Stabilizer(const QuadPIDs& quadPIDs, const PhysicsObject* objectToRead,
+        Stabilizer(const QuadPIDs& quadPIDs, PhysicsObject* objectToRead,
                    const QuadAttitudeParameters& currentParameters = QuadAttitudeParameters(),
                    const QuadAttitudeParameters& targetParameters = QuadAttitudeParameters(),
-                   flightModes flightMode = STAB);
+                   FlightModes flightMode = STAB);
 
         double computePwm(const std::vector<Motor*>& motors, double dt);
 
@@ -53,9 +53,13 @@ namespace drone {
 
         void setTargetParameters(double targetAltitude, const rp3d::Vector3& targetAxis);
 
+        double getThrottle() const;
+
         void setThrottle(double throttle);
 
-        void setFlightMode(flightModes flightMode);
+        void setFlightMode(FlightModes flightMode);
+
+        FlightModes getFlightMode() const;
 
         void reset();
 

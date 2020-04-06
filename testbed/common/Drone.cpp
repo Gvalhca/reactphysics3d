@@ -85,7 +85,6 @@ namespace drone {
 //                generateFrameInfo(_motors[MOTOR_BL], centralModule,
 //                                  _motors[MOTOR_BL]->getDefaultTransform().getPosition()))));
 
-
         // --------------- Create the central to FR motor fixed joint --------------- //
         _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
                 generateFrameInfo(centralModule, _motors[MOTOR_FR],
@@ -106,7 +105,21 @@ namespace drone {
                 generateFrameInfo(centralModule, _motors[MOTOR_BL],
                                   _centralModule->getDefaultTransform().getPosition()))));
 
+        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+                generateFrameInfo(_motors[MOTOR_FL], _centralModule,
+                                  _motors[MOTOR_FL]->getDefaultTransform().getPosition()))));
 
+        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+                generateFrameInfo(_motors[MOTOR_FR], _centralModule,
+                                  _motors[MOTOR_FR]->getDefaultTransform().getPosition()))));
+
+        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+                generateFrameInfo(_motors[MOTOR_BL], _centralModule,
+                                  _motors[MOTOR_BL]->getDefaultTransform().getPosition()))));
+
+        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+                generateFrameInfo(_motors[MOTOR_BR], _centralModule,
+                                  _motors[MOTOR_BR]->getDefaultTransform().getPosition()))));
 
 //        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
 //                generateFrameInfo(_motors[MOTOR_FL], _motors[MOTOR_FR],
@@ -143,7 +156,7 @@ namespace drone {
         // Update min and max of Quad PIDs
         for (int i = 0; i < HOVER_PID; ++i) {
             pidTypes type = (pidTypes) i;
-            quadPIDs[type].setMinMax(-1, 1);
+            quadPIDs[type].setMinMax(-0.05, 0.05);
         }
         quadPIDs[HOVER_PID].setMinMax(0, _motors[MOTOR_BL]->getMaxPwm());
 
@@ -175,15 +188,16 @@ namespace drone {
                                                   const rp3d::Vector3& anchorPoint) {
         rp3d::RigidBody* firstModuleBody = firstModule->getPhysicsBody()->getRigidBody();
         rp3d::RigidBody* secondModuleBody = secondModule->getPhysicsBody()->getRigidBody();
-        rp3d::FixedJointInfo jointInfoTop(firstModuleBody, secondModuleBody, anchorPoint);
-        jointInfoTop.isCollisionEnabled = false;
-        return jointInfoTop;
+        rp3d::FixedJointInfo jointInfo(firstModuleBody, secondModuleBody, anchorPoint);
+        jointInfo.isCollisionEnabled = false;
+        return jointInfo;
     }
 
     void Drone::updatePhysics(double dt) {
         _centralModule->_stabilizer->computePwm(_motors, dt);
         for (auto& motor : _motors) {
             motor->updatePhysics();
+//            _centralModule->getPhysicsBody()->getRigidBody()->applyTorque(motor->computeTorque());
         }
     }
 
@@ -196,8 +210,8 @@ namespace drone {
         return _centralModule->_stabilizer->getCurrentParameters().getAltitude();
     }
 
-    void Drone::setFlightMode(flightModes flightMode) {
-        _centralModule->_stabilizer->setFlightMode(STAB_HEIGHT);
+    void Drone::setFlightMode(FlightModes flightMode) {
+        _centralModule->_stabilizer->setFlightMode(flightMode);
 //        _stabilizer->setTargetPRY(5.0);
     }
 
@@ -214,6 +228,20 @@ namespace drone {
      */
     void Drone::setInputAxisPRY(double pitch, double roll, double yaw) {
         _centralModule->_stabilizer->setTargetAxisPRY(rp3d::Vector3(pitch, roll, yaw));
+    }
+
+    void Drone::setMotorsPwm(double pwm) {
+        for (const auto& motor : _motors) {
+            motor->setPwm(pwm);
+        }
+    }
+
+    void Drone::setThrottle(double throttle) {
+        _centralModule->_stabilizer->setThrottle(std::max(0.0, throttle));
+    }
+
+    double Drone::getThrottle() const {
+        return _centralModule->_stabilizer->getThrottle();
     }
 
 

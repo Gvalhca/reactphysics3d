@@ -12,10 +12,10 @@ namespace drone {
 
     class Sensor {
     protected:
-        const PhysicsObject* _objectToRead;
+        PhysicsObject* _objectToRead;
 
     public:
-        explicit Sensor(const PhysicsObject* objectToRead) : _objectToRead(objectToRead) {};
+        explicit Sensor(PhysicsObject* objectToRead) : _objectToRead(objectToRead) {};
         virtual void getData(QuadAttitudeParameters&) = 0;
     };
 }

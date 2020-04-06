@@ -57,6 +57,9 @@ using namespace drone;
         /// Can be called several times per frame
         virtual void updatePhysics() override;
 
+        /// Called when a keyboard event occurs
+        virtual bool keyboardEvent(int key, int scancode, int action, int mods) override;
+
         /// Reset the scene
         virtual void reset() override;
 

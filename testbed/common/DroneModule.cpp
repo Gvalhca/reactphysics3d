@@ -5,7 +5,7 @@ namespace drone {
 
     DroneModule::DroneModule(double mass, const rp3d::Transform& defaultTransform, rp3d::DynamicsWorld* dynamicsWorld,
                              const std::string& meshFolderPath, double radius, const openglframework::Color& color) :
-            _physicsBody(new Sphere(radius, mass, dynamicsWorld, meshFolderPath)),
+            _physicsBody(new Box(openglframework::Vector3(radius, 0.01, radius), mass, dynamicsWorld, meshFolderPath)),
             _defaultTransform(defaultTransform) {
 
         _physicsBody->setTransform(defaultTransform);
@@ -26,7 +26,11 @@ namespace drone {
         delete _physicsBody;
     }
 
-    Sphere* DroneModule::getPhysicsBody() const {
+    Box* DroneModule::getPhysicsBody() const {
         return _physicsBody;
     }
+
+//    Sphere* DroneModule::getPhysicsBody() const {
+//        return _physicsBody;
+//    }
 }
