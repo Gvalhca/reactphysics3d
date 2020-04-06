@@ -49,7 +49,7 @@ namespace drone {
 
         for (int i = 0; i < 4; i++) {
             motors[i]->setPwm(motorsPwm[i]);
-            std::cout << "Thrust" << i + 1 << "_Pwm: " << motorsPwm[i] << " ";
+//            std::cout << "Thrust" << i + 1 << "_Pwm: " << motorsPwm[i] << " ";
         }
         std::cout << std::endl << "-------------------------------------------------------------" << std::endl;
     }

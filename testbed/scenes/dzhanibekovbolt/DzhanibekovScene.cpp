@@ -160,7 +160,7 @@ void DzhanibekovScene::createFloor() {
 void DzhanibekovScene::createDrone() {
     rp3d::Vector3 positionDrone(0, initialHeight, 0);
     QuadPIDs quadPids(PID(0.7, 0.35, 0.05),
-                      PID(0.7, 0.35, 0.05),
+                      PID(0.07, 0.035, 0.005),
                       PID(0.07, 0.035, 0.0005),
                       PID(7, 3.5, 3.5));
     double droneFrame = 0.088;
@@ -242,6 +242,12 @@ bool DzhanibekovScene::keyboardEvent(int key, int scancode, int action, int mods
         mDrone->setFlightMode(STAB);
         mDrone->setThrottle(mDrone->getThrottle() - 0.05);
     }
+
+    if (key == GLFW_KEY_V && action == GLFW_PRESS) {
+        mDrone->getMotors()[MOTOR_BL]->getPhysicsBody()->getRigidBody()->applyForceToCenterOfMass(rp3d::Vector3(0.0, 0.5, 0.0));
+        mDrone->getMotors()[MOTOR_BR]->getPhysicsBody()->getRigidBody()->applyForceToCenterOfMass(rp3d::Vector3(0.0, 0.5, 0.0));
+    }
+
 
     mDrone->getCentralModule()->_stabilizer->setTargetAxisPRY(testPRY);
 
