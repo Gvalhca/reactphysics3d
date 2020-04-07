@@ -6,7 +6,8 @@
 #define REACTPHYSICS3D_ACCELEROMETER_H
 
 #include "Sensor.h"
-namespace drone {
+
+namespace quad {
 
     class Accelerometer : public Sensor {
     public:

@@ -1,6 +1,6 @@
 
-#ifndef REACTPHYSICS3D_DZHANIBEKOVSCENE_H
-#define REACTPHYSICS3D_DZHANIBEKOVSCENE_H
+#ifndef REACTPHYSICS3D_QUADSCENE_H
+#define REACTPHYSICS3D_QUADSCENE_H
 #define TEST_FLAG 0
 // Libraries
 #include "openglframework.h"
@@ -10,8 +10,8 @@
 #include "Sphere.h"
 #include "quadCopter/Drone.h"
 
-namespace dzhanibekovscene {
-using namespace drone;
+namespace quadscene {
+using namespace quad;
 // Constants
     const float SCENE_RADIUS = 30.0f;
     const openglframework::Vector3 BOX_SIZE(2, 2, 2);           // Box dimensions in meters
@@ -21,8 +21,8 @@ using namespace drone;
     const int NB_BALLSOCKETJOINT_BOXES = 7;                     // Number of Ball-And-Socket chain boxes
     const int NB_HINGE_BOXES = 7;                               // Number of Hinge chain boxes
 
-// Class DzhanibekovsScene
-    class DzhanibekovScene : public SceneDemo {
+// Class QuadScene
+    class QuadScene : public SceneDemo {
 
     protected :
 
@@ -48,10 +48,10 @@ using namespace drone;
         // -------------------- Methods -------------------- //
 
         /// Constructor
-        DzhanibekovScene(const std::string& name, EngineSettings& settings);
+        QuadScene(const std::string& name, EngineSettings& settings);
 
         /// Destructor
-        virtual ~DzhanibekovScene() override;
+        virtual ~QuadScene() override;
 
         /// Update the physics world (take a simulation step)
         /// Can be called several times per frame
@@ -68,11 +68,11 @@ using namespace drone;
     };
 
 // Return all the contact points of the scene
-//    inline std::vector<ContactPoint> DzhanibekovScene::getContactPoints() {
+//    inline std::vector<ContactPoint> QuadScene::getContactPoints() {
 //        return computeContactPointsOfWorld(getDynamicsWorld());
 //    }
 
 }
 
 
-#endif //REACTPHYSICS3D_DZHANIBEKOVSCENE_H
+#endif //REACTPHYSICS3D_QUADSCENE_H

@@ -8,7 +8,7 @@
 
 #include <reactphysics3d.h>
 
-namespace drone {
+namespace quad {
     typedef enum {
         PITCH = 0,
         ROLL = 1,

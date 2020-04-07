@@ -1,7 +1,7 @@
 
 #include "DroneModule.h"
 
-namespace drone {
+namespace quad {
 
     
     DroneModule::DroneModule(double mass, const rp3d::Transform& defaultTransform,

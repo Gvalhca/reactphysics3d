@@ -6,7 +6,7 @@
 #include "openglframework.h"
 #include "Sensor.h"
 
-namespace drone {
+namespace quad {
 
     class Barometer : public Sensor {
     public:

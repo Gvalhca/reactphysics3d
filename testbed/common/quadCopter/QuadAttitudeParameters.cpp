@@ -4,7 +4,7 @@
 
 #include "QuadAttitudeParameters.h"
 
-namespace drone {
+namespace quad {
     QuadAttitudeParameters::QuadAttitudeParameters(double altitude, const rp3d::Vector3& axisPRY) : _altitude(altitude),
                                                                                                     _axisPRY(axisPRY) {}
 

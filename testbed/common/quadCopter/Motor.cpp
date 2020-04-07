@@ -1,7 +1,7 @@
 
 #include "Motor.h"
 
-namespace drone {
+namespace quad {
     Motor::Motor(double propellerRadius, double mass, double maxPwm, RotationDirection rotationDirection,
                  const openglframework::Color& color, const rp3d::Transform& defaultTransform,
                  rp3d::DynamicsWorld* dynamicsWorld, const std::string& meshFolderPath) :
@@ -18,9 +18,6 @@ namespace drone {
     }
 
     void Motor::setPwm(double pwm) {
-//        if (pwm < 0) {
-//            throw std::runtime_error("Motor::setPwm: Invalid value of argument. pwm should be positive");
-//        }
         _pwm = std::max(pwm, 0.0);
         _pwm = std::min(_pwm, _maxPwm);
     }

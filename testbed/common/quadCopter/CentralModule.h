@@ -11,7 +11,7 @@
 #include "Gyroscope.h"
 
 
-namespace drone {
+namespace quad {
 
     class CentralModule : public DroneModule {
     public:

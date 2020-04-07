@@ -7,7 +7,7 @@
 #include "Sphere.h"
 #include "Box.h"
 
-namespace drone {
+namespace quad {
 
     class DroneModule {
     protected:

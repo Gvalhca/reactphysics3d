@@ -1,14 +1,14 @@
 
 // Libraries
-#include "DzhanibekovScene.h"
+#include "QuadScene.h"
 #include <cmath>
 
 // Namespaces
 using namespace openglframework;
-using namespace dzhanibekovscene;
+using namespace quadscene;
 
 // Constructor
-DzhanibekovScene::DzhanibekovScene(const std::string& name, EngineSettings& settings)
+QuadScene::QuadScene(const std::string& name, EngineSettings& settings)
         : SceneDemo(name, settings, SCENE_RADIUS) {
 
     // Compute the radius and the center of the scene
@@ -46,7 +46,7 @@ DzhanibekovScene::DzhanibekovScene(const std::string& name, EngineSettings& sett
 }
 
 // Destructor
-DzhanibekovScene::~DzhanibekovScene() {
+QuadScene::~QuadScene() {
 #if 0
     // Destroy the joints
     getDynamicsWorld()->destroyJoint(mSliderJoint);
@@ -76,7 +76,7 @@ DzhanibekovScene::~DzhanibekovScene() {
         delete mBallAndSocketJointChainBoxes[i];
     }
 #endif
-    //Destroy the drone
+    //Destroy the quad
     mDrone->destroyQuadModules(getDynamicsWorld());
     delete mDrone;
 
@@ -89,50 +89,18 @@ DzhanibekovScene::~DzhanibekovScene() {
 }
 
 // Update the physics world (take a simulation step)
-void DzhanibekovScene::updatePhysics() {
+void QuadScene::updatePhysics() {
     double elapsedTime = static_cast<double>(mEngineSettings.elapsedTime) - simStartTime;
-//    std::cout << "elapsed time: " << elapsedTime << std::endl;
-    rp3d::Vector3 testPRY(1.0, 0.0, 0.0);
-    if (elapsedTime > 5.0 && elapsedTime < 15.0) {
-//        mDrone->getCentralModule()->_stabilizer->setTargetAxisPRY(testPRY);
-
-//        mDrone->getCentralModule()->getPhysicsBody()->getRigidBody()->setAngularVelocity(rp3d::Vector3(0.0, 0.5, 0));
-//        rp3d::Vector3 force = rp3d::Vector3(0, 0.0001, 0);
-//        for (auto& droneModule : mDrone->getDroneModules()) {
-//            droneModule->getPhysicsBody()->getRigidBody()->applyForceToCenterOfMass(force);
-//        }
-//        PhysicsObject* mDroneModule = mDrone->getDroneModules()[]->getPhysicsBody();
-//        rp3d::Vector3 transformedForce = mDroneModule->getTransform().getOrientation() * force;
-//        mDroneModule->getRigidBody()->applyForceToCenterOfMass(force);
-//
-//        mDrone->getMotors()[MOTOR_BL]->getPhysicsBody()->getRigidBody()->applyForceToCenterOfMass(force);
-//        mDrone->getMotors()[MOTOR_BR]->getPhysicsBody()->getRigidBody()->applyForceToCenterOfMass(force);
-//        force+=force;
-    }
-
-    if (elapsedTime > 7.0 && elapsedTime < 8.0) {
-//        mDrone->getCentralModule()->_stabilizer->setTargetAxisPRY(-testPRY);
-    }
-
-    if (elapsedTime > 9.0) {
-//        mDrone->getCentralModule()->_stabilizer->setTargetAxisPRY(rp3d::Vector3::zero());
-    }
-
-//    PhysicsObject* mCentralSphere = mDrone->getDroneModules()[0]->getPhysicsBody();
-//    mCentralSphere->getRigidBody()->setLinearVelocity(rp3d::Vector3(0, 0, 0));
 
     mDrone->updatePhysics(mEngineSettings.timeStep);
     SceneDemo::updatePhysics();
 }
 
 // Reset the scene
-void DzhanibekovScene::reset() {
+void QuadScene::reset() {
     simStartTime = static_cast<double>(mEngineSettings.elapsedTime);
 
-//    rp3d::Vector3 floorPosition(0, -5, 0);
-//    mFloor->setTransform(rp3d::Transform(floorPosition,rp3d::Quaternion::identity()));
-
-    // --------------- Drone --------------- //mFloor->setTransform(rp3d::Transform(floorPosition,rp3d::Quaternion::identity()));
+    // --------------- Drone --------------- //
     mDrone->reset();
     rp3d::Vector3 positionDrone(0, initialHeight, 0);
     mDrone->setTransform(rp3d::Transform(positionDrone, rp3d::Quaternion::identity()));
@@ -141,7 +109,7 @@ void DzhanibekovScene::reset() {
 
 
 // Create the floor
-void DzhanibekovScene::createFloor() {
+void QuadScene::createFloor() {
 
     // Create the floor
     rp3d::Vector3 floorPosition(0, 0, 0);
@@ -151,7 +119,6 @@ void DzhanibekovScene::createFloor() {
     mFloor->setColor(mGreyColorDemo);
     mFloor->setSleepingColor(mGreyColorDemo);
 
-//    mFloor->setTransform(rp3d::Transform(floorPosition,rp3d::Quaternion::identity()));
     // The floor must be a static rigid body
     mFloor->getRigidBody()->setType(rp3d::BodyType::STATIC);
 
@@ -161,10 +128,10 @@ void DzhanibekovScene::createFloor() {
     mPhysicsObjects.push_back(mFloor);
 }
 
-void DzhanibekovScene::createDrone() {
+void QuadScene::createDrone() {
     rp3d::Vector3 positionDrone(0, initialHeight, 0);
-    QuadPIDs quadPids(PID(0.7, 0.35, 0.05),
-                      PID(0.07, 0.035, 0.005),
+    QuadPIDs quadPIDs(PID(0.07, 0.035, 0.015),
+                      PID(0.07, 0.035, 0.015),
                       PID(0.07, 0.035, 0.0005),
                       PID(7, 3.5, 3.5));
     double droneFrame = 0.088;
@@ -173,7 +140,7 @@ void DzhanibekovScene::createDrone() {
     double propellerRadius = 0.02;
 
     mDrone = new Drone(droneFrame, droneMass, propellerRadius, motorMass,
-                       quadPids, getDynamicsWorld(), mMeshFolderPath);
+                       quadPIDs, getDynamicsWorld(), mMeshFolderPath);
     mDrone->setTransform(rp3d::Transform(positionDrone, rp3d::Quaternion::identity()));
     for (auto& mDroneModule : mDrone->getDroneModules()) {
         mPhysicsObjects.push_back(mDroneModule->getPhysicsBody());
@@ -183,75 +150,58 @@ void DzhanibekovScene::createDrone() {
 
 static rp3d::Vector3 testPRY(0.0, 0.0, 0.0);
 
-bool DzhanibekovScene::keyboardEvent(int key, int scancode, int action, int mods) {
+bool QuadScene::keyboardEvent(int key, int scancode, int action, int mods) {
 
-    if (key == GLFW_KEY_W && action == GLFW_PRESS) {
-        testPRY.x = 0.5;
+    if (action == GLFW_PRESS) {
+        switch (key) {
+            case GLFW_KEY_W:
+                testPRY.x = 0.5;
+                break;
+            case GLFW_KEY_S:
+                testPRY.x = -0.5;
+                break;
+            case GLFW_KEY_A:
+                testPRY.y = -0.5;
+                break;
+            case GLFW_KEY_D:
+                testPRY.y = 0.5;
+                break;
+            case GLFW_KEY_Q:
+                testPRY.z = 5.0;
+                break;
+            case GLFW_KEY_E:
+                testPRY.z = -5.0;
+                break;
+            case GLFW_KEY_SPACE:
+                mDrone->setFlightMode(mDrone->getFlightMode() ? STAB : STAB_HEIGHT);
+                break;
+            case GLFW_KEY_R:
+                mDrone->setFlightMode(STAB);
+                mDrone->setThrottle(mDrone->getThrottle() + 0.05);
+                break;
+            case GLFW_KEY_F:
+                mDrone->setFlightMode(STAB);
+                mDrone->setThrottle(mDrone->getThrottle() - 0.05);
+                break;
+        }
     }
 
-    if (key == GLFW_KEY_W && action == GLFW_RELEASE) {
-        testPRY.x = 0.0;
+    if (action == GLFW_RELEASE) {
+        switch (key) {
+            case GLFW_KEY_W:
+            case GLFW_KEY_S:
+                testPRY.x = 0.0;
+                break;
+            case GLFW_KEY_A:
+            case GLFW_KEY_D:
+                testPRY.y = 0.0;
+                break;
+            case GLFW_KEY_Q:
+            case GLFW_KEY_E:
+                testPRY.z = 0.0;
+                break;
+        }
     }
-
-    if (key == GLFW_KEY_S && action == GLFW_PRESS) {
-        testPRY.x = -0.5;
-    }
-
-    if (key == GLFW_KEY_S && action == GLFW_RELEASE) {
-        testPRY.x = 0.0;
-    }
-
-    if (key == GLFW_KEY_A && action == GLFW_PRESS) {
-        testPRY.y = -0.5;
-    }
-
-    if (key == GLFW_KEY_A && action == GLFW_RELEASE) {
-        testPRY.y = 0.0;
-    }
-
-    if (key == GLFW_KEY_D && action == GLFW_PRESS) {
-        testPRY.y = 0.5;
-    }
-
-    if (key == GLFW_KEY_D && action == GLFW_RELEASE) {
-        testPRY.y = 0.0;
-    }
-
-    if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
-        testPRY.z = 5.0;
-    }
-
-    if (key == GLFW_KEY_Q && action == GLFW_RELEASE) {
-        testPRY.z = 0.0;
-    }
-
-    if (key == GLFW_KEY_E && action == GLFW_PRESS) {
-        testPRY.z = -5.0;
-    }
-
-    if (key == GLFW_KEY_E && action == GLFW_RELEASE) {
-        testPRY.z = 0.0;
-    }
-
-    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
-        mDrone->setFlightMode(mDrone->getFlightMode() ? STAB : STAB_HEIGHT);
-    }
-
-    if (key == GLFW_KEY_R && action == GLFW_PRESS) {
-        mDrone->setFlightMode(STAB);
-        mDrone->setThrottle(mDrone->getThrottle() + 0.05);
-    }
-
-    if (key == GLFW_KEY_F && action == GLFW_PRESS) {
-        mDrone->setFlightMode(STAB);
-        mDrone->setThrottle(mDrone->getThrottle() - 0.05);
-    }
-
-    if (key == GLFW_KEY_V && action == GLFW_PRESS) {
-        mDrone->getMotors()[MOTOR_BL]->getPhysicsBody()->getRigidBody()->applyForceToCenterOfMass(rp3d::Vector3(0.0, 0.5, 0.0));
-        mDrone->getMotors()[MOTOR_FL]->getPhysicsBody()->getRigidBody()->applyForceToCenterOfMass(rp3d::Vector3(0.0, 0.5, 0.0));
-    }
-
 
     mDrone->getCentralModule()->_stabilizer->setTargetAxisPRY(testPRY);
 
@@ -259,4 +209,4 @@ bool DzhanibekovScene::keyboardEvent(int key, int scancode, int action, int mods
 }
 
 
-#include "DzhanibekovScene.h"
+#include "QuadScene.h"

@@ -8,7 +8,7 @@
 #include <map>
 #include "pid.h"
 
-namespace drone {
+namespace quad {
 
     typedef enum {
         PITCH_PID = 0,

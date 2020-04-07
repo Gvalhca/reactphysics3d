@@ -131,8 +131,8 @@ SET(SCENES_SOURCES
         scenes/heightfield/HeightFieldScene.cpp
         scenes/cubestack/CubeStackScene.h
         scenes/cubestack/CubeStackScene.cpp
-        scenes/dzhanibekovbolt/DzhanibekovScene.cpp
-        scenes/dzhanibekovbolt/DzhanibekovScene.h common/quadCopter/Gyroscope.cpp common/quadCopter/Gyroscope.h)
+        scenes/quadcopter/QuadScene.cpp
+        scenes/quadcopter/QuadScene.h common/quadCopter/Gyroscope.cpp common/quadCopter/Gyroscope.h)
 
 # Add .user file to set debug path in Visual Studio
 SET(USER_FILE testbed.vcxproj.user)

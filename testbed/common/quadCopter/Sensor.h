@@ -8,7 +8,7 @@
 #include "quadCopter/DroneModule.h"
 #include "QuadAttitudeParameters.h"
 
-namespace drone {
+namespace quad {
 
     class Sensor {
     protected:

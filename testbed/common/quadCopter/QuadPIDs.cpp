@@ -1,7 +1,7 @@
 
 #include "QuadPIDs.h"
 
-namespace drone {
+namespace quad {
 
     QuadPIDs::QuadPIDs(const PID& pitchPID, const PID& rollPID, const PID& yawPID, const PID& hoverPID) {
         _pids[PITCH_PID] = new PID(pitchPID);

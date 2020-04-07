@@ -3,15 +3,13 @@
 #include "quadCopter/Drone.h"
 #include "Accelerometer.h"
 
-namespace drone {
+namespace quad {
 
     double Stabilizer::computePwm(const std::vector<Motor*>& motors, double dt) {
         readSensorsData();
         if (_flightMode == STAB_HEIGHT) {
             computeHoverMode(dt);
         }
-
-        //_throttle = 0.2943;
 
         rp3d::Vector3 currentPRY;
         if (_flightMode == STAB || _flightMode == STAB_HEIGHT) {
@@ -22,6 +20,17 @@ namespace drone {
         double thrustPitch = _quadPIDs[PITCH_PID].calculate(dt, currentPRY[PITCH], targetPRY[PITCH]);
         double thrustRoll = _quadPIDs[ROLL_PID].calculate(dt, currentPRY[ROLL], targetPRY[ROLL]);
         double thrustYaw = _quadPIDs[YAW_PID].calculate(dt, currentPRY[YAW], targetPRY[YAW]);
+
+        std::vector<double> motorsPwm(4, 0);
+        motorsPwm[MOTOR_FR] = thrustPitch - thrustRoll + thrustYaw + _throttle;
+        motorsPwm[MOTOR_FL] = thrustPitch + thrustRoll - thrustYaw + _throttle;
+        motorsPwm[MOTOR_BR] = -thrustPitch - thrustRoll - thrustYaw + _throttle;
+        motorsPwm[MOTOR_BL] = -thrustPitch + thrustRoll + thrustYaw + _throttle;
+
+        for (int i = 0; i < 4; i++) {
+            motors[i]->setPwm(motorsPwm[i]);
+//            std::cout << "Thrust" << i + 1 << "_Pwm: " << motorsPwm[i] << " ";
+        }
 
 //        double thrustPitch = 0;
 //        double thrustRoll = 0;
@@ -46,17 +55,7 @@ namespace drone {
 //                  << " Throttle: " << _throttle
 //                  << std::endl;
 
-        std::vector<double> motorsPwm(4, 0);
-        motorsPwm[MOTOR_FR] = thrustPitch - thrustRoll + thrustYaw + _throttle;
-        motorsPwm[MOTOR_FL] = thrustPitch + thrustRoll - thrustYaw + _throttle;
-        motorsPwm[MOTOR_BR] = -thrustPitch - thrustRoll - thrustYaw + _throttle;
-        motorsPwm[MOTOR_BL] = -thrustPitch + thrustRoll + thrustYaw + _throttle;
-
-        for (int i = 0; i < 4; i++) {
-            motors[i]->setPwm(motorsPwm[i]);
-//            std::cout << "Thrust" << i + 1 << "_Pwm: " << motorsPwm[i] << " ";
-        }
-//        std::cout << std::endl << "-------------------------------------------------------------" << std::endl;
+//        std::cout << "-------------------------------------------------------------" << std::endl;
     }
 
     void Stabilizer::computeHoverMode(double dt) {

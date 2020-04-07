@@ -9,7 +9,7 @@
 #include "reactphysics3d.h"
 #include "Sensor.h"
 
-namespace drone {
+namespace quad {
 
     class Gyroscope : public Sensor {
     private:

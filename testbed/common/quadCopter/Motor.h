@@ -7,14 +7,13 @@
 #include "openglframework.h"
 #include "quadCopter/DroneModule.h"
 
-namespace drone {
+namespace quad {
 
     typedef enum {
         CLOCKWISE = -1,
         COUNTER_CLOCKWISE = 1
     } RotationDirection;
 
-    ///TODO: Add Motor torque
     class Motor : public DroneModule {
     private:
         double _pwm;

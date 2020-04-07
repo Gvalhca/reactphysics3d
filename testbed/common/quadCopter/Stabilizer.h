@@ -14,7 +14,7 @@
 #include "quadCopter/Barometer.h"
 #include "quadCopter/Gyroscope.h"
 
-namespace drone {
+namespace quad {
 
     typedef enum {
         STAB = 0,

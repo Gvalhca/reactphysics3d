@@ -37,7 +37,7 @@
 #include "raycast/RaycastScene.h"
 #include "concavemesh/ConcaveMeshScene.h"
 #include "cubestack/CubeStackScene.h"
-#include "dzhanibekovbolt/DzhanibekovScene.h"
+#include "quadcopter/QuadScene.h"
 
 using namespace openglframework;
 using namespace jointsscene;
@@ -48,7 +48,7 @@ using namespace trianglemeshscene;
 using namespace heightfieldscene;
 using namespace collisiondetectionscene;
 using namespace cubestackscene;
-using namespace dzhanibekovscene;
+using namespace quadscene;
 
 // Initialization of static variables
 const float TestbedApplication::SCROLL_SENSITIVITY = 0.08f;
@@ -128,9 +128,9 @@ void TestbedApplication::createScenes() {
 //    ConcaveMeshScene* concaveMeshScene = new ConcaveMeshScene("Concave Mesh", mEngineSettings);
 //    mScenes.push_back(concaveMeshScene);
 
-    // Dzhanibekovs Bolt scene
-    auto* dzhanibekovScene = new DzhanibekovScene("Dzhanibekov", mEngineSettings);
-    mScenes.push_back(dzhanibekovScene);
+    // Quad scene
+    auto* quadScene = new QuadScene("QuadCopter", mEngineSettings);
+    mScenes.push_back(quadScene);
 
     assert(!mScenes.empty());
 

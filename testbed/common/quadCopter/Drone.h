@@ -16,7 +16,7 @@
 #include "Gyroscope.h"
 
 
-namespace drone {
+namespace quad {
 
     typedef enum {
         MOTOR_FR = 0,
