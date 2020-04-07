@@ -8,7 +8,7 @@
 #include "Box.h"
 #include "SceneDemo.h"
 #include "Sphere.h"
-#include "Drone.h"
+#include "quadCopter/Drone.h"
 
 namespace dzhanibekovscene {
 using namespace drone;

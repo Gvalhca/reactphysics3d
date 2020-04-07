@@ -1,6 +1,7 @@
 
 #include "Stabilizer.h"
-#include "Drone.h"
+#include "quadCopter/Drone.h"
+#include "Accelerometer.h"
 
 namespace drone {
 
@@ -12,7 +13,11 @@ namespace drone {
 
         //_throttle = 0.2943;
 
-        rp3d::Vector3 currentPRY = _currentParams.getAxisPRY();
+        rp3d::Vector3 currentPRY;
+        if (_flightMode == STAB || _flightMode == STAB_HEIGHT) {
+            currentPRY = _currentParams.getAxisPRY();
+            currentPRY[YAW] = _currentParams.getAngularVelocity().y;
+        }
         rp3d::Vector3 targetPRY = _targetParams.getAxisPRY();
         double thrustPitch = _quadPIDs[PITCH_PID].calculate(dt, currentPRY[PITCH], targetPRY[PITCH]);
         double thrustRoll = _quadPIDs[ROLL_PID].calculate(dt, currentPRY[ROLL], targetPRY[ROLL]);
@@ -95,6 +100,7 @@ namespace drone {
             _flightMode(flightMode) {
         _sensors.push_back(new Barometer(objectToRead));
         _sensors.push_back(new Gyroscope(objectToRead));
+        _sensors.push_back(new Accelerometer(objectToRead));
     }
 
     const QuadAttitudeParameters& Stabilizer::getCurrentParameters() const {

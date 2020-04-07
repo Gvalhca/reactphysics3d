@@ -5,7 +5,7 @@
 
 #include "reactphysics3d.h"
 #include "openglframework.h"
-#include "DroneModule.h"
+#include "quadCopter/DroneModule.h"
 
 namespace drone {
 

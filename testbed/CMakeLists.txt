@@ -96,22 +96,22 @@ SET(COMMON_SOURCES
         common/PerlinNoise.cpp
         common/AABB.h
         common/AABB.cpp
-        common/Drone.cpp
-        common/Drone.h
-        common/Stabilizer.cpp
-        common/Stabilizer.h
-        common/pid.cpp
-        common/pid.h
-        common/Motor.cpp
-        common/Motor.h
-        common/DroneModule.cpp
-        common/DroneModule.h
-        common/Barometer.cpp
-        common/Barometer.h
-        common/QuadPIDs.cpp
-        common/QuadPIDs.h
-        common/QuadAttitudeParameters.cpp
-        common/QuadAttitudeParameters.h common/CentralModule.cpp common/CentralModule.h common/Sensor.h)
+        common/quadCopter/Drone.cpp
+        common/quadCopter/Drone.h
+        common/quadCopter/Stabilizer.cpp
+        common/quadCopter/Stabilizer.h
+        common/quadCopter/pid.cpp
+        common/quadCopter/pid.h
+        common/quadCopter/Motor.cpp
+        common/quadCopter/Motor.h
+        common/quadCopter/DroneModule.cpp
+        common/quadCopter/DroneModule.h
+        common/quadCopter/Barometer.cpp
+        common/quadCopter/Barometer.h
+        common/quadCopter/QuadPIDs.cpp
+        common/quadCopter/QuadPIDs.h
+        common/quadCopter/QuadAttitudeParameters.cpp
+        common/quadCopter/QuadAttitudeParameters.h common/quadCopter/CentralModule.cpp common/quadCopter/CentralModule.h common/quadCopter/Sensor.h common/quadCopter/Accelerometer.cpp common/quadCopter/Accelerometer.h)
 
 # Examples scenes source files
 SET(SCENES_SOURCES
@@ -132,7 +132,7 @@ SET(SCENES_SOURCES
         scenes/cubestack/CubeStackScene.h
         scenes/cubestack/CubeStackScene.cpp
         scenes/dzhanibekovbolt/DzhanibekovScene.cpp
-        scenes/dzhanibekovbolt/DzhanibekovScene.h common/Gyroscope.cpp common/Gyroscope.h)
+        scenes/dzhanibekovbolt/DzhanibekovScene.h common/quadCopter/Gyroscope.cpp common/quadCopter/Gyroscope.h)
 
 # Add .user file to set debug path in Visual Studio
 SET(USER_FILE testbed.vcxproj.user)

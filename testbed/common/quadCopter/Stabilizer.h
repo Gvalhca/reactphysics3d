@@ -11,8 +11,8 @@
 #include "Motor.h"
 #include "QuadPIDs.h"
 #include "QuadAttitudeParameters.h"
-#include "Barometer.h"
-#include "Gyroscope.h"
+#include "quadCopter/Barometer.h"
+#include "quadCopter/Gyroscope.h"
 
 namespace drone {
 

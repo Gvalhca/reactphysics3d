@@ -5,7 +5,7 @@
 #ifndef REACTPHYSICS3D_CENTRALMODULE_H
 #define REACTPHYSICS3D_CENTRALMODULE_H
 
-#include "DroneModule.h"
+#include "quadCopter/DroneModule.h"
 #include "Stabilizer.h"
 #include "Barometer.h"
 #include "Gyroscope.h"

@@ -33,4 +33,12 @@ namespace drone {
     void QuadAttitudeParameters::setAxisPRY(const rp3d::Vector3& axisPRY) {
         _axisPRY = axisPRY;
     }
+
+    rp3d::Vector3 QuadAttitudeParameters::getAngularVelocity() const {
+        return _angularVelocity;
+    }
+
+    void QuadAttitudeParameters::setAngularVelocity(const rp3d::Vector3& angularVelocity) {
+        _angularVelocity = angularVelocity;
+    }
 }
