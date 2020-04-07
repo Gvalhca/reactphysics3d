@@ -28,7 +28,6 @@ namespace drone {
     class Drone : public openglframework::Object3D {
     private:
         double _mass;
-        double _throttle = 0;
 
         CentralModule* _centralModule;
         std::vector<Motor*> _motors;
@@ -53,6 +52,8 @@ namespace drone {
               rp3d::DynamicsWorld* world, const std::string& meshFolderPath);
 
         ~Drone() override;
+
+        void destroyQuadModules(rp3d::DynamicsWorld* world);
 
         void render(openglframework::Shader& shader, const openglframework::Matrix4& worldToCameraMatrix);
 

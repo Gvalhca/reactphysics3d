@@ -90,10 +90,10 @@ double PIDImpl::calculate(double dt, double wantedPoint, double currentPoint) {
     double Dout = _Kd * derivative;
 
     // Calculate total output
-    cout << "Pout: " << Pout << " Iout: " << Iout << " Dout: " << Dout << endl;
+//    cout << "Pout: " << Pout << " Iout: " << Iout << " Dout: " << Dout << endl;
     double output = Pout + Iout + Dout;
 
-    cout << "error: " << error << " output: " << output << " max: " << _max << " min: " << _min << endl;
+//    cout << "error: " << error << " output: " << output << " max: " << _max << " min: " << _min << endl;
 
     // Restrict to max/min
     if (output > _max)

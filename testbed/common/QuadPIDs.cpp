@@ -35,4 +35,11 @@ namespace drone {
         }
     }
 
+    QuadPIDs::~QuadPIDs() {
+        for (auto& pid : _pids) {
+            delete pid.second;
+        }
+        _pids.clear();
+    }
+
 }

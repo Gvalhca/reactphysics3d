@@ -27,6 +27,8 @@ namespace drone {
         QuadPIDs(const PID& pitchPID, const PID& rollPID, const PID& yawPID,
                  const PID& hoverPID = PID(0.7, 0.35, 0.35));
 
+        ~QuadPIDs();
+
         QuadPIDs(const QuadPIDs&);
 
         PID& operator[](pidTypes pidType);

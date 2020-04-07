@@ -76,6 +76,10 @@ DzhanibekovScene::~DzhanibekovScene() {
         delete mBallAndSocketJointChainBoxes[i];
     }
 #endif
+    //Destroy the drone
+    mDrone->destroyQuadModules(getDynamicsWorld());
+    delete mDrone;
+
     // Destroy the floor
     getDynamicsWorld()->destroyRigidBody(mFloor->getRigidBody());
     delete mFloor;
@@ -243,10 +247,10 @@ bool DzhanibekovScene::keyboardEvent(int key, int scancode, int action, int mods
         mDrone->setThrottle(mDrone->getThrottle() - 0.05);
     }
 
-//    if (key == GLFW_KEY_V && action == GLFW_PRESS) {
-//        mDrone->getMotors()[MOTOR_BL]->getPhysicsBody()->getRigidBody()->applyForceToCenterOfMass(rp3d::Vector3(0.0, 0.5, 0.0));
-//        mDrone->getMotors()[MOTOR_BR]->getPhysicsBody()->getRigidBody()->applyForceToCenterOfMass(rp3d::Vector3(0.0, 0.5, 0.0));
-//    }
+    if (key == GLFW_KEY_V && action == GLFW_PRESS) {
+        mDrone->getMotors()[MOTOR_BL]->getPhysicsBody()->getRigidBody()->applyForceToCenterOfMass(rp3d::Vector3(0.0, 0.5, 0.0));
+        mDrone->getMotors()[MOTOR_FL]->getPhysicsBody()->getRigidBody()->applyForceToCenterOfMass(rp3d::Vector3(0.0, 0.5, 0.0));
+    }
 
 
     mDrone->getCentralModule()->_stabilizer->setTargetAxisPRY(testPRY);

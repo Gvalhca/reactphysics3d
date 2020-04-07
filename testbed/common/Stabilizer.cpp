@@ -24,22 +24,22 @@ namespace drone {
 
 //        std::cout << "FLight Mode: " << _flightMode << std::endl;
 //
-        std::cout << "Current Altitude: " << _currentParams.getAltitude()
-                  << " Target Altitude: " << _targetParams.getAltitude()
-                  << std::endl
-                  << "Current Pitch: " << _currentParams.getAxisPRY().x
-                  << " Roll: " << _currentParams.getAxisPRY().y
-                  << " Yaw: " << _currentParams.getAxisPRY().z
-                  << " Target Pitch: " << _targetParams.getAxisPRY().x
-                  << " Roll: " << _targetParams.getAxisPRY().y
-                  << " Yaw: " << _targetParams.getAxisPRY().z
-                  << std::endl;
+//        std::cout << "Current Altitude: " << _currentParams.getAltitude()
+//                  << " Target Altitude: " << _targetParams.getAltitude()
+//                  << std::endl
+//                  << "Current Pitch: " << _currentParams.getAxisPRY().x
+//                  << " Roll: " << _currentParams.getAxisPRY().y
+//                  << " Yaw: " << _currentParams.getAxisPRY().z
+//                  << " Target Pitch: " << _targetParams.getAxisPRY().x
+//                  << " Roll: " << _targetParams.getAxisPRY().y
+//                  << " Yaw: " << _targetParams.getAxisPRY().z
+//                  << std::endl;
 //
-        std::cout << "Thrust Pitch: " << thrustPitch
-                  << " Roll: " << thrustRoll
-                  << " Yaw: " << thrustYaw
-                  << " Throttle: " << _throttle
-                  << std::endl;
+//        std::cout << "Thrust Pitch: " << thrustPitch
+//                  << " Roll: " << thrustRoll
+//                  << " Yaw: " << thrustYaw
+//                  << " Throttle: " << _throttle
+//                  << std::endl;
 
         std::vector<double> motorsPwm(4, 0);
         motorsPwm[MOTOR_FR] = thrustPitch - thrustRoll + thrustYaw + _throttle;
@@ -51,7 +51,7 @@ namespace drone {
             motors[i]->setPwm(motorsPwm[i]);
 //            std::cout << "Thrust" << i + 1 << "_Pwm: " << motorsPwm[i] << " ";
         }
-        std::cout << std::endl << "-------------------------------------------------------------" << std::endl;
+//        std::cout << std::endl << "-------------------------------------------------------------" << std::endl;
     }
 
     void Stabilizer::computeHoverMode(double dt) {
@@ -73,14 +73,19 @@ namespace drone {
         }
     }
 
-    Stabilizer::~Stabilizer() {}
+    Stabilizer::~Stabilizer() {
+        for (auto& sensor : _sensors) {
+            delete sensor;
+        }
+        _sensors.clear();
+    }
 
     void Stabilizer::setTargetParameters(double targetAltitude, const rp3d::Vector3& targetAxis) {
         _targetParams.setParameters(targetAltitude, targetAxis);
     }
 
     Stabilizer::Stabilizer(const QuadPIDs& quadPIDs,
-                           PhysicsObject* objectToRead,
+                           PhysicsObject*& objectToRead,
                            const QuadAttitudeParameters& currentParameters,
                            const QuadAttitudeParameters& targetParameters,
                            FlightModes flightMode) :

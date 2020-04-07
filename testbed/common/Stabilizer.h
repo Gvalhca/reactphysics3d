@@ -36,7 +36,7 @@ namespace drone {
 
     public:
 
-        Stabilizer(const QuadPIDs& quadPIDs, PhysicsObject* objectToRead,
+        Stabilizer(const QuadPIDs& quadPIDs, PhysicsObject*& objectToRead,
                    const QuadAttitudeParameters& currentParameters = QuadAttitudeParameters(),
                    const QuadAttitudeParameters& targetParameters = QuadAttitudeParameters(),
                    FlightModes flightMode = STAB);
@@ -63,7 +63,6 @@ namespace drone {
 
         void reset();
 
-        ///TODO: delete sensors using sharedPtr
         ~Stabilizer();
     };
 }

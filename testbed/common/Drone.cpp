@@ -1,3 +1,4 @@
+#include <vector>
 #include "Drone.h"
 
 namespace drone {
@@ -155,7 +156,7 @@ namespace drone {
 
         // Update min and max of Quad PIDs
         for (int i = 0; i < HOVER_PID; ++i) {
-            pidTypes type = (pidTypes) i;
+            auto type = (pidTypes) i;
             quadPIDs[type].setMinMax(-0.05, 0.05);
         }
         quadPIDs[HOVER_PID].setMinMax(0, _motors[MOTOR_BL]->getMaxPwm());
@@ -205,7 +206,7 @@ namespace drone {
 
     ///TODO: Clear all shit
     Drone::~Drone() {
-        //delete _stabilizer;
+
     }
 
     double Drone::getAltitude() const {
@@ -244,6 +245,25 @@ namespace drone {
 
     double Drone::getThrottle() const {
         return _centralModule->_stabilizer->getThrottle();
+    }
+
+    void Drone::destroyQuadModules(rp3d::DynamicsWorld* world) {
+        for (auto& fixedJoint : _fixedJoints) {
+            world->destroyJoint(fixedJoint);
+//            delete fixedJoint;
+        }
+        _fixedJoints.clear();
+
+        for (auto & droneModule : _droneModules) {
+            world->destroyRigidBody(droneModule->getPhysicsBody()->getRigidBody());
+            delete droneModule;
+        }
+        _droneModules.clear();
+        _motors.clear();
+
+//        world->destroyRigidBody(_centralModule->getPhysicsBody()->getRigidBody());
+//        delete _centralModule;
+
     }
 
 

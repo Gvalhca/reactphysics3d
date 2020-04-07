@@ -17,6 +17,7 @@ namespace drone {
     public:
         explicit Sensor(PhysicsObject* objectToRead) : _objectToRead(objectToRead) {};
         virtual void getData(QuadAttitudeParameters&) = 0;
+        virtual ~Sensor() = default;;
     };
 }
 
