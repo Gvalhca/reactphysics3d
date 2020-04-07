@@ -11,7 +11,7 @@ namespace quad {
 
     class Accelerometer : public Sensor {
     public:
-        explicit Accelerometer(PhysicsObject*& objectToRead) : Sensor(objectToRead) {};
+        explicit Accelerometer(PhysicsObject* objectToRead) : Sensor(objectToRead) {};
 
         inline void getData(QuadAttitudeParameters& quadAttitudeParameters) override {
             quadAttitudeParameters.setAngularVelocity(_objectToRead->getRigidBody()->getAngularVelocity());

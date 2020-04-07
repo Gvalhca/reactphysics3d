@@ -39,6 +39,8 @@ namespace quad {
               const openglframework::Color& color, const rp3d::Transform& defaultTransform,
               rp3d::DynamicsWorld* dynamicsWorld, const std::string& meshFolderPath);
 
+        ~Motor() override = default;
+
         rp3d::Vector3 computeTorque();
     };
 

@@ -29,7 +29,7 @@ namespace quad {
 
         rp3d::Transform getDefaultTransform() const;
 
-        ~DroneModule();
+        virtual ~DroneModule();
 
         PhysicsObject* getPhysicsBody() const;
     };

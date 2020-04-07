@@ -19,7 +19,7 @@ namespace quad {
         rp3d::Vector3 getPRYFromQuaternion(const rp3d::Quaternion& Q) const;
 
     public:
-        explicit Gyroscope(PhysicsObject*& objectToRead) : Sensor(objectToRead) {};
+        explicit Gyroscope(PhysicsObject* objectToRead) : Sensor(objectToRead) {};
 
         inline void getData(QuadAttitudeParameters& quadAttitudeParameters) override {
 //            quadAttitudeParameters.setAxisPRY(getPRYFromQuaternion(_objectToRead->getTransform().getOrientation()));

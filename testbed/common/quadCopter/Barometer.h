@@ -10,7 +10,7 @@ namespace quad {
 
     class Barometer : public Sensor {
     public:
-        explicit Barometer(PhysicsObject*& objectToRead) : Sensor(objectToRead) {};
+        explicit Barometer(PhysicsObject* objectToRead) : Sensor(objectToRead) {};
 
         inline void getData(QuadAttitudeParameters& quadAttitudeParameters) override {
             quadAttitudeParameters.setAltitude(_objectToRead->getTransform().getPosition().y);

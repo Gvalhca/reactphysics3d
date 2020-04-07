@@ -19,7 +19,7 @@ namespace quad {
         CentralModule(double mass, const openglframework::Vector3& size, const rp3d::Transform& defaultTransform,
                       const QuadPIDs& quadPIDs, rp3d::DynamicsWorld* dynamicsWorld, const std::string& meshFolderPath);
 
-        ~CentralModule();
+        ~CentralModule() override;
 
         Stabilizer* _stabilizer;
     };

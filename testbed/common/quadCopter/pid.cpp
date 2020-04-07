@@ -130,5 +130,5 @@ void PIDImpl::setMinMax(double min, double max) {
 }
 
 
-PIDImpl::~PIDImpl()
-= default;
+PIDImpl::~PIDImpl() = default;
+

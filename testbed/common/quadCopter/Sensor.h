@@ -15,9 +15,9 @@ namespace quad {
         PhysicsObject* _objectToRead;
 
     public:
-        explicit Sensor(PhysicsObject*& objectToRead) : _objectToRead(objectToRead) {};
+        explicit Sensor(PhysicsObject* objectToRead) : _objectToRead(objectToRead) {};
         virtual void getData(QuadAttitudeParameters&) = 0;
-        virtual ~Sensor() = default;;
+        virtual ~Sensor() = default;
     };
 }
 

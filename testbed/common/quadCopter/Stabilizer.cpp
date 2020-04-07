@@ -96,6 +96,7 @@ namespace quad {
             _quadPIDs(quadPIDs),
             _targetParams(targetParameters),
             _currentParams(currentParameters),
+            _throttle(0),
             _flightMode(flightMode) {
         _sensors.push_back(new Barometer(objectToRead));
         _sensors.push_back(new Gyroscope(objectToRead));
