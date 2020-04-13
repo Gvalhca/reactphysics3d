@@ -1,11 +1,14 @@
 
 #include "Stabilizer.h"
+
+#include <memory>
+#include <utility>
 #include "quadCopter/Drone.h"
 #include "Accelerometer.h"
 
 namespace quad {
 
-    double Stabilizer::computePwm(const std::vector<Motor*>& motors, double dt) {
+    double Stabilizer::computePwm(std::vector<std::shared_ptr<Motor>> motors, double dt) {
         readSensorsData();
         if (_flightMode == STAB_HEIGHT) {
             computeHoverMode(dt);
@@ -78,9 +81,6 @@ namespace quad {
     }
 
     Stabilizer::~Stabilizer() {
-        for (auto& sensor : _sensors) {
-            delete sensor;
-        }
         _sensors.clear();
     }
 
@@ -89,7 +89,7 @@ namespace quad {
     }
 
     Stabilizer::Stabilizer(const QuadPIDs& quadPIDs,
-                           PhysicsObject*& objectToRead,
+                           std::shared_ptr<PhysicsObject> objectToRead,
                            const QuadAttitudeParameters& currentParameters,
                            const QuadAttitudeParameters& targetParameters,
                            FlightModes flightMode) :
@@ -98,9 +98,9 @@ namespace quad {
             _currentParams(currentParameters),
             _throttle(0),
             _flightMode(flightMode) {
-        _sensors.push_back(new Barometer(objectToRead));
-        _sensors.push_back(new Gyroscope(objectToRead));
-        _sensors.push_back(new Accelerometer(objectToRead));
+        _sensors.push_back(std::make_shared<Barometer>(objectToRead));
+        _sensors.push_back(std::make_shared<Gyroscope>(objectToRead));
+        _sensors.push_back(std::make_shared<Accelerometer>(objectToRead));
     }
 
     const QuadAttitudeParameters& Stabilizer::getCurrentParameters() const {

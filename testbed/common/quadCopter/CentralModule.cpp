@@ -14,8 +14,6 @@ namespace quad {
             _stabilizer(new Stabilizer(quadPIDs, _physicsBody)) {}
 
 
-    CentralModule::~CentralModule() {
-        delete _stabilizer;
-    }
+    CentralModule::~CentralModule() = default;
 
 }

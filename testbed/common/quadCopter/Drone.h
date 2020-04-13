@@ -29,14 +29,14 @@ namespace quad {
     private:
         double _mass;
 
-        CentralModule* _centralModule;
-        std::vector<Motor*> _motors;
-        std::vector<rp3d::FixedJoint*> _fixedJoints;
-        std::vector<DroneModule*> _droneModules;
+        std::shared_ptr<CentralModule> _centralModule;
+        std::vector<std::shared_ptr<Motor>> _motors;
+        std::vector<std::shared_ptr<rp3d::FixedJoint>> _fixedJoints;
+        std::vector<std::shared_ptr<DroneModule>> _droneModules;
 
 
         static rp3d::FixedJointInfo
-        generateFrameInfo(DroneModule* firstModule, DroneModule* secondModule, const rp3d::Vector3& anchorPoint);
+        generateFrameInfo(std::shared_ptr<DroneModule> firstModule, std::shared_ptr<DroneModule> secondModule, const rp3d::Vector3& anchorPoint);
 
         void createMotors(double frameSize, double motorRadius, double motorMass, rp3d::DynamicsWorld* world,
                           const std::string& meshFolderPath);
@@ -72,19 +72,19 @@ namespace quad {
         };
 
 
-        inline std::vector<Motor*> getMotors() const {
+        inline std::vector<std::shared_ptr<Motor>> getMotors() const {
             return _motors;
         }
 
-        inline std::vector<rp3d::FixedJoint*> getFixedJoints() const {
+        inline std::vector<std::shared_ptr<rp3d::FixedJoint>> getFixedJoints() const {
             return _fixedJoints;
         }
 
-        inline std::vector<DroneModule*> getDroneModules() const {
+        inline std::vector<std::shared_ptr<DroneModule>> getDroneModules() const {
             return _droneModules;
         }
 
-        inline CentralModule* getCentralModule() const {
+        inline std::shared_ptr<CentralModule> getCentralModule() const {
             return _centralModule;
         }
 

@@ -6,6 +6,8 @@
 #define REACTPHYSICS3D_GYROSCOPE_H
 
 #include <mathematics/Vector3.h>
+
+#include <utility>
 #include "reactphysics3d.h"
 #include "Sensor.h"
 
@@ -19,7 +21,7 @@ namespace quad {
         rp3d::Vector3 getPRYFromQuaternion(const rp3d::Quaternion& Q) const;
 
     public:
-        explicit Gyroscope(PhysicsObject* objectToRead) : Sensor(objectToRead) {};
+        explicit Gyroscope(std::shared_ptr<PhysicsObject> objectToRead) : Sensor(std::move(objectToRead)) {};
 
         inline void getData(QuadAttitudeParameters& quadAttitudeParameters) override {
 //            quadAttitudeParameters.setAxisPRY(getPRYFromQuaternion(_objectToRead->getTransform().getOrientation()));

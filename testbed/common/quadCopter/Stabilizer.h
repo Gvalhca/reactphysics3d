@@ -30,18 +30,19 @@ namespace quad {
 
         FlightModes _flightMode;
 
-        std::vector<Sensor*> _sensors;
+        std::vector<std::shared_ptr<Sensor>> _sensors;
 
         void computeHoverMode(double dt);
 
     public:
 
-        Stabilizer(const QuadPIDs& quadPIDs, PhysicsObject*& objectToRead,
+        Stabilizer(const QuadPIDs& quadPIDs,
+                   std::shared_ptr<PhysicsObject> objectToRead,
                    const QuadAttitudeParameters& currentParameters = QuadAttitudeParameters(),
                    const QuadAttitudeParameters& targetParameters = QuadAttitudeParameters(),
                    FlightModes flightMode = STAB);
 
-        double computePwm(const std::vector<Motor*>& motors, double dt);
+        double computePwm(std::vector<std::shared_ptr<Motor>> motors, double dt);
 
         void readSensorsData();
 

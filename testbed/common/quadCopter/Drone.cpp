@@ -21,8 +21,8 @@ namespace quad {
         rp3d::Transform motorTransform(motorPosition, rp3d::Quaternion::identity());
 
         // Create a sphere and a corresponding rigid in the dynamics world
-        auto* motorFR = new Motor(motorRadius, motorMass, maxPwm,
-                                  CLOCKWISE, mBlueColor, motorTransform, world, meshFolderPath);
+        auto motorFR = std::make_shared<Motor>(motorRadius, motorMass, maxPwm,
+                                               CLOCKWISE, mOrangeColor, motorTransform, world, meshFolderPath);
         _motors.push_back(motorFR);
 
         // --------------- Create the front left motor --------------- //
@@ -32,8 +32,8 @@ namespace quad {
         motorTransform = rp3d::Transform(motorPosition, rp3d::Quaternion::identity());
 
         // Create a motor and a corresponding rigid in the dynamics world
-        auto* motorFL = new Motor(motorRadius, motorMass, maxPwm,
-                                  COUNTER_CLOCKWISE, mBlueColor, motorTransform, world, meshFolderPath);
+        auto motorFL = std::make_shared<Motor>(motorRadius, motorMass, maxPwm,
+                                               COUNTER_CLOCKWISE, mOrangeColor, motorTransform, world, meshFolderPath);
         _motors.push_back(motorFL);
 
         // --------------- Create the back right motor --------------- //
@@ -43,8 +43,9 @@ namespace quad {
         motorTransform = rp3d::Transform(motorPosition, rp3d::Quaternion::identity());
 
         // Create a motor and a corresponding rigid in the dynamics world
-        auto* motorBR = new Motor(motorRadius, motorMass, maxPwm, COUNTER_CLOCKWISE, mOrangeColor, motorTransform,
-                                  world, meshFolderPath);
+        auto motorBR = std::make_shared<Motor>(motorRadius, motorMass, maxPwm, COUNTER_CLOCKWISE, mBlueColor,
+                                               motorTransform,
+                                               world, meshFolderPath);
         _motors.push_back(motorBR);
 
         // --------------- Create the back left motor --------------- //
@@ -54,8 +55,8 @@ namespace quad {
         motorTransform = rp3d::Transform(motorPosition, rp3d::Quaternion::identity());
 
         // Create a motor and a corresponding rigid in the dynamics world
-        auto* motorBL = new Motor(motorRadius, motorMass, maxPwm, CLOCKWISE, mOrangeColor, motorTransform,
-                                  world, meshFolderPath);
+        auto motorBL = std::make_shared<Motor>(motorRadius, motorMass, maxPwm, CLOCKWISE, mBlueColor, motorTransform,
+                                               world, meshFolderPath);
         _motors.push_back(motorBL);
 
         // Add _motors to _droneModules
@@ -63,43 +64,43 @@ namespace quad {
     }
 
     void Drone::createFrames(rp3d::DynamicsWorld* world) {
-        
+
         // --------------- Create the central to FR motor fixed joint --------------- //
-        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+        _fixedJoints.push_back(std::shared_ptr<rp3d::FixedJoint>(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
                 generateFrameInfo(_centralModule, _motors[MOTOR_FR],
-                                  _centralModule->getDefaultTransform().getPosition()))));
+                                  _centralModule->getDefaultTransform().getPosition())))));
 
         // --------------- Create the central to FL motor fixed joint --------------- //
-        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+        _fixedJoints.push_back(std::shared_ptr<rp3d::FixedJoint>(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
                 generateFrameInfo(_centralModule, _motors[MOTOR_FL],
-                                  _centralModule->getDefaultTransform().getPosition()))));
+                                  _centralModule->getDefaultTransform().getPosition())))));
 
         // --------------- Create the central to BR motor fixed joint --------------- //
-        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+        _fixedJoints.push_back(std::shared_ptr<rp3d::FixedJoint>(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
                 generateFrameInfo(_centralModule, _motors[MOTOR_BR],
-                                  _centralModule->getDefaultTransform().getPosition()))));
+                                  _centralModule->getDefaultTransform().getPosition())))));
 
         // --------------- Create the central to BL motor fixed joint --------------- //
-        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+        _fixedJoints.push_back(std::shared_ptr<rp3d::FixedJoint>(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
                 generateFrameInfo(_centralModule, _motors[MOTOR_BL],
-                                  _centralModule->getDefaultTransform().getPosition()))));
+                                  _centralModule->getDefaultTransform().getPosition())))));
 
         // ----- Create motors to central fixed joints for better physics dynamics ---- //
-        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+        _fixedJoints.push_back(std::shared_ptr<rp3d::FixedJoint>(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
                 generateFrameInfo(_motors[MOTOR_FL], _centralModule,
-                                  _motors[MOTOR_FL]->getDefaultTransform().getPosition()))));
+                                  _motors[MOTOR_FL]->getDefaultTransform().getPosition())))));
 
-        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+        _fixedJoints.push_back(std::shared_ptr<rp3d::FixedJoint>(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
                 generateFrameInfo(_motors[MOTOR_FR], _centralModule,
-                                  _motors[MOTOR_FR]->getDefaultTransform().getPosition()))));
+                                  _motors[MOTOR_FR]->getDefaultTransform().getPosition())))));
 
-        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+        _fixedJoints.push_back(std::shared_ptr<rp3d::FixedJoint>(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
                 generateFrameInfo(_motors[MOTOR_BL], _centralModule,
-                                  _motors[MOTOR_BL]->getDefaultTransform().getPosition()))));
+                                  _motors[MOTOR_BL]->getDefaultTransform().getPosition())))));
 
-        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+        _fixedJoints.push_back(std::shared_ptr<rp3d::FixedJoint>(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
                 generateFrameInfo(_motors[MOTOR_BR], _centralModule,
-                                  _motors[MOTOR_BR]->getDefaultTransform().getPosition()))));
+                                  _motors[MOTOR_BR]->getDefaultTransform().getPosition())))));
     }
 
     Drone::Drone(double frameSize, double droneMass, double motorRadius, double motorMass, QuadPIDs quadPIDs,
@@ -126,8 +127,9 @@ namespace quad {
 
         // Create a central module and a corresponding rigid in the dynamics world
         openglframework::Vector3 boxDimensions(frameSize, 0.01, frameSize);
-        _centralModule = new CentralModule(centralModuleMass, boxDimensions, centralModuleTransform, quadPIDs, world,
-                                           meshFolderPath);
+        _centralModule = std::make_shared<CentralModule>(centralModuleMass, boxDimensions, centralModuleTransform,
+                                                         quadPIDs, world,
+                                                         meshFolderPath);
         _droneModules.push_back(_centralModule);
 
         // ------------ Create fixed joints for quad frames --------- //
@@ -150,8 +152,9 @@ namespace quad {
         }
     }
 
-    rp3d::FixedJointInfo Drone::generateFrameInfo(DroneModule* firstModule, DroneModule* secondModule,
-                                                  const rp3d::Vector3& anchorPoint) {
+    rp3d::FixedJointInfo
+    Drone::generateFrameInfo(std::shared_ptr<DroneModule> firstModule, std::shared_ptr<DroneModule> secondModule,
+                             const rp3d::Vector3& anchorPoint) {
         rp3d::RigidBody* firstModuleBody = firstModule->getPhysicsBody()->getRigidBody();
         rp3d::RigidBody* secondModuleBody = secondModule->getPhysicsBody()->getRigidBody();
         rp3d::FixedJointInfo jointInfo(firstModuleBody, secondModuleBody, anchorPoint);
@@ -209,14 +212,14 @@ namespace quad {
 
     void Drone::destroyQuadModules(rp3d::DynamicsWorld* world) {
         for (auto& fixedJoint : _fixedJoints) {
-            world->destroyJoint(fixedJoint);
+            world->destroyJoint(fixedJoint.get());
 //            delete fixedJoint;
         }
         _fixedJoints.clear();
 
-        for (auto & droneModule : _droneModules) {
+        for (auto& droneModule : _droneModules) {
             world->destroyRigidBody(droneModule->getPhysicsBody()->getRigidBody());
-            delete droneModule;
+//            delete droneModule;
         }
         _droneModules.clear();
         _motors.clear();

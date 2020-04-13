@@ -21,7 +21,7 @@ namespace quad {
 
         ~CentralModule() override;
 
-        Stabilizer* _stabilizer;
+        std::shared_ptr<Stabilizer> _stabilizer;
     };
 }
 

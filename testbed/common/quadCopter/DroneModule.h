@@ -11,7 +11,7 @@ namespace quad {
 
     class DroneModule {
     protected:
-        PhysicsObject* _physicsBody;
+        std::shared_ptr<PhysicsObject> _physicsBody;
         rp3d::Transform _defaultTransform;
 
     public:
@@ -31,7 +31,7 @@ namespace quad {
 
         virtual ~DroneModule();
 
-        PhysicsObject* getPhysicsBody() const;
+        std::shared_ptr<PhysicsObject> getPhysicsBody() const;
     };
 }
 

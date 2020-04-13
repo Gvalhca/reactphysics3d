@@ -6,6 +6,7 @@
 #define REACTPHYSICS3D_QUADPIDS_H
 
 #include <map>
+#include <memory>
 #include "pid.h"
 
 namespace quad {
@@ -19,7 +20,7 @@ namespace quad {
 
     class QuadPIDs {
     private:
-        std::map<pidTypes, PID*> _pids;
+        std::map<pidTypes, std::shared_ptr<PID>> _pids;
 
         PID& getPid(pidTypes pidType) const;
 

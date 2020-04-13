@@ -143,7 +143,7 @@ void QuadScene::createDrone() {
                        quadPIDs, getDynamicsWorld(), mMeshFolderPath);
     mDrone->setTransform(rp3d::Transform(positionDrone, rp3d::Quaternion::identity()));
     for (auto& mDroneModule : mDrone->getDroneModules()) {
-        mPhysicsObjects.push_back(mDroneModule->getPhysicsBody());
+        mPhysicsObjects.push_back(mDroneModule->getPhysicsBody().get());
     }
     mDrone->setFlightMode(STAB_HEIGHT);
 }

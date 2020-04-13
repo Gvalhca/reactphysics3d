@@ -27,16 +27,14 @@ namespace quad {
     }
 
     
-    DroneModule::~DroneModule() {
-        delete _physicsBody;
-    }
+    DroneModule::~DroneModule() = default;
 
 //    Box* DroneModule::getPhysicsBody() const {
 //        return _physicsBody;
 //    }
 
     
-    PhysicsObject* DroneModule::getPhysicsBody() const {
+    std::shared_ptr<PhysicsObject> DroneModule::getPhysicsBody() const {
         return _physicsBody;
     }
     

@@ -5,6 +5,8 @@
 #ifndef REACTPHYSICS3D_SENSOR_H
 #define REACTPHYSICS3D_SENSOR_H
 
+#include <utility>
+
 #include "quadCopter/DroneModule.h"
 #include "QuadAttitudeParameters.h"
 
@@ -12,10 +14,10 @@ namespace quad {
 
     class Sensor {
     protected:
-        PhysicsObject* _objectToRead;
+        std::shared_ptr<PhysicsObject> _objectToRead;
 
     public:
-        explicit Sensor(PhysicsObject* objectToRead) : _objectToRead(objectToRead) {};
+        explicit Sensor(std::shared_ptr<PhysicsObject> objectToRead) : _objectToRead(std::move(objectToRead)) {};
         virtual void getData(QuadAttitudeParameters&) = 0;
         virtual ~Sensor() = default;
     };
