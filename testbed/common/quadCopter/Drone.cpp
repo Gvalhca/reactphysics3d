@@ -66,41 +66,41 @@ namespace quad {
     void Drone::createFrames(rp3d::DynamicsWorld* world) {
 
         // --------------- Create the central to FR motor fixed joint --------------- //
-        _fixedJoints.push_back(std::shared_ptr<rp3d::FixedJoint>(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
                 generateFrameInfo(_centralModule, _motors[MOTOR_FR],
-                                  _centralModule->getDefaultTransform().getPosition())))));
+                                  _centralModule->getDefaultTransform().getPosition()))));
 
         // --------------- Create the central to FL motor fixed joint --------------- //
-        _fixedJoints.push_back(std::shared_ptr<rp3d::FixedJoint>(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
                 generateFrameInfo(_centralModule, _motors[MOTOR_FL],
-                                  _centralModule->getDefaultTransform().getPosition())))));
+                                  _centralModule->getDefaultTransform().getPosition()))));
 
         // --------------- Create the central to BR motor fixed joint --------------- //
-        _fixedJoints.push_back(std::shared_ptr<rp3d::FixedJoint>(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
                 generateFrameInfo(_centralModule, _motors[MOTOR_BR],
-                                  _centralModule->getDefaultTransform().getPosition())))));
+                                  _centralModule->getDefaultTransform().getPosition()))));
 
         // --------------- Create the central to BL motor fixed joint --------------- //
-        _fixedJoints.push_back(std::shared_ptr<rp3d::FixedJoint>(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
                 generateFrameInfo(_centralModule, _motors[MOTOR_BL],
-                                  _centralModule->getDefaultTransform().getPosition())))));
+                                  _centralModule->getDefaultTransform().getPosition()))));
 
         // ----- Create motors to central fixed joints for better physics dynamics ---- //
-        _fixedJoints.push_back(std::shared_ptr<rp3d::FixedJoint>(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
                 generateFrameInfo(_motors[MOTOR_FL], _centralModule,
-                                  _motors[MOTOR_FL]->getDefaultTransform().getPosition())))));
+                                  _motors[MOTOR_FL]->getDefaultTransform().getPosition()))));
 
-        _fixedJoints.push_back(std::shared_ptr<rp3d::FixedJoint>(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
                 generateFrameInfo(_motors[MOTOR_FR], _centralModule,
-                                  _motors[MOTOR_FR]->getDefaultTransform().getPosition())))));
+                                  _motors[MOTOR_FR]->getDefaultTransform().getPosition()))));
 
-        _fixedJoints.push_back(std::shared_ptr<rp3d::FixedJoint>(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
                 generateFrameInfo(_motors[MOTOR_BL], _centralModule,
-                                  _motors[MOTOR_BL]->getDefaultTransform().getPosition())))));
+                                  _motors[MOTOR_BL]->getDefaultTransform().getPosition()))));
 
-        _fixedJoints.push_back(std::shared_ptr<rp3d::FixedJoint>(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
+        _fixedJoints.push_back(dynamic_cast<rp3d::FixedJoint*>(world->createJoint(
                 generateFrameInfo(_motors[MOTOR_BR], _centralModule,
-                                  _motors[MOTOR_BR]->getDefaultTransform().getPosition())))));
+                                  _motors[MOTOR_BR]->getDefaultTransform().getPosition()))));
     }
 
     Drone::Drone(double frameSize, double droneMass, double motorRadius, double motorMass, QuadPIDs quadPIDs,
@@ -125,12 +125,22 @@ namespace quad {
         }
         quadPIDs[HOVER_PID].setMinMax(0, _motors[MOTOR_BL]->getMaxPwm());
 
+
         // Create a central module and a corresponding rigid in the dynamics world
         openglframework::Vector3 boxDimensions(frameSize, 0.01, frameSize);
         _centralModule = std::make_shared<CentralModule>(centralModuleMass, boxDimensions, centralModuleTransform,
                                                          quadPIDs, world,
                                                          meshFolderPath);
         _droneModules.push_back(_centralModule);
+
+        // Set scale functions for managing input from controller
+        ScaleManager<double, double> scaleCubeFunction([](double x) { return x * x * x; });
+        /// TODO: create interface for setting scaleFunctions in quad creation
+//        _centralModule->_stabilizer->getTargetParameters().setScaleFunctions(scaleCubeFunction,
+//                           scaleCubeFunction,
+//                           scaleCubeFunction,
+//                           scaleCubeFunction);
+
 
         // ------------ Create fixed joints for quad frames --------- //
         createFrames(world);
@@ -187,13 +197,14 @@ namespace quad {
     }
 
     /**
-     * Set target Pitch, Roll, Yaw from input device
-     * @param pitch in radians
-     * @param roll  in radians
-     * @param yaw   in radians
+     * Set target Pitch, Roll, Yaw, Throttle from input device
+     * @param pitch in range [QuadAttitudeParameters::minInput, QuadAttitudeParameters::maxInput]
+     * @param roll  in range [QuadAttitudeParameters::minInput, QuadAttitudeParameters::maxInput]
+     * @param yaw   in range [QuadAttitudeParameters::minInput, QuadAttitudeParameters::maxInput]
+     * @param throttle in range range [QuadAttitudeParameters::minInput, QuadAttitudeParameters::maxInput]
      */
-    void Drone::setInputAxisPRY(double pitch, double roll, double yaw) {
-        _centralModule->_stabilizer->setTargetAxisPRY(rp3d::Vector3(pitch, roll, yaw));
+    void Drone::setInputParams(double pitch, double roll, double yaw, double throttle) {
+        _centralModule->_stabilizer->setInputParameters(rp3d::Vector3(pitch, roll, yaw), throttle, _motors[MOTOR_BL]->getMaxPwm());
     }
 
     void Drone::setMotorsPwm(double pwm) {
@@ -202,9 +213,9 @@ namespace quad {
         }
     }
 
-    void Drone::setThrottle(double throttle) {
-        _centralModule->_stabilizer->setThrottle(std::max(0.0, throttle));
-    }
+//    void Drone::setThrottle(double throttle) {
+//        _centralModule->_stabilizer->setThrottle(std::max(0.0, throttle));
+//    }
 
     double Drone::getThrottle() const {
         return _centralModule->_stabilizer->getThrottle();
@@ -212,7 +223,7 @@ namespace quad {
 
     void Drone::destroyQuadModules(rp3d::DynamicsWorld* world) {
         for (auto& fixedJoint : _fixedJoints) {
-            world->destroyJoint(fixedJoint.get());
+            world->destroyJoint(fixedJoint);
 //            delete fixedJoint;
         }
         _fixedJoints.clear();

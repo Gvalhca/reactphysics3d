@@ -148,40 +148,41 @@ void QuadScene::createDrone() {
     mDrone->setFlightMode(STAB_HEIGHT);
 }
 
-static rp3d::Vector3 testPRY(0.0, 0.0, 0.0);
+static rp3d::Vector3 testPRY(1500.0, 1500.0, 1500.0);
+static double quadThrottle = 0.0;
 
 bool QuadScene::keyboardEvent(int key, int scancode, int action, int mods) {
 
     if (action == GLFW_PRESS) {
         switch (key) {
             case GLFW_KEY_W:
-                testPRY.x = 0.5;
+                testPRY.x = 2100;
                 break;
             case GLFW_KEY_S:
-                testPRY.x = -0.5;
+                testPRY.x = 900;
                 break;
             case GLFW_KEY_A:
-                testPRY.y = -0.5;
+                testPRY.y = 2100;
                 break;
             case GLFW_KEY_D:
-                testPRY.y = 0.5;
+                testPRY.y = 900;
                 break;
             case GLFW_KEY_Q:
-                testPRY.z = 5.0;
+                testPRY.z = 2100;
                 break;
             case GLFW_KEY_E:
-                testPRY.z = -5.0;
+                testPRY.z = 900;
                 break;
             case GLFW_KEY_SPACE:
                 mDrone->setFlightMode(mDrone->getFlightMode() ? STAB : STAB_HEIGHT);
                 break;
             case GLFW_KEY_R:
                 mDrone->setFlightMode(STAB);
-                mDrone->setThrottle(mDrone->getThrottle() + 0.05);
+                quadThrottle = mDrone->getThrottle() + 50;
                 break;
             case GLFW_KEY_F:
                 mDrone->setFlightMode(STAB);
-                mDrone->setThrottle(mDrone->getThrottle() - 0.05);
+                quadThrottle = mDrone->getThrottle() - 50;
                 break;
         }
     }
@@ -190,20 +191,20 @@ bool QuadScene::keyboardEvent(int key, int scancode, int action, int mods) {
         switch (key) {
             case GLFW_KEY_W:
             case GLFW_KEY_S:
-                testPRY.x = 0.0;
+                testPRY.x = 1500.0;
                 break;
             case GLFW_KEY_A:
             case GLFW_KEY_D:
-                testPRY.y = 0.0;
+                testPRY.y = 1500.0;
                 break;
             case GLFW_KEY_Q:
             case GLFW_KEY_E:
-                testPRY.z = 0.0;
+                testPRY.z = 1500.0;
                 break;
         }
     }
 
-    mDrone->getCentralModule()->_stabilizer->setTargetAxisPRY(testPRY);
+    mDrone->setInputParams(testPRY.x, testPRY.y, testPRY.z, quadThrottle);
 
     return false;
 }

@@ -31,7 +31,7 @@ namespace quad {
 
         std::shared_ptr<CentralModule> _centralModule;
         std::vector<std::shared_ptr<Motor>> _motors;
-        std::vector<std::shared_ptr<rp3d::FixedJoint>> _fixedJoints;
+        std::vector<rp3d::FixedJoint*> _fixedJoints;
         std::vector<std::shared_ptr<DroneModule>> _droneModules;
 
 
@@ -76,7 +76,7 @@ namespace quad {
             return _motors;
         }
 
-        inline std::vector<std::shared_ptr<rp3d::FixedJoint>> getFixedJoints() const {
+        inline std::vector<rp3d::FixedJoint*> getFixedJoints() const {
             return _fixedJoints;
         }
 
@@ -94,11 +94,11 @@ namespace quad {
 
         double getThrottle() const;
 
-        void setThrottle(double throttle);
+//        void setThrottle(double throttle);
 
         double getAltitude() const;
 
-        void setInputAxisPRY(double pitch, double roll, double yaw);
+        void setInputParams(double pitch, double roll, double yaw, double throttle);
 
         void setFlightMode(FlightModes flightMode);
 

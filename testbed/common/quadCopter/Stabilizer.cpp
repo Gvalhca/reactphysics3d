@@ -24,11 +24,13 @@ namespace quad {
         double thrustRoll = _quadPIDs[ROLL_PID].calculate(dt, currentPRY[ROLL], targetPRY[ROLL]);
         double thrustYaw = _quadPIDs[YAW_PID].calculate(dt, currentPRY[YAW], targetPRY[YAW]);
 
+        double throttle = _currentParams.getThrottle();
+
         std::vector<double> motorsPwm(4, 0);
-        motorsPwm[MOTOR_FR] = thrustPitch - thrustRoll + thrustYaw + _throttle;
-        motorsPwm[MOTOR_FL] = thrustPitch + thrustRoll - thrustYaw + _throttle;
-        motorsPwm[MOTOR_BR] = -thrustPitch - thrustRoll - thrustYaw + _throttle;
-        motorsPwm[MOTOR_BL] = -thrustPitch + thrustRoll + thrustYaw + _throttle;
+        motorsPwm[MOTOR_FR] = thrustPitch - thrustRoll + thrustYaw + throttle;
+        motorsPwm[MOTOR_FL] = thrustPitch + thrustRoll - thrustYaw + throttle;
+        motorsPwm[MOTOR_BR] = -thrustPitch - thrustRoll - thrustYaw + throttle;
+        motorsPwm[MOTOR_BL] = -thrustPitch + thrustRoll + thrustYaw + throttle;
 
         for (int i = 0; i < 4; i++) {
             motors[i]->setPwm(motorsPwm[i]);
@@ -41,35 +43,39 @@ namespace quad {
 
 //        std::cout << "FLight Mode: " << _flightMode << std::endl;
 //
-//        std::cout << "Current Altitude: " << _currentParams.getAltitude()
-//                  << " Target Altitude: " << _targetParams.getAltitude()
-//                  << std::endl
-//                  << "Current Pitch: " << _currentParams.getAxisPRY().x
-//                  << " Roll: " << _currentParams.getAxisPRY().y
-//                  << " Yaw: " << _currentParams.getAxisPRY().z
-//                  << " Target Pitch: " << _targetParams.getAxisPRY().x
-//                  << " Roll: " << _targetParams.getAxisPRY().y
-//                  << " Yaw: " << _targetParams.getAxisPRY().z
-//                  << std::endl;
-//
-//        std::cout << "Thrust Pitch: " << thrustPitch
-//                  << " Roll: " << thrustRoll
-//                  << " Yaw: " << thrustYaw
-//                  << " Throttle: " << _throttle
-//                  << std::endl;
+        std::cout << "Current Altitude: " << _currentParams.getAltitude()
+                  << " Target Altitude: " << _targetParams.getAltitude()
+                  << std::endl
+                  << "Current Pitch: " << _currentParams.getAxisPRY().x
+                  << " Roll: " << _currentParams.getAxisPRY().y
+                  << " Yaw: " << currentPRY[YAW]
+                  << " Throttle: " << _currentParams.getThrottle()
+                  << std::endl
+                  << " Target Pitch: " << _targetParams.getAxisPRY().x
+                  << " Roll: " << _targetParams.getAxisPRY().y
+                  << " Yaw: " << _targetParams.getAxisPRY().z
+                  << " Throttle: " << _targetParams.getThrottle()
+                  << std::endl;
 
-//        std::cout << "-------------------------------------------------------------" << std::endl;
+        std::cout << "Thrust Pitch: " << thrustPitch
+                  << " Roll: " << thrustRoll
+                  << " Yaw: " << thrustYaw
+                  << " Throttle: " << throttle
+                  << std::endl;
+
+        std::cout << "-------------------------------------------------------------" << std::endl;
     }
 
     void Stabilizer::computeHoverMode(double dt) {
-
         double currentAltitude = _currentParams.getAltitude();
-        _throttle = _quadPIDs[HOVER_PID].calculate(dt, _targetParams.getAltitude(), currentAltitude);
+        _currentParams.setThrottle(_quadPIDs[HOVER_PID].calculate(dt, _targetParams.getAltitude(), currentAltitude));
+        _targetParams.setThrottle(_currentParams.getThrottle());
     }
 
     void Stabilizer::reset() {
         _quadPIDs.reset();
-        _targetParams.setParameters(0, rp3d::Vector3(0, 0, 0));
+        _targetParams.reset();
+        _currentParams.reset();
     }
 
     void Stabilizer::setFlightMode(FlightModes flightMode) {
@@ -84,8 +90,9 @@ namespace quad {
         _sensors.clear();
     }
 
-    void Stabilizer::setTargetParameters(double targetAltitude, const rp3d::Vector3& targetAxis) {
-        _targetParams.setParameters(targetAltitude, targetAxis);
+    void Stabilizer::setInputParameters(rp3d::Vector3 inputPRY, double throttle, double maxThrottle) {
+        _targetParams.setInputParameters(inputPRY, throttle, maxThrottle);
+        _currentParams.setThrottle(_targetParams.getThrottle());
     }
 
     Stabilizer::Stabilizer(const QuadPIDs& quadPIDs,
@@ -96,7 +103,6 @@ namespace quad {
             _quadPIDs(quadPIDs),
             _targetParams(targetParameters),
             _currentParams(currentParameters),
-            _throttle(0),
             _flightMode(flightMode) {
         _sensors.push_back(std::make_shared<Barometer>(objectToRead));
         _sensors.push_back(std::make_shared<Gyroscope>(objectToRead));
@@ -117,21 +123,12 @@ namespace quad {
         }
     }
 
-    void Stabilizer::setTargetAxisPRY(const rp3d::Vector3& targetAxis) {
-        _targetParams.setAxisPRY(targetAxis);
-    }
-
-    void Stabilizer::setThrottle(double throttle) {
-        _throttle = throttle;
-    }
-
     FlightModes Stabilizer::getFlightMode() const {
         return _flightMode;
     }
 
     double Stabilizer::getThrottle() const {
-        return _throttle;
+        return _currentParams.getThrottle();
     }
-
 
 }

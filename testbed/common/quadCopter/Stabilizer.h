@@ -24,15 +24,13 @@ namespace quad {
     class Stabilizer {
     private:
         QuadPIDs _quadPIDs;
-        QuadAttitudeParameters _targetParams;
-        QuadAttitudeParameters _currentParams;
-        double _throttle;
-
+        QuadAttitudeParameters _targetParams, _currentParams;
         FlightModes _flightMode;
 
         std::vector<std::shared_ptr<Sensor>> _sensors;
 
         void computeHoverMode(double dt);
+
 
     public:
 
@@ -50,13 +48,11 @@ namespace quad {
 
         const QuadAttitudeParameters& getTargetParameters() const;
 
-        void setTargetAxisPRY(const rp3d::Vector3& targetAxis);
-
-        void setTargetParameters(double targetAltitude, const rp3d::Vector3& targetAxis);
+        void setInputParameters(rp3d::Vector3 inputPRY, double throttle, double maxThrottle);
 
         double getThrottle() const;
 
-        void setThrottle(double throttle);
+//        void setThrottle(double throttle);
 
         void setFlightMode(FlightModes flightMode);
 

@@ -26,11 +26,12 @@ namespace quad {
 
     public:
         QuadPIDs(const PID& pitchPID, const PID& rollPID, const PID& yawPID,
-                 const PID& hoverPID = PID(0.7, 0.35, 0.35));
+                 const PID& hoverPID = PID(7, 3.5, 3.5));
 
         ~QuadPIDs();
 
         QuadPIDs(const QuadPIDs&);
+
 
         PID& operator[](pidTypes pidType);
 

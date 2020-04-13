@@ -8,6 +8,8 @@ namespace quad {
         _pids[ROLL_PID] = std::make_shared<PID>(rollPID);
         _pids[YAW_PID] = std::make_shared<PID>(yawPID);
         _pids[HOVER_PID] = std::make_shared<PID>(hoverPID);
+
+
     }
 
     PID& QuadPIDs::getPid(pidTypes pidType) const {
@@ -15,10 +17,10 @@ namespace quad {
     }
 
     QuadPIDs::QuadPIDs(const QuadPIDs& quadPIDs) {
-        _pids[PITCH_PID] = std::make_shared<PID>(quadPIDs[PITCH_PID]);
-        _pids[ROLL_PID] = std::make_shared<PID>(quadPIDs[ROLL_PID]);
-        _pids[YAW_PID] = std::make_shared<PID>(quadPIDs[YAW_PID]);
-        _pids[HOVER_PID] = std::make_shared<PID>(quadPIDs[HOVER_PID]);
+        for (int i = 0; i <= HOVER_PID; ++i) {
+            auto pidType = (pidTypes) i;
+            _pids[pidType] = std::make_shared<PID>(quadPIDs[pidType]);
+        }
     }
 
     const PID& QuadPIDs::operator[](pidTypes pidType) const {
@@ -41,5 +43,9 @@ namespace quad {
 //        }
         _pids.clear();
     }
+
+
+
+
 
 }

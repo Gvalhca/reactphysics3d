@@ -111,7 +111,7 @@ SET(COMMON_SOURCES
         common/quadCopter/QuadPIDs.cpp
         common/quadCopter/QuadPIDs.h
         common/quadCopter/QuadAttitudeParameters.cpp
-        common/quadCopter/QuadAttitudeParameters.h common/quadCopter/CentralModule.cpp common/quadCopter/CentralModule.h common/quadCopter/Sensor.h common/quadCopter/Accelerometer.cpp common/quadCopter/Accelerometer.h)
+        common/quadCopter/QuadAttitudeParameters.h common/quadCopter/CentralModule.cpp common/quadCopter/CentralModule.h common/quadCopter/Sensor.h common/quadCopter/Accelerometer.cpp common/quadCopter/Accelerometer.h common/quadCopter/ScaleManager.cpp common/quadCopter/ScaleManager.h)
 
 # Examples scenes source files
 SET(SCENES_SOURCES
