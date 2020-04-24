@@ -16,16 +16,16 @@ namespace quad {
     class Gyroscope : public Sensor {
     private:
 
-        rp3d::Vector3 toEulerAngles(const rp3d::Quaternion& q) const;
+        QuadAngles toEulerAngles(const rp3d::Quaternion& q) const;
 
-        rp3d::Vector3 getPRYFromQuaternion(const rp3d::Quaternion& Q) const;
+        QuadAngles getPRYFromQuaternion(const rp3d::Quaternion& Q) const;
 
     public:
         explicit Gyroscope(std::shared_ptr<PhysicsObject> objectToRead) : Sensor(std::move(objectToRead)) {};
 
         inline void getData(QuadAttitudeParameters& quadAttitudeParameters) override {
 //            quadAttitudeParameters.setAxisPRY(getPRYFromQuaternion(_objectToRead->getTransform().getOrientation()));
-            quadAttitudeParameters.setAxisPRY(toEulerAngles(_objectToRead->getTransform().getOrientation()));
+            quadAttitudeParameters.setQuadAngles(toEulerAngles(_objectToRead->getTransform().getOrientation()));
         }
     };
 

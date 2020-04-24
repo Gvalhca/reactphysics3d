@@ -48,7 +48,7 @@ namespace quad {
 
         const QuadAttitudeParameters& getTargetParameters() const;
 
-        void setInputParameters(rp3d::Vector3 inputPRY, double throttle, double maxThrottle);
+        void setInputParameters(QuadAngles inputAngles, double throttle, double maxThrottle);
 
         double getThrottle() const;
 

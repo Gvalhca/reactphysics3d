@@ -5,7 +5,7 @@
 #include "Gyroscope.h"
 
 
-rp3d::Vector3 quad::Gyroscope::toEulerAngles(const rp3d::Quaternion& q) const {
+quad::QuadAngles quad::Gyroscope::toEulerAngles(const rp3d::Quaternion& q) const {
 //    // roll (x-axis rotation)
 //    double sinr_cosp = 2 * (q.w * q.x + q.y * q.z);
 //    double cosr_cosp = 1 - 2 * (q.x * q.x + q.y * q.y);
@@ -38,28 +38,28 @@ rp3d::Vector3 quad::Gyroscope::toEulerAngles(const rp3d::Quaternion& q) const {
 //    angles.y = std::atan2(sinr_cosp, cosr_cosp);
 //    std::cout << "sinr_cosp: " << sinr_cosp << "cosr_cosp: " << cosr_cosp << std::endl;
 
-    rp3d::Vector3 angles;
+    QuadAngles angles;
     double toDegrees = 180 / M_PI;
 
     // roll (x-axis rotation)
     // Proper roll calculation
     rp3d::Matrix3x3 orientMatrix = q.getMatrix();
     double phi = std::asin(orientMatrix[1][2]);
-    angles.y = -std::atan2(-orientMatrix[1][0] / std::cos(phi),
-                           orientMatrix[1][1] / std::cos(phi));
+    angles.setRoll(-std::atan2(-orientMatrix[1][0] / std::cos(phi),
+                               orientMatrix[1][1] / std::cos(phi)));
 
     // pitch (y-axis rotation)
     double sinp = 2 * (q.w * q.x - q.z * q.y);
     if (std::abs(sinp) >= 1)
-        angles.x = std::copysign(M_PI / 2, sinp); // use 90 degrees if out of range
+        angles.setPitch(std::copysign(M_PI / 2, sinp)); // use 90 degrees if out of range
     else
-        angles.x = std::asin(sinp);
+        angles.setPitch(std::asin(sinp));
 
     // yaw (z-axis rotation)
     double siny_cosp = 2 * (q.w * q.x + q.z * q.y);
     double cosy_cosp = 1 - 2 * (q.y * q.y + q.x * q.x);
-    angles.z = std::atan2(siny_cosp, cosy_cosp);
-    angles.z = std::cos(angles.z);
+    angles.setYaw(std::atan2(siny_cosp, cosy_cosp));
+    angles.setYaw(std::cos(angles.getYaw()));
 
 //    std::cout << "PRY from Quaternion: " << (angles * toDegrees).to_string() << std::endl;
 //    angles.y = std::sin(angles.y);
@@ -68,7 +68,7 @@ rp3d::Vector3 quad::Gyroscope::toEulerAngles(const rp3d::Quaternion& q) const {
 
 }
 
-rp3d::Vector3 quad::Gyroscope::getPRYFromQuaternion(const rp3d::Quaternion& Q) const {
+quad::QuadAngles quad::Gyroscope::getPRYFromQuaternion(const rp3d::Quaternion& Q) const {
     double toDegrees = 180 / M_PI;
     double angleYaw = asin(2.0 * (Q.w * Q.y - Q.z * Q.x));
     rp3d::Quaternion qYaw = rp3d::Quaternion::fromEulerAngles(0.0, -angleYaw, 0.0);
@@ -89,5 +89,5 @@ rp3d::Vector3 quad::Gyroscope::getPRYFromQuaternion(const rp3d::Quaternion& Q) c
 //            pitch *= toDegrees;
 //            roll *= toDegrees;
 
-    return rp3d::Vector3(pitch, roll, angleYaw);
+    return QuadAngles(pitch, roll, angleYaw);
 }

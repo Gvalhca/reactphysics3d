@@ -68,7 +68,7 @@ SET(TESTBED_SOURCES
         src/SceneDemo.cpp
         src/Timer.h
         src/Timer.cpp
-        )
+        common/quadCopter/QuadAngles.cpp common/quadCopter/QuadAngles.h)
 
 # Common source files
 SET(COMMON_SOURCES

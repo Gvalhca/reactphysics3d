@@ -98,7 +98,7 @@ namespace quad {
 
         double getAltitude() const;
 
-        void setInputParams(double pitch, double roll, double yaw, double throttle);
+        void setInputParams(QuadAngles quadAngles, double throttle);
 
         void setFlightMode(FlightModes flightMode);
 

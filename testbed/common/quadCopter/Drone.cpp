@@ -200,11 +200,12 @@ namespace quad {
      * Set target Pitch, Roll, Yaw, Throttle from input device
      * @param pitch in range [QuadAttitudeParameters::minInput, QuadAttitudeParameters::maxInput]
      * @param roll  in range [QuadAttitudeParameters::minInput, QuadAttitudeParameters::maxInput]
-     * @param yaw   in range [QuadAttitudeParameters::minInput, QuadAttitudeParameters::maxInput]
+     * @param quadAngles   in range [QuadAttitudeParameters::minInput, QuadAttitudeParameters::maxInput]
      * @param throttle in range range [QuadAttitudeParameters::minInput, QuadAttitudeParameters::maxInput]
      */
-    void Drone::setInputParams(double pitch, double roll, double yaw, double throttle) {
-        _centralModule->_stabilizer->setInputParameters(rp3d::Vector3(pitch, roll, yaw), throttle, _motors[MOTOR_BL]->getMaxPwm());
+    void Drone::setInputParams(QuadAngles quadAngles, double throttle) {
+        _centralModule->_stabilizer->setInputParameters(quadAngles, throttle,
+                                                        _motors[MOTOR_BL]->getMaxPwm());
     }
 
     void Drone::setMotorsPwm(double pwm) {

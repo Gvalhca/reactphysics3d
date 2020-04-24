@@ -6,8 +6,8 @@
 
 namespace quad {
     QuadAttitudeParameters::QuadAttitudeParameters(double altitude,
-                                                   const rp3d::Vector3& axisPRY) : _altitude(altitude),
-                                                                                   _axisPRY(axisPRY),
+                                                   const QuadAngles& quadAngles) : _altitude(altitude),
+                                                                                   _quadAngles(quadAngles),
                                                                                    _throttle(0) {
         for (size_t i = 0; i <= THROTTLE; ++i) {
             _scaleFunctions.push_back(
@@ -15,17 +15,17 @@ namespace quad {
         }
     }
 
-    void QuadAttitudeParameters::setInputParameters(const rp3d::Vector3& axisPRY, double throttle, double maxThrottle) {
+    void QuadAttitudeParameters::setInputParameters(const QuadAngles& quadAngles, double throttle, double maxThrottle) {
         for (int i = 0; i <= YAW; ++i) {
-            double normalizedInput = scaleInput(constrainToRange(axisPRY[i], minInput, maxInput), -1, 1);
-            _axisPRY[i] = (*_scaleFunctions[i])(normalizedInput) * (M_PI / 3);
+            double normalizedInput = scaleInput(constrainToRange(quadAngles[i], minInput, maxInput), -1, 1);
+            _quadAngles[i] = (*_scaleFunctions[i])(normalizedInput) * (M_PI / 3);
         }
         _throttle = (*_scaleFunctions[THROTTLE])(scaleInput(constrainToRange(throttle, minInput, maxInput), 0, 1)) * maxThrottle;
     }
 
     QuadAttitudeParameters::QuadAttitudeParameters(const QuadAttitudeParameters& attitudeParameters) {
         _altitude = attitudeParameters._altitude;
-        _axisPRY = attitudeParameters._axisPRY;
+        _quadAngles = attitudeParameters._quadAngles;
         _throttle = attitudeParameters._throttle;
 
         for (size_t i = 0; i <= THROTTLE; ++i) {
@@ -38,16 +38,16 @@ namespace quad {
         return _altitude;
     }
 
-    rp3d::Vector3 QuadAttitudeParameters::getAxisPRY() const {
-        return _axisPRY;
+    QuadAngles QuadAttitudeParameters::getQuadAngles() const {
+        return _quadAngles;
     }
 
     void QuadAttitudeParameters::setAltitude(double altitude) {
         _altitude = altitude;
     }
 
-    void QuadAttitudeParameters::setAxisPRY(const rp3d::Vector3& axisPRY) {
-        _axisPRY = axisPRY;
+    void QuadAttitudeParameters::setQuadAngles(const QuadAngles& quadAngles) {
+        _quadAngles = quadAngles;
     }
 
     rp3d::Vector3 QuadAttitudeParameters::getAngularVelocity() const {
@@ -91,7 +91,7 @@ namespace quad {
 
     void QuadAttitudeParameters::reset() {
         _altitude = 0;
-        _axisPRY = rp3d::Vector3::zero();
+        _quadAngles = QuadAngles::zero();
         _angularVelocity = rp3d::Vector3::zero();
         _throttle = 0;
     }

@@ -14,15 +14,15 @@ namespace quad {
             computeHoverMode(dt);
         }
 
-        rp3d::Vector3 currentPRY;
+        QuadAngles currentAngles;
         if (_flightMode == STAB || _flightMode == STAB_HEIGHT) {
-            currentPRY = _currentParams.getAxisPRY();
-            currentPRY[YAW] = _currentParams.getAngularVelocity().y;
+            currentAngles = _currentParams.getQuadAngles();
+            currentAngles[YAW] = _currentParams.getAngularVelocity().y;
         }
-        rp3d::Vector3 targetPRY = _targetParams.getAxisPRY();
-        double thrustPitch = _quadPIDs[PITCH_PID].calculate(dt, currentPRY[PITCH], targetPRY[PITCH]);
-        double thrustRoll = _quadPIDs[ROLL_PID].calculate(dt, currentPRY[ROLL], targetPRY[ROLL]);
-        double thrustYaw = _quadPIDs[YAW_PID].calculate(dt, currentPRY[YAW], targetPRY[YAW]);
+        QuadAngles targetAngles = _targetParams.getQuadAngles();
+        double thrustPitch = _quadPIDs[PITCH_PID].calculate(dt, currentAngles[PITCH], targetAngles[PITCH]);
+        double thrustRoll = _quadPIDs[ROLL_PID].calculate(dt, currentAngles[ROLL], targetAngles[ROLL]);
+        double thrustYaw = _quadPIDs[YAW_PID].calculate(dt, currentAngles[YAW], targetAngles[YAW]);
 
         double throttle = _currentParams.getThrottle();
 
@@ -46,14 +46,14 @@ namespace quad {
         std::cout << "Current Altitude: " << _currentParams.getAltitude()
                   << " Target Altitude: " << _targetParams.getAltitude()
                   << std::endl
-                  << "Current Pitch: " << _currentParams.getAxisPRY().x
-                  << " Roll: " << _currentParams.getAxisPRY().y
-                  << " Yaw: " << currentPRY[YAW]
+                  << "Current Pitch: " << _currentParams.getQuadAngles().getPitch()
+                  << " Roll: " << _currentParams.getQuadAngles().getRoll()
+                  << " Yaw: " << currentAngles[YAW]
                   << " Throttle: " << _currentParams.getThrottle()
                   << std::endl
-                  << " Target Pitch: " << _targetParams.getAxisPRY().x
-                  << " Roll: " << _targetParams.getAxisPRY().y
-                  << " Yaw: " << _targetParams.getAxisPRY().z
+                  << " Target Pitch: " << _targetParams.getQuadAngles().getPitch()
+                  << " Roll: " << _targetParams.getQuadAngles().getRoll()
+                  << " Yaw: " << _targetParams.getQuadAngles().getYaw()
                   << " Throttle: " << _targetParams.getThrottle()
                   << std::endl;
 
@@ -90,8 +90,8 @@ namespace quad {
         _sensors.clear();
     }
 
-    void Stabilizer::setInputParameters(rp3d::Vector3 inputPRY, double throttle, double maxThrottle) {
-        _targetParams.setInputParameters(inputPRY, throttle, maxThrottle);
+    void Stabilizer::setInputParameters(QuadAngles inputAngles, double throttle, double maxThrottle) {
+        _targetParams.setInputParameters(inputAngles, throttle, maxThrottle);
         _currentParams.setThrottle(_targetParams.getThrottle());
     }
 

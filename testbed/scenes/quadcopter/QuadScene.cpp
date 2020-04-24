@@ -148,7 +148,7 @@ void QuadScene::createDrone() {
     mDrone->setFlightMode(STAB_HEIGHT);
 }
 
-static rp3d::Vector3 testPRY(1500.0, 1500.0, 1500.0);
+static QuadAngles testPRY(1500.0, 1500.0, 1500.0);
 static double quadThrottle = 0.0;
 
 bool QuadScene::keyboardEvent(int key, int scancode, int action, int mods) {
@@ -156,22 +156,22 @@ bool QuadScene::keyboardEvent(int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
         switch (key) {
             case GLFW_KEY_W:
-                testPRY.x = 2100;
+                testPRY.setPitch(2100);
                 break;
             case GLFW_KEY_S:
-                testPRY.x = 900;
+                testPRY.setPitch(900);
                 break;
             case GLFW_KEY_A:
-                testPRY.y = 2100;
+                testPRY.setRoll(2100);
                 break;
             case GLFW_KEY_D:
-                testPRY.y = 900;
+                testPRY.setRoll(900);
                 break;
             case GLFW_KEY_Q:
-                testPRY.z = 2100;
+                testPRY.setYaw(2100);
                 break;
             case GLFW_KEY_E:
-                testPRY.z = 900;
+                testPRY.setYaw(900);
                 break;
             case GLFW_KEY_SPACE:
                 mDrone->setFlightMode(mDrone->getFlightMode() ? STAB : STAB_HEIGHT);
@@ -191,20 +191,20 @@ bool QuadScene::keyboardEvent(int key, int scancode, int action, int mods) {
         switch (key) {
             case GLFW_KEY_W:
             case GLFW_KEY_S:
-                testPRY.x = 1500.0;
+                testPRY.setPitch(1500.0);
                 break;
             case GLFW_KEY_A:
             case GLFW_KEY_D:
-                testPRY.y = 1500.0;
+                testPRY.setRoll(1500.0);
                 break;
             case GLFW_KEY_Q:
             case GLFW_KEY_E:
-                testPRY.z = 1500.0;
+                testPRY.setYaw(1500.0);
                 break;
         }
     }
 
-    mDrone->setInputParams(testPRY.x, testPRY.y, testPRY.z, quadThrottle);
+    mDrone->setInputParams(testPRY, quadThrottle);
 
     return false;
 }
