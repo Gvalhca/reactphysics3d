@@ -57,7 +57,8 @@ SceneDemo::SceneDemo(const std::string& name, EngineSettings& settings, float sc
     shadowMapTextureLevel++;
 
     // Move the light0
-    mLight0.translateWorld(Vector3(-2, 35, 40));
+    mLight0.translateWorld(Vector3(-2, 50, -10));
+//    mLight0.translateWorld(Vector3(2, 35, 2));
 
     // Camera at light0 postion for the shadow map
     mShadowMapLightCamera.translateWorld(mLight0.getOrigin());

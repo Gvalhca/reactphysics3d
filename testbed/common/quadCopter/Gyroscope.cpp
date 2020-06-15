@@ -68,6 +68,8 @@ quad::QuadAngles quad::Gyroscope::toEulerAngles(const rp3d::Quaternion& q) const
 
 }
 
+
+
 quad::QuadAngles quad::Gyroscope::getPRYFromQuaternion(const rp3d::Quaternion& Q) const {
     double toDegrees = 180 / M_PI;
     double angleYaw = asin(2.0 * (Q.w * Q.y - Q.z * Q.x));

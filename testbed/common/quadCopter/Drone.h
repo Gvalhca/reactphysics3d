@@ -102,6 +102,10 @@ namespace quad {
 
         void setFlightMode(FlightModes flightMode);
 
+        inline QuadAngles getQuadAngles(){
+            _centralModule->_stabilizer->getQuadAngles();
+        }
+
         void reset();
     };
 }

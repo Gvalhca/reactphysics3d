@@ -21,6 +21,12 @@ namespace quad {
         STAB_HEIGHT = 1
     } FlightModes;
 
+    typedef enum {
+        BAROMETER = 0,
+        GYROSCOPE = 1,
+        ACCELEROMETER = 2
+    } SensorTypes;
+
     class Stabilizer {
     private:
         QuadPIDs _quadPIDs;
@@ -57,6 +63,8 @@ namespace quad {
         void setFlightMode(FlightModes flightMode);
 
         FlightModes getFlightMode() const;
+
+        QuadAngles getQuadAngles();
 
         void reset();
 

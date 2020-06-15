@@ -24,7 +24,7 @@ namespace quad {
         double thrustRoll = _quadPIDs[ROLL_PID].calculate(dt, currentAngles[ROLL], targetAngles[ROLL]);
         double thrustYaw = _quadPIDs[YAW_PID].calculate(dt, currentAngles[YAW], targetAngles[YAW]);
 
-        double throttle = _currentParams.getThrottle();
+         double throttle = _currentParams.getThrottle();
 
         std::vector<double> motorsPwm(4, 0);
         motorsPwm[MOTOR_FR] = thrustPitch - thrustRoll + thrustYaw + throttle;
@@ -129,6 +129,12 @@ namespace quad {
 
     double Stabilizer::getThrottle() const {
         return _currentParams.getThrottle();
+    }
+
+    QuadAngles Stabilizer::getQuadAngles() {
+        QuadAttitudeParameters quadParams;
+        _sensors[GYROSCOPE]->getData(quadParams);
+        return quadParams.getQuadAngles();
     }
 
 }

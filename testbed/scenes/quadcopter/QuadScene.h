@@ -15,7 +15,8 @@ using namespace quad;
 // Constants
     const float SCENE_RADIUS = 30.0f;
     const openglframework::Vector3 BOX_SIZE(2, 2, 2);           // Box dimensions in meters
-    const openglframework::Vector3 FLOOR_SIZE(50, 0.5f, 50);    // Floor dimensions in meters
+    const openglframework::Vector3 FLOOR_SIZE(50, 0.5f, 50); // Floor dimensions in meters
+    const openglframework::Vector3 WALL_SIZE(50, 50, 0.5f); // Floor dimensions in meters
     const float BOX_MASS = 1.0f;                                // Box mass in kilograms
     const float FLOOR_MASS = 100.0f;                            // Floor mass in kilograms
     const int NB_BALLSOCKETJOINT_BOXES = 7;                     // Number of Ball-And-Socket chain boxes
@@ -23,6 +24,8 @@ using namespace quad;
 
 // Class QuadScene
     class QuadScene : public SceneDemo {
+    private:
+        openglframework::Vector3 cameraAngles;
 
     protected :
 
@@ -30,6 +33,8 @@ using namespace quad;
 
         /// Box for the floor
         Box* mFloor;
+
+        Box* mWall;
 
         float initialHeight = 5;
 
@@ -65,6 +70,7 @@ using namespace quad;
 
         /// Return all the contact points of the scene
 //        virtual std::vector<ContactPoint> getContactPoints() override;
+        void createWall();
     };
 
 // Return all the contact points of the scene

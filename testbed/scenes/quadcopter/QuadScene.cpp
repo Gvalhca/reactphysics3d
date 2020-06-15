@@ -16,6 +16,7 @@ QuadScene::QuadScene(const std::string& name, EngineSettings& settings)
 
     // Set the center of the scene
     setScenePosition(center, SCENE_RADIUS);
+    mCamera.rotateAroundWorldPoint(Vector3(0, 1, 0), PI, mCenterScene);
 
     // Gravity vector in the dynamics world
     rp3d::Vector3 gravity(0, rp3d::decimal(-9.81), 0);
@@ -32,6 +33,8 @@ QuadScene::QuadScene(const std::string& name, EngineSettings& settings)
 
     // Create the floor
     createFloor();
+
+    createWall();
 
     // Get the physics engine parameters
     mEngineSettings.isGravityEnabled = getDynamicsWorld()->isGravityEnabled();
@@ -84,6 +87,9 @@ QuadScene::~QuadScene() {
     getDynamicsWorld()->destroyRigidBody(mFloor->getRigidBody());
     delete mFloor;
 
+    getDynamicsWorld()->destroyRigidBody(mWall->getRigidBody());
+    delete mWall;
+
     // Destroy the dynamics world
     delete getDynamicsWorld();
 }
@@ -94,6 +100,21 @@ void QuadScene::updatePhysics() {
 
     mDrone->updatePhysics(mEngineSettings.timeStep);
     SceneDemo::updatePhysics();
+    rp3d::Vector3 dronePos = mDrone->getCentralModule()->getPhysicsBody()->getTransform().getPosition();
+//               mCamera.setTransformMatrix(mDrone->getCentralModule()->getPhysicsBody()->getTransformMatrix());
+//    resetCameraToViewAll();
+//    mCamera.translateWorld(openglframework::Vector3(dronePos.x, dronePos.y, dronePos.z));
+
+//    openglframework::Vector3 cameraShift(mDrone->getTransformMatrix().getTranspose() * openglframework::Vector3(0, 1, 0));
+//    openglframework::Vector3 cameraPosition(dronePos.x, dronePos.y, dronePos.z);
+//    cameraPosition = cameraPosition + cameraShift;
+//    setScenePosition(cameraPosition, 3);
+
+//    QuadAngles quadAngles = mDrone->getQuadAngles();
+//    quadAngles.setPitch(PI / 6);
+//    mCamera.rotateAroundWorldPoint(openglframework::Vector3(0, 1, 0), quadAngles.getPitch() - cameraAngles.x, mCenterScene);
+//    cameraAngles.x = quadAngles.getPitch();
+
 }
 
 // Reset the scene
@@ -128,6 +149,26 @@ void QuadScene::createFloor() {
     mPhysicsObjects.push_back(mFloor);
 }
 
+void QuadScene::createWall() {
+
+    // Create the floor
+    rp3d::Vector3 floorPosition(0, 0, 0);
+    mWall = new Box(WALL_SIZE, FLOOR_MASS, getDynamicsWorld(), mMeshFolderPath);
+    mWall->setTransform(rp3d::Transform(rp3d::Vector3(0, 0, 25), rp3d::Quaternion::identity()));
+    // Set the box color
+    mWall->setColor(mRedColorDemo);
+    mWall->setSleepingColor(mRedColorDemo);
+
+    // The floor must be a static rigid body
+    mWall->getRigidBody()->setType(rp3d::BodyType::STATIC);
+
+    // Change the material properties of the rigid body
+    rp3d::Material& material = mWall->getRigidBody()->getMaterial();
+    material.setBounciness(rp3d::decimal(0.3));
+    mPhysicsObjects.push_back(mWall);
+}
+
+
 void QuadScene::createDrone() {
     rp3d::Vector3 positionDrone(0, initialHeight, 0);
     QuadPIDs quadPIDs(PID(0.07, 0.035, 0.015),
@@ -149,7 +190,7 @@ void QuadScene::createDrone() {
 }
 
 static QuadAngles testPRY(1500.0, 1500.0, 1500.0);
-static double quadThrottle = 0.0;
+static double quadThrottle = 900.0;
 
 bool QuadScene::keyboardEvent(int key, int scancode, int action, int mods) {
 
@@ -178,11 +219,23 @@ bool QuadScene::keyboardEvent(int key, int scancode, int action, int mods) {
                 break;
             case GLFW_KEY_R:
                 mDrone->setFlightMode(STAB);
-                quadThrottle = mDrone->getThrottle() + 50;
+                quadThrottle = quadThrottle + 50;
                 break;
             case GLFW_KEY_F:
                 mDrone->setFlightMode(STAB);
-                quadThrottle = mDrone->getThrottle() - 50;
+                quadThrottle = quadThrottle - 50;
+                break;
+            case GLFW_KEY_1:
+                rp3d::Vector3 dronePos = mDrone->getCentralModule()->getPhysicsBody()->getTransform().getPosition();
+//               mCamera.setTransformMatrix(mDrone->getCentralModule()->getPhysicsBody()->getTransformMatrix());
+//    resetCameraToViewAll();
+//    mCamera.translateWorld(openglframework::Vector3(dronePos.x, dronePos.y, dronePos.z));
+                openglframework::Vector3 cameraShift(
+                        mDrone->getTransformMatrix().getTranspose() * openglframework::Vector3(0, 0, 1));
+                openglframework::Vector3 cameraPosition(dronePos.x, dronePos.y, dronePos.z);
+                cameraPosition = cameraPosition + cameraShift;
+                setScenePosition(cameraPosition, 1);
+
                 break;
         }
     }

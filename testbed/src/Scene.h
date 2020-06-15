@@ -235,6 +235,8 @@ class Scene {
 
         /// Update the engine settings
         virtual void updateEngineSettings() = 0;
+
+    void setCameraLookAt(const openglframework::Vector3& position, float sceneRadius);
 };
 
 // Called when a keyboard event occurs
