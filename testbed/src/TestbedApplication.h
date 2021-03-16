@@ -31,6 +31,7 @@
 #include "Gui.h"
 #include "Scene.h"
 #include "Timer.h"
+#include <GL/glu.h>
 #include <GLFW/glfw3.h>
 
 using namespace nanogui;

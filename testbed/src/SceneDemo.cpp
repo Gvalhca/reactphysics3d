@@ -35,6 +35,7 @@ using namespace openglframework;
 int SceneDemo::shadowMapTextureLevel = 0;
 openglframework::Color SceneDemo::mGreyColorDemo = Color(0.70f, 0.70f, 0.7f, 1.0f);
 openglframework::Color SceneDemo::mYellowColorDemo = Color(0.9f, 0.88f, 0.145f, 1.0f);
+openglframework::Color SceneDemo::mBlackColorDemo = Color(0.1f, 0.1f, 0.1f, 1.0f);
 openglframework::Color SceneDemo::mBlueColorDemo = Color(0, 0.66f, 0.95f, 1.0f);
 openglframework::Color SceneDemo::mOrangeColorDemo = Color(0.9f, 0.35f, 0, 1.0f);
 openglframework::Color SceneDemo::mPinkColorDemo = Color(0.83f, 0.48f, 0.64f, 1.0f);

@@ -10,6 +10,7 @@
 #include "Sphere.h"
 #include "quadCopter/Drone.h"
 
+
 namespace quadscene {
 using namespace quad;
 // Constants
@@ -17,6 +18,7 @@ using namespace quad;
     const openglframework::Vector3 BOX_SIZE(2, 2, 2);           // Box dimensions in meters
     const openglframework::Vector3 FLOOR_SIZE(50, 0.5f, 50); // Floor dimensions in meters
     const openglframework::Vector3 WALL_SIZE(50, 50, 0.5f); // Floor dimensions in meters
+    const openglframework::Vector3 TESTBOX_SIZE(0.5, 2.5, 0.1); // Floor dimensions in meters
     const float BOX_MASS = 1.0f;                                // Box mass in kilograms
     const float FLOOR_MASS = 100.0f;                            // Floor mass in kilograms
     const int NB_BALLSOCKETJOINT_BOXES = 7;                     // Number of Ball-And-Socket chain boxes
@@ -35,6 +37,8 @@ using namespace quad;
         Box* mFloor;
 
         Box* mWall;
+
+        Box* testBox;
 
         float initialHeight = 5;
 
@@ -71,6 +75,15 @@ using namespace quad;
         /// Return all the contact points of the scene
 //        virtual std::vector<ContactPoint> getContactPoints() override;
         void createWall();
+
+        void createTestBox();
+
+        openglframework::Matrix4&
+        fLookAt(const openglframework::Vector3& target, const openglframework::Vector3& upVec);
+
+        void refreshCamera();
+
+        void SaveImage();
     };
 
 // Return all the contact points of the scene

@@ -104,7 +104,7 @@ namespace quad {
     }
 
     Drone::Drone(double frameSize, double droneMass, double motorRadius, double motorMass, QuadPIDs quadPIDs,
-                 rp3d::DynamicsWorld* world, const std::string& meshFolderPath) : _mass(droneMass) {
+                 rp3d::DynamicsWorld* world, const std::string& meshFolderPath) : _mass(droneMass), _frameSize(frameSize) {
 
         // ---------------     Create motors     --------------- //
         createMotors(frameSize, motorRadius, motorMass, world, meshFolderPath);

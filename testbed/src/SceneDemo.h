@@ -41,128 +41,129 @@ const int SHADOWMAP_HEIGHT = 2048;
 // This scene has a single light source with shadow mapping.
 class SceneDemo : public Scene {
 
-    protected:
+protected:
 
-        // -------------------- Attributes -------------------- //
+    // -------------------- Attributes -------------------- //
 
-        /// Light 0
-        openglframework::Light mLight0;
+    /// Light 0
+    openglframework::Light mLight0;
 
-        /// True if the shadows FBO, textures have been created
-        bool mIsShadowMappingInitialized;
+    /// True if the shadows FBO, textures have been created
+    bool mIsShadowMappingInitialized;
 
-        /// FBO for the shadow map
-        openglframework::FrameBufferObject mFBOShadowMap;
+    /// FBO for the shadow map
+    openglframework::FrameBufferObject mFBOShadowMap;
 
-        /// Shadow map texture
-        openglframework::Texture2D mShadowMapTexture;
+    /// Shadow map texture
+    openglframework::Texture2D mShadowMapTexture;
 
-        static int shadowMapTextureLevel;
+    static int shadowMapTextureLevel;
 
-        /// All the visual contact points
-        std::vector<VisualContactPoint*> mContactPoints;
+    /// All the visual contact points
+    std::vector<VisualContactPoint*> mContactPoints;
 
-        /// Shadow map bias matrix
-        openglframework::Matrix4 mShadowMapBiasMatrix;
+    /// Shadow map bias matrix
+    openglframework::Matrix4 mShadowMapBiasMatrix;
 
-        /// Camera at light0 position for the shadow map
-        openglframework::Camera mShadowMapLightCamera;
+    /// Camera at light0 position for the shadow map
+    openglframework::Camera mShadowMapLightCamera;
 
-        /// Depth shader to render the shadow map
-        openglframework::Shader mDepthShader;
+    /// Depth shader to render the shadow map
+    openglframework::Shader mDepthShader;
 
-        /// Phong shader
-        openglframework::Shader mPhongShader;
+    /// Phong shader
+    openglframework::Shader mPhongShader;
 
-		/// Constant color shader
-		openglframework::Shader mColorShader;
+    /// Constant color shader
+    openglframework::Shader mColorShader;
 
-        // TODO : Delete this
-        openglframework::Shader mQuadShader;
+    // TODO : Delete this
+    openglframework::Shader mQuadShader;
 
-        // TODO : Delete this
-        openglframework::VertexArrayObject mVAOQuad;
+    // TODO : Delete this
+    openglframework::VertexArrayObject mVAOQuad;
 
-        openglframework::VertexBufferObject mVBOQuad;
+    openglframework::VertexBufferObject mVBOQuad;
 
-        static openglframework::Color mGreyColorDemo;
-        static openglframework::Color mYellowColorDemo;
-        static openglframework::Color mBlueColorDemo;
-        static openglframework::Color mOrangeColorDemo;
-        static openglframework::Color mPinkColorDemo;
-        static openglframework::Color mRedColorDemo;
-        static openglframework::Color mGreenColorDemo;
-        static openglframework::Color mDemoColors[];
-        static int mNbDemoColors;
+    static openglframework::Color mGreyColorDemo;
+    static openglframework::Color mYellowColorDemo;
+    static openglframework::Color mBlackColorDemo;
+    static openglframework::Color mBlueColorDemo;
+    static openglframework::Color mOrangeColorDemo;
+    static openglframework::Color mPinkColorDemo;
+    static openglframework::Color mRedColorDemo;
+    static openglframework::Color mGreenColorDemo;
+    static openglframework::Color mDemoColors[];
+    static int mNbDemoColors;
 
-        std::string mMeshFolderPath;
+    std::string mMeshFolderPath;
 
-		std::vector<PhysicsObject*> mPhysicsObjects;
+    std::vector<PhysicsObject*> mPhysicsObjects;
 
-        rp3d::CollisionWorld* mPhysicsWorld;
+    rp3d::CollisionWorld* mPhysicsWorld;
 
-        // -------------------- Methods -------------------- //
+    // -------------------- Methods -------------------- //
 
-        // Create the Shadow map FBO and texture
-        void createShadowMapFBOAndTexture();
+    // Create the Shadow map FBO and texture
+    void createShadowMapFBOAndTexture();
 
-        // Used for debugging shadow maps
-        void createQuadVBO();
+    // Used for debugging shadow maps
+    void createQuadVBO();
 
-        // TODO : Delete this
-        void drawTextureQuad();
+    // TODO : Delete this
+    void drawTextureQuad();
 
-        // Update the contact points
-        void updateContactPoints();
+    // Update the contact points
+    void updateContactPoints();
 
-        // Render the contact points
-        void renderContactPoints(openglframework::Shader& shader,
-                                 const openglframework::Matrix4& worldToCameraMatrix);
+    // Render the contact points
+    void renderContactPoints(openglframework::Shader& shader,
+                             const openglframework::Matrix4& worldToCameraMatrix);
 
 
-        /// Render the AABBs
-        void renderAABBs(const openglframework::Matrix4& worldToCameraMatrix);
+    /// Render the AABBs
+    void renderAABBs(const openglframework::Matrix4& worldToCameraMatrix);
 
-        /// Remove all contact points
-        void removeAllContactPoints();
+    /// Remove all contact points
+    void removeAllContactPoints();
 
-        /// Return a reference to the dynamics world
-        rp3d::DynamicsWorld* getDynamicsWorld();
+    /// Return a reference to the dynamics world
+    rp3d::DynamicsWorld* getDynamicsWorld();
 
-        /// Return a reference to the dynamics world
-        const rp3d::DynamicsWorld* getDynamicsWorld() const;
+    /// Return a reference to the dynamics world
+    const rp3d::DynamicsWorld* getDynamicsWorld() const;
 
-    public:
+public:
 
-        // -------------------- Methods -------------------- //
+    // -------------------- Methods -------------------- //
 
-        /// Constructor
-        SceneDemo(const std::string& name, EngineSettings& settings, float sceneRadius, bool isShadowMappingEnabled = true);
+    /// Constructor
+    SceneDemo(const std::string& name, EngineSettings& settings, float sceneRadius, bool isShadowMappingEnabled = true);
 
-        /// Destructor
-        virtual ~SceneDemo() override;
+    /// Destructor
+    virtual ~SceneDemo() override;
 
-        /// Update the scene
-        virtual void update() override;
+    /// Update the scene
+    virtual void update() override;
 
-		/// Update the physics world (take a simulation step)
-		/// Can be called several times per frame
-		virtual void updatePhysics() override;
+    /// Update the physics world (take a simulation step)
+    /// Can be called several times per frame
+    virtual void updatePhysics() override;
 
-        /// Render the scene (possibly in multiple passes for shadow mapping)
-        virtual void render() override;
+    /// Render the scene (possibly in multiple passes for shadow mapping)
+    virtual void render() override;
 
-        /// Update the engine settings
-        virtual void updateEngineSettings() override;
+    /// Update the engine settings
+    virtual void updateEngineSettings() override;
 
-        /// Render the scene in a single pass
-        virtual void renderSinglePass(openglframework::Shader& shader, const openglframework::Matrix4& worldToCameraMatrix);
+    /// Render the scene in a single pass
+    virtual void renderSinglePass(openglframework::Shader& shader, const openglframework::Matrix4& worldToCameraMatrix);
 
-        /// Enabled/Disable the shadow mapping
-        virtual void setIsShadowMappingEnabled(bool isShadowMappingEnabled) override;
+    /// Enabled/Disable the shadow mapping
+    virtual void setIsShadowMappingEnabled(bool isShadowMappingEnabled) override;
 
-        /// Return all the contact points of the scene
-        std::vector<ContactPoint> computeContactPointsOfWorld(reactphysics3d::DynamicsWorld *world);
+    /// Return all the contact points of the scene
+    std::vector<ContactPoint> computeContactPointsOfWorld(reactphysics3d::DynamicsWorld* world);
 };
 
 // Enabled/Disable the shadow mapping

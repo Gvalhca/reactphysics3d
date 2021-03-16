@@ -43,27 +43,27 @@ namespace quad {
 
 //        std::cout << "FLight Mode: " << _flightMode << std::endl;
 //
-        std::cout << "Current Altitude: " << _currentParams.getAltitude()
-                  << " Target Altitude: " << _targetParams.getAltitude()
-                  << std::endl
-                  << "Current Pitch: " << _currentParams.getQuadAngles().getPitch()
-                  << " Roll: " << _currentParams.getQuadAngles().getRoll()
-                  << " Yaw: " << currentAngles[YAW]
-                  << " Throttle: " << _currentParams.getThrottle()
-                  << std::endl
-                  << " Target Pitch: " << _targetParams.getQuadAngles().getPitch()
-                  << " Roll: " << _targetParams.getQuadAngles().getRoll()
-                  << " Yaw: " << _targetParams.getQuadAngles().getYaw()
-                  << " Throttle: " << _targetParams.getThrottle()
-                  << std::endl;
-
-        std::cout << "Thrust Pitch: " << thrustPitch
-                  << " Roll: " << thrustRoll
-                  << " Yaw: " << thrustYaw
-                  << " Throttle: " << throttle
-                  << std::endl;
-
-        std::cout << "-------------------------------------------------------------" << std::endl;
+//        std::cout << "Current Altitude: " << _currentParams.getAltitude()
+//                  << " Target Altitude: " << _targetParams.getAltitude()
+//                  << std::endl
+//                  << "Current Pitch: " << _currentParams.getQuadAngles().getPitch()
+//                  << " Roll: " << _currentParams.getQuadAngles().getRoll()
+//                  << " Yaw: " << currentAngles[YAW]
+//                  << " Throttle: " << _currentParams.getThrottle()
+//                  << std::endl
+//                  << " Target Pitch: " << _targetParams.getQuadAngles().getPitch()
+//                  << " Roll: " << _targetParams.getQuadAngles().getRoll()
+//                  << " Yaw: " << _targetParams.getQuadAngles().getYaw()
+//                  << " Throttle: " << _targetParams.getThrottle()
+//                  << std::endl;
+//
+//        std::cout << "Thrust Pitch: " << thrustPitch
+//                  << " Roll: " << thrustRoll
+//                  << " Yaw: " << thrustYaw
+//                  << " Throttle: " << throttle
+//                  << std::endl;
+//
+//        std::cout << "-------------------------------------------------------------" << std::endl;
     }
 
     void Stabilizer::computeHoverMode(double dt) {

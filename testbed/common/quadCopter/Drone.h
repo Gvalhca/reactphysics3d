@@ -28,6 +28,7 @@ namespace quad {
     class Drone : public openglframework::Object3D {
     private:
         double _mass;
+        double _frameSize;
 
         std::shared_ptr<CentralModule> _centralModule;
         std::vector<std::shared_ptr<Motor>> _motors;
@@ -104,6 +105,10 @@ namespace quad {
 
         inline QuadAngles getQuadAngles(){
             _centralModule->_stabilizer->getQuadAngles();
+        }
+
+        inline double getFrameSize() {
+            return _frameSize;
         }
 
         void reset();

@@ -27,6 +27,7 @@
 #define SCENE_H
 
 // Libraries
+//#include <GL/glu.h>
 #include "openglframework.h"
 #include "reactphysics3d.h"
 
