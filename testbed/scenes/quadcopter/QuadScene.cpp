@@ -431,10 +431,10 @@ void QuadScene::refreshCamera() {
 //    cameraLookAtMatrix.print();
 }
 
-void QuadScene::SaveImage(){
-    int* buffer = new int[ 1920 * 1080 * 3];
-    glReadPixels(0, 0, WIDTH, 1080, GL_BGR, )
-}
+//void QuadScene::SaveImage(){
+//    int* buffer = new int[ 1920 * 1080 * 3];
+//    glReadPixels(0, 0, WIDTH, 1080, GL_BGR, )
+//}
 
 static QuadAngles testPRY(1500.0, 1500.0, 1500.0);
 static double quadThrottle = 900.0;
